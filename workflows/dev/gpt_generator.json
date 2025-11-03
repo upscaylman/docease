@@ -306,7 +306,7 @@
         "fromEmail": "contact@fo-metaux.fr",
         "toEmail": "={{ $json.email_destinataire }}",
         "subject": "={{ 'Document généré - ' + $json.objet }}",
-        "text": "={{ 'Bonjour ' + $json.nom_destinataire + ',\\n\\nVeuillez trouver ci-joint le document généré.\\n\\nCordialement,\\nFO METAUX' }}",
+        "text": "={{ 'Bonjour ' + ($json.nom_destinataire || 'Madame, Monsieur') + ',\\n\\nVeuillez trouver ci-joint le document généré.\\n\\nCordialement,\\nFO METAUX' }}",
         "attachments": "data",
         "options": {
           "attachmentsPropertyName": "data"

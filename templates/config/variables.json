@@ -15,7 +15,7 @@
     "nom_destinataire": {
       "label": "Nom du destinataire",
       "type": "text",
-      "required": true,
+      "required": false,
       "description": "Nom complet"
     },
     "statut": {
