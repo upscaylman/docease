@@ -29,11 +29,11 @@
 
     <input id="adresse" type="text" placeholder="Adresse" class="w-full p-2 border rounded-lg" required>
 
-    <input id="cp" type="text" placeholder="Code postal + Ville (ex: 75001 Paris)" class="w-full p-2 border rounded-lg">
+    <input id="cp" type="text" placeholder="Code postal + Ville (ex: 75001 Paris)" class="w-full p-2 border rounded-lg" required>
 
     <input id="objet" type="text" placeholder="Objet du document" class="w-full p-2 border rounded-lg">
 
-    <input id="number" type="text" placeholder="Numéro (ex: 2025-001)" class="w-full p-2 border rounded-lg">
+    <input id="number" type="text" placeholder="Numéro (ex: 2025-001)" class="w-full p-2 border rounded-lg" required>
 
     <input id="nom_destinataire" type="text" placeholder="Nom du destinataire" class="w-full p-2 border rounded-lg">
 
@@ -45,6 +45,12 @@
     </select>
 
     <textarea id="texte_ai" placeholder="Texte IA (optionnel)" rows="3" class="w-full p-2 border rounded-lg"></textarea>
+
+    <input id="civilite_replace" type="text" placeholder="Civilité remplaçant" class="w-full p-2 border rounded-lg">
+
+    <input id="nom_replace" type="text" placeholder="Nom remplaçant" class="w-full p-2 border rounded-lg" required>
+    
+    <input id="nom_exp" type="text" placeholder="Nom expéditeur (ex: FO METAUX)" class="w-full p-2 border rounded-lg">
 
     <div class="w-full">
       <label class="block text-sm font-medium text-gray-700 mb-1">Destinataires</label>
@@ -162,6 +168,9 @@
         objet: ['Sécurité au travail', 'Désignation représentant', 'Négociation collective', 'Réunion CSE'][Math.floor(Math.random() * 4)],
         number: ['2025-' + String(Math.floor(Math.random() * 100) + 1).padStart(3, '0')],
         nom_destinataire: ['Jean Dupont', 'Marie Martin', 'Pierre Bernard', 'Sophie Dubois'][Math.floor(Math.random() * 4)],
+        civilite_replace: ['Monsieur', 'Madame'][Math.floor(Math.random() * 2)],
+        nom_replace: ['Durand', 'Petit', 'Robert', 'Moreau'][Math.floor(Math.random() * 4)],
+        nom_exp: ['FO METAUX', 'Force Ouvrière', 'Syndicat FO'][Math.floor(Math.random() * 3)],
         template: ['securite', 'designation'][Math.floor(Math.random() * 2)],
         texte_ai: 'Ceci est un texte de test généré automatiquement pour la démonstration.',
         emails: ['epheandrill@gmail.com', 'bouvier.jul@gmail.com']
@@ -176,6 +185,9 @@
       document.getElementById('objet').value = testData.objet
       document.getElementById('number').value = testData.number
       document.getElementById('nom_destinataire').value = testData.nom_destinataire
+      document.getElementById('civilite_replace').value = testData.civilite_replace
+      document.getElementById('nom_replace').value = testData.nom_replace
+      document.getElementById('nom_exp').value = testData.nom_exp
       document.getElementById('template').value = testData.template
       document.getElementById('texte_ai').value = testData.texte_ai
       
@@ -201,7 +213,10 @@
         nom_destinataire: document.getElementById("nom_destinataire").value,
         template: document.getElementById("template").value,
         texte_ai: document.getElementById("texte_ai").value,
-        destinataires: document.getElementById("destinataires").value
+        civilite_replace: document.getElementById("civilite_replace").value,
+        nom_replace: document.getElementById("nom_replace").value,
+        destinataires: document.getElementById("destinataires").value,
+        nom_exp: document.getElementById("nom_exp").value
       }
 
       try {

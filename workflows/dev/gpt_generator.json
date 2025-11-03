@@ -28,6 +28,12 @@
               "type": "string"
             },
             {
+              "id": "genre",
+              "name": "genre",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.civilite === 'Madame' ? 'la' : 'le' }}",
+              "type": "string"
+            },
+            {
               "id": "nom_destinataire",
               "name": "nom_destinataire",
               "value": "={{ $('Formulaire (Webhook)').item.json.body.nom }}",
