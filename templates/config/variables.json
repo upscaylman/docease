@@ -1,0 +1,115 @@
+{
+  "variables_communes": {
+    "civilite": {
+      "label": "Civilité",
+      "type": "select",
+      "options": ["M.", "Mme", "M. et Mme"],
+      "required": true
+    },
+    "nom_destinataire": {
+      "label": "Nom du destinataire",
+      "type": "text",
+      "required": true,
+      "description": "Nom complet"
+    },
+    "statut": {
+      "label": "Statut",
+      "type": "text",
+      "required": false,
+      "placeholder": "Ex: Président, Directeur..."
+    },
+    "batiment": {
+      "label": "Bâtiment",
+      "type": "text",
+      "required": false
+    },
+    "adresse": {
+      "label": "Adresse",
+      "type": "text",
+      "required": false
+    },
+    "cp": {
+      "label": "Code postal + Ville",
+      "type": "text",
+      "required": false,
+      "placeholder": "Ex: 75001 Paris"
+    },
+    "email_destinataire": {
+      "label": "Email(s) destinataire(s)",
+      "type": "email",
+      "required": true,
+      "description": "Plusieurs emails séparés par virgule"
+    },
+    "nom_exp": {
+      "label": "Nom expéditeur",
+      "type": "text",
+      "required": false,
+      "default": "FO METAUX"
+    },
+    "statut_exp": {
+      "label": "Statut expéditeur",
+      "type": "text",
+      "required": false
+    },
+    "date": {
+      "label": "Date (format court)",
+      "type": "auto",
+      "format": "dd/MM/yyyy",
+      "description": "Généré automatiquement"
+    },
+    "date_complete": {
+      "label": "Date (format long)",
+      "type": "auto",
+      "format": "cccc d MMMM yyyy",
+      "locale": "fr",
+      "description": "Généré automatiquement (ex: vendredi 31 octobre 2025)"
+    },
+    "heure": {
+      "label": "Heure",
+      "type": "auto",
+      "format": "HH:mm",
+      "description": "Généré automatiquement"
+    }
+  },
+  "templates": {
+    "securite": {
+      "nom": "Document Sécurité",
+      "fichier": "template_principal.docx",
+      "description": "Sécurité désignation",
+      "variables_specifiques": {
+        "objet": {
+          "label": "Objet du document",
+          "type": "text",
+          "required": true,
+          "placeholder": "Ex: Sécurité au travail"
+        },
+        "texte_ia": {
+          "label": "Texte (optionnel IA)",
+          "type": "textarea",
+          "required": false,
+          "rows": 5,
+          "description": "Saisissez le texte ou laissez l'IA le générer"
+        },
+        "number": {
+          "label": "Numéro",
+          "type": "text",
+          "required": false,
+          "placeholder": "Ex: 2025-001"
+        },
+        "civilite_replace": {
+          "label": "Civilité (remplacement)",
+          "type": "select",
+          "options": ["M.", "Mme", "M. et Mme"],
+          "required": false,
+          "description": "Si différent de la civilité principale"
+        },
+        "nom_replace": {
+          "label": "Nom (remplacement)",
+          "type": "text",
+          "required": false,
+          "description": "Si différent du nom principal"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n-local
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      
+      # Timezone
+      - GENERIC_TIMEZONE=Europe/Paris
+      - TZ=Europe/Paris
+      
+      # Mode de base de données simplifié (SQLite)
+      - DB_TYPE=sqlite
+      
+      # Logs
+      - N8N_LOG_LEVEL=debug
+      
+      # Configuration CORS
+      - N8N_CORS_ENABLED=true
+      - N8N_CORS_ALLOW_ORIGIN=*
+      
+    volumes:
+      # Données n8n (workflows, credentials, etc.)
+      - n8n_data:/home/node/.n8n
+      
+      # Templates Word accessibles dans n8n
+      - ./templates:/templates:ro
+      
+      # Exports de workflows
+      - ./workflows:/workflows
+
+volumes:
+  n8n_data:
+    driver: local

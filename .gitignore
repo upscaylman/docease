@@ -1,0 +1,35 @@
+# n8n data
+.n8n/
+n8n_data/
+database.sqlite
+
+# Docker volumes
+postgres_data/
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+*.env.local
+
+# Backups
+backups/
+*.backup
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temp files
+tmp/
+temp/
+*.tmp
