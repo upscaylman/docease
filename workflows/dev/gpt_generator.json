@@ -22,27 +22,27 @@
         "assignments": {
           "assignments": [
             {
-              "id": "civilite",
-              "name": "civilite",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.civilite }}",
+              "id": "civiliteDestinataire",
+              "name": "civiliteDestinataire",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.civiliteDestinataire }}",
               "type": "string"
             },
             {
               "id": "genre",
               "name": "genre",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.civilite === 'Madame' ? 'la' : 'le' }}",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.civiliteDestinataire === 'Madame' ? 'la' : 'le' }}",
               "type": "string"
             },
             {
-              "id": "nom_destinataire",
-              "name": "nom_destinataire",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.nom }}",
+              "id": "nomDestinataire",
+              "name": "nomDestinataire",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.nomDestinataire }}",
               "type": "string"
             },
             {
-              "id": "statut",
-              "name": "statut",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.statut }}",
+              "id": "statutDestinataire",
+              "name": "statutDestinataire",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.statutDestinataire }}",
               "type": "string"
             },
             {
@@ -58,87 +58,81 @@
               "type": "string"
             },
             {
-              "id": "cp",
-              "name": "cp",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.cp }}",
+              "id": "cpVille",
+              "name": "cpVille",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.cpVille }}",
+              "type": "string"
+            },
+            {
+              "id": "typeDocument",
+              "name": "typeDocument",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.templateType }}",
+              "type": "string"
+            },
+            {
+              "id": "texteIa",
+              "name": "texteIa",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.texteIa || '' }}",
               "type": "string"
             },
             {
               "id": "objet",
               "name": "objet",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.template }}",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.objet || '' }}",
               "type": "string"
             },
             {
-              "id": "texte_ia",
-              "name": "texte_ia",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.texte_ai || '' }}",
+              "id": "numeroCourrier",
+              "name": "numeroCourrier",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.numeroCourrier }}",
               "type": "string"
             },
             {
-              "id": "number",
-              "name": "number",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.number }}",
+              "id": "civiliteRemplace",
+              "name": "civiliteRemplace",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.civiliteRemplace }}",
               "type": "string"
             },
             {
-              "id": "civilite_replace",
-              "name": "civilite_replace",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.civilite_replace }}",
+              "id": "nomRemplace",
+              "name": "nomRemplace",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.nomRemplace }}",
               "type": "string"
             },
             {
-              "id": "nom_replace",
-              "name": "nom_replace",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.nom_replace }}",
+              "id": "codeDocument",
+              "name": "codeDocument",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.codeDocument }}",
               "type": "string"
             },
             {
-              "id": "email_replace",
-              "name": "email_replace",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.email_replace }}",
+              "id": "civiliteDelegue",
+              "name": "civiliteDelegue",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.civiliteDelegue }}",
               "type": "string"
             },
             {
-              "id": "entreprise",
-              "name": "entreprise",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.entreprise }}",
+              "id": "nomDelegue",
+              "name": "nomDelegue",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.nomDelegue }}",
               "type": "string"
             },
             {
-              "id": "civilite_nomme",
-              "name": "civilite_nomme",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.civilite_nomme }}",
+              "id": "emailDelegue",
+              "name": "emailDelegue",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.emailDelegue }}",
               "type": "string"
             },
             {
-              "id": "nom_nomme",
-              "name": "nom_nomme",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.nom_nomme }}",
+              "id": "emailDestinataire",
+              "name": "emailDestinataire",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.emailDestinataire }}",
               "type": "string"
             },
             {
-              "id": "email_nomme",
-              "name": "email_nomme",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.email_nomme }}",
-              "type": "string"
-            },
-            {
-              "id": "email_destinataire",
-              "name": "email_destinataire",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.destinataires }}",
-              "type": "string"
-            },
-            {
-              "id": "nom_exp",
-              "name": "nom_exp",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.nom_exp || 'FO METAUX' }}",
-              "type": "string"
-            },
-            {
-              "id": "statut_exp",
-              "name": "statut_exp",
-              "value": "={{ $('Formulaire (Webhook)').item.json.body.statut_exp }}",
+              "id": "signatureExp",
+              "name": "signatureExp",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.signatureExp || 'FO METAUX' }}",
               "type": "string"
             },
             {
@@ -148,8 +142,8 @@
               "type": "string"
             },
             {
-              "id": "date_complete",
-              "name": "date_complete",
+              "id": "dateComplete",
+              "name": "dateComplete",
               "value": "={{ $now.toFormat('cccc d MMMM yyyy', { locale: 'fr' }) }}",
               "type": "string"
             },
@@ -173,7 +167,7 @@
         "conditions": {
           "boolean": [
             {
-              "value1": "={{ $json.texte_ia && $json.texte_ia.length > 10 }}"
+              "value1": "={{ $json.texteIa && $json.texteIa.length > 10 }}"
             }
           ]
         }
@@ -244,7 +238,7 @@
     },
     {
       "parameters": {
-        "functionCode": "// Récupérer les données préparées\nconst civilite = $('Préparer Données').item.json.civilite;\nconst nom_destinataire = $('Préparer Données').item.json.nom_destinataire;\nconst statut = $('Préparer Données').item.json.statut;\nconst batiment = $('Préparer Données').item.json.batiment;\nconst adresse = $('Préparer Données').item.json.adresse;\nconst cp = $('Préparer Données').item.json.cp;\nconst objet = $('Préparer Données').item.json.objet;\nconst texte_ia = $('Préparer Données').item.json.texte_ia;\nconst number = $('Préparer Données').item.json.number;\nconst civilite_replace = $('Préparer Données').item.json.civilite_replace;\nconst nom_replace = $('Préparer Données').item.json.nom_replace;\nconst email_replace = $('Préparer Données').item.json.email_replace;\nconst entreprise = $('Préparer Données').item.json.entreprise;\nconst civilite_nomme = $('Préparer Données').item.json.civilite_nomme;\nconst nom_nomme = $('Préparer Données').item.json.nom_nomme;\nconst email_nomme = $('Préparer Données').item.json.email_nomme;\nconst email_destinataire = $('Préparer Données').item.json.email_destinataire;\nconst nom_exp = $('Préparer Données').item.json.nom_exp;\nconst statut_exp = $('Préparer Données').item.json.statut_exp;\nconst date = $('Préparer Données').item.json.date;\nconst date_complete = $('Préparer Données').item.json.date_complete;\n\n// Récupérer le fichier Word binaire depuis le node précédent\nconst inputData = items[0];\n\nif (!inputData.binary || !inputData.binary.data) {\n  throw new Error('Aucun fichier Word trouvé dans les données binaires !');\n}\n\n// Utiliser les helpers n8n pour récupérer le buffer binaire\nconst binaryBuffer = await this.helpers.getBinaryDataBuffer(0, 'data');\n\n// Convertir le buffer en base64\nconst wordBase64 = binaryBuffer.toString('base64');\n\nconsole.log('Base64 length:', wordBase64.length);\n\n// Créer le HTML de prévisualisation avec le contenu du document Word\nconst html = `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset='utf-8'>\n  <script src='https://cdn.tailwindcss.com'></script>\n</head>\n<body class='p-6 bg-gray-50'>\n  <h2 class='text-xl font-semibold mb-4'>📄 Prévisualisation du document Word</h2>\n  <div class='bg-white p-6 rounded shadow mb-4 border-2 border-gray-200' style='font-family: Calibri, Arial, sans-serif; line-height: 1.8; white-space: pre-wrap;'>\n    <div class='text-sm text-gray-500 mb-4'>OBJET: <strong class='text-blue-700'>${objet}</strong></div>\n    <div class='mb-4'>Paris, le <strong class='text-blue-700'>${date}</strong></div>\n    <div class='mb-4'><strong class='text-blue-700'>${civilite} ${nom_destinataire}</strong></div>\n    ${statut ? `<div class='mb-4'>${statut}</div>` : ''}\n    ${batiment ? `<div class='mb-4'>${batiment}</div>` : ''}\n    ${adresse ? `<div class='mb-4'>${adresse}</div>` : ''}\n    ${cp ? `<div class='mb-4'>${cp}</div>` : ''}\n    <div class='mb-4' style='text-align: justify;'>${texte_ia}</div>\n    ${number ? `<div class='mb-4'>Numéro: <strong class='text-blue-700'>${number}</strong></div>` : ''}\n    ${civilite_nomme || nom_nomme ? `<div class='mb-4'>Nommé: <strong class='text-blue-700'>${civilite_nomme || ''} ${nom_nomme || ''}</strong>${email_nomme ? ` - ${email_nomme}` : ''}</div>` : ''}\n    ${civilite_replace || nom_replace ? `<div class='mb-4'>Remplaçant: <strong class='text-blue-700'>${civilite_replace || ''} ${nom_replace || ''}</strong></div>` : ''}\n    ${entreprise ? `<div class='mb-4'>Entreprise: <strong class='text-blue-700'>${entreprise}</strong></div>` : ''}\n    <div class='mb-4'>Je reste à votre disposition pour toute information complémentaire.</div>\n    <div class='mb-4'>Cordialement,</div>\n    ${nom_exp ? `<div class='mb-4'><strong class='text-blue-700'>${nom_exp}</strong></div>` : ''}\n    ${statut_exp ? `<div class='mb-4'>${statut_exp}</div>` : ''}\n    <hr class='my-4'>\n    <div class='text-xs text-gray-400'>Email destinataire : <strong class='text-blue-700'>${email_destinataire}</strong></div>\n  </div>\n  <div class='bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4'>\n    <p class='text-sm'><strong>ℹ️ Les parties en <span class='text-blue-700 font-bold'>bleu gras</span> sont les données insérées dans le template Word</strong></p>\n  </div>\n  <form id='form' class='flex flex-col gap-4'>\n    <input type='hidden' name='civilite' value='${civilite}'>\n    <input type='hidden' name='nom_destinataire' value='${nom_destinataire}'>\n    <input type='hidden' name='statut' value='${statut || ''}'>\n    <input type='hidden' name='batiment' value='${batiment || ''}'>\n    <input type='hidden' name='adresse' value='${adresse || ''}'>\n    <input type='hidden' name='cp' value='${cp || ''}'>\n    <input type='hidden' name='objet' value='${objet}'>\n    <input type='hidden' name='texte_ia' value='${texte_ia || ''}'>\n    <input type='hidden' name='number' value='${number || ''}'>\n    <input type='hidden' name='civilite_nomme' value='${civilite_nomme || ''}'>\n    <input type='hidden' name='nom_nomme' value='${nom_nomme || ''}'>\n    <input type='hidden' name='email_nomme' value='${email_nomme || ''}'>\n    <input type='hidden' name='civilite_replace' value='${civilite_replace || ''}'>\n    <input type='hidden' name='nom_replace' value='${nom_replace || ''}'>\n    <input type='hidden' name='entreprise' value='${entreprise || ''}'>\n    <input type='hidden' name='email_destinataire' value='${email_destinataire}'>\n    <input type='hidden' name='nom_exp' value='${nom_exp}'>\n    <input type='hidden' name='statut_exp' value='${statut_exp || ''}'>\n    <input type='hidden' name='wordfile' value='${wordBase64}'>\n    <div class='flex gap-2'>\n      <button type='submit' class='bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700'>\n        ✅ Valider et envoyer par email\n      </button>\n      <button type='button' onclick='window.close()' class='bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600'>\n        ❌ Annuler\n      </button>\n    </div>\n  </form>\n  <script>\n    document.querySelector('#form').onsubmit = async e => {\n      e.preventDefault();\n      const btn = e.target.querySelector('button[type=submit]');\n      btn.disabled = true;\n      btn.textContent = '⏳ Envoi en cours...';\n      try {\n        const formData = new FormData(e.target);\n        const data = Object.fromEntries(formData);\n        console.log('Envoi données:', { objet: data.objet, destinataires: data.email_destinataire, wordfileLength: data.wordfile?.length });\n        await fetch('http://localhost:5678/webhook/validate-doc', {\n          method: 'POST',\n          headers: {'Content-Type': 'application/json'},\n          body: JSON.stringify(data)\n        });\n        alert('✅ Document envoyé avec succès!');\n        window.close();\n      } catch(err) {\n        alert('❌ Erreur: ' + err.message);\n        btn.disabled = false;\n        btn.textContent = '✅ Valider et envoyer par email';\n      }\n    };\n  </script>\n</body>\n</html>`;\n\nreturn { json: { html } };"
+        "functionCode": "// Récupérer les données préparées\nconst civiliteDestinataire = $('Préparer Données').item.json.civiliteDestinataire;\nconst nomDestinataire = $('Préparer Données').item.json.nomDestinataire;\nconst statutDestinataire = $('Préparer Données').item.json.statutDestinataire;\nconst batiment = $('Préparer Données').item.json.batiment;\nconst adresse = $('Préparer Données').item.json.adresse;\nconst cpVille = $('Préparer Données').item.json.cpVille;\nconst objet = $('Préparer Données').item.json.objet;\nconst numeroCourrier = $('Préparer Données').item.json.numeroCourrier;\nconst civiliteRemplace = $('Préparer Données').item.json.civiliteRemplace;\nconst nomRemplace = $('Préparer Données').item.json.nomRemplace;\nconst codeDocument = $('Préparer Données').item.json.codeDocument;\nconst civiliteDelegue = $('Préparer Données').item.json.civiliteDelegue;\nconst nomDelegue = $('Préparer Données').item.json.nomDelegue;\nconst emailDelegue = $('Préparer Données').item.json.emailDelegue;\nconst emailDestinataire = $('Préparer Données').item.json.emailDestinataire;\nconst signatureExp = $('Préparer Données').item.json.signatureExp;\nconst date = $('Préparer Données').item.json.date;\nconst dateComplete = $('Préparer Données').item.json.dateComplete;\n\n// Récupérer le fichier Word binaire depuis le node précédent\nconst inputData = items[0];\n\nif (!inputData.binary || !inputData.binary.data) {\n  throw new Error('Aucun fichier Word trouvé dans les données binaires !');\n}\n\n// Utiliser les helpers n8n pour récupérer le buffer binaire\nconst binaryBuffer = await this.helpers.getBinaryDataBuffer(0, 'data');\n\n// Convertir le buffer en base64\nconst wordBase64 = binaryBuffer.toString('base64');\n\nconsole.log('Base64 length:', wordBase64.length);\n\n// Créer le HTML de prévisualisation avec le contenu du document Word\nconst html = `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset='utf-8'>\n  <script src='https://cdn.tailwindcss.com'></script>\n</head>\n<body class='p-6 bg-gray-50'>\n  <h2 class='text-xl font-semibold mb-4'>📄 Prévisualisation du document Word</h2>\n  <div class='bg-white p-6 rounded shadow mb-4 border-2 border-gray-200' style='font-family: Calibri, Arial, sans-serif; line-height: 1.8; white-space: pre-wrap;'>\n    ${objet ? `<div class='text-sm text-gray-500 mb-4'>OBJET: <strong class='text-blue-700'>${objet}</strong></div>` : ''}\n    <div class='mb-4'>Paris, le <strong class='text-blue-700'>${date}</strong></div>\n    <div class='mb-4'><strong class='text-blue-700'>${civiliteDestinataire}${nomDestinataire ? ' ' + nomDestinataire : ''}</strong></div>\n    ${statutDestinataire ? `<div class='mb-4'>${statutDestinataire}</div>` : ''}\n    ${batiment ? `<div class='mb-4'>${batiment}</div>` : ''}\n    ${adresse ? `<div class='mb-4'>${adresse}</div>` : ''}\n    ${cpVille ? `<div class='mb-4'>${cpVille}</div>` : ''}\n    ${numeroCourrier ? `<div class='mb-4'>Numéro: <strong class='text-blue-700'>${numeroCourrier}</strong></div>` : ''}\n    ${civiliteDelegue || nomDelegue ? `<div class='mb-4'>Nommé: <strong class='text-blue-700'>${civiliteDelegue || ''} ${nomDelegue || ''}</strong>${emailDelegue ? ` - ${emailDelegue}` : ''}</div>` : ''}\n    ${civiliteRemplace || nomRemplace ? `<div class='mb-4'>Remplaçant: <strong class='text-blue-700'>${civiliteRemplace || ''} ${nomRemplace || ''}</strong></div>` : ''}\n    ${codeDocument ? `<div class='mb-4'>Entreprise: <strong class='text-blue-700'>${codeDocument}</strong></div>` : ''}\n    <div class='mb-4'>Je reste à votre disposition pour toute information complémentaire.</div>\n    <div class='mb-4'>Cordialement,</div>\n    ${signatureExp ? `<div class='mb-4'><strong class='text-blue-700'>${signatureExp}</strong></div>` : ''}\n    <hr class='my-4'>\n    <div class='text-xs text-gray-400'>Email destinataire : <strong class='text-blue-700'>${emailDestinataire}</strong></div>\n  </div>\n  <div class='bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4'>\n    <p class='text-sm'><strong>ℹ️ Les parties en <span class='text-blue-700 font-bold'>bleu gras</span> sont les données insérées dans le template Word</strong></p>\n  </div>\n  <form id='form' class='flex flex-col gap-4'>\n    <input type='hidden' name='civiliteDestinataire' value='${civiliteDestinataire}'>\n    <input type='hidden' name='nomDestinataire' value='${nomDestinataire || ''}'>\n    <input type='hidden' name='statutDestinataire' value='${statutDestinataire || ''}'>\n    <input type='hidden' name='batiment' value='${batiment || ''}'>\n    <input type='hidden' name='adresse' value='${adresse || ''}'>\n    <input type='hidden' name='cpVille' value='${cpVille || ''}'>\n    <input type='hidden' name='objet' value='${objet || ''}'>\n    <input type='hidden' name='numeroCourrier' value='${numeroCourrier || ''}'>\n    <input type='hidden' name='civiliteDelegue' value='${civiliteDelegue || ''}'>\n    <input type='hidden' name='nomDelegue' value='${nomDelegue || ''}'>\n    <input type='hidden' name='emailDelegue' value='${emailDelegue || ''}'>\n    <input type='hidden' name='civiliteRemplace' value='${civiliteRemplace || ''}'>\n    <input type='hidden' name='nomRemplace' value='${nomRemplace || ''}'>\n    <input type='hidden' name='codeDocument' value='${codeDocument || ''}'>\n    <input type='hidden' name='emailDestinataire' value='${emailDestinataire}'>\n    <input type='hidden' name='signatureExp' value='${signatureExp}'>\n    <input type='hidden' name='wordfile' value='${wordBase64}'>\n    <div class='flex gap-2'>\n      <button type='submit' class='bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700'>\n        ✅ Valider et envoyer par email\n      </button>\n      <button type='button' onclick='window.close()' class='bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600'>\n        ❌ Annuler\n      </button>\n    </div>\n  </form>\n  <script>\n    document.querySelector('#form').onsubmit = async e => {\n      e.preventDefault();\n      const btn = e.target.querySelector('button[type=submit]');\n      btn.disabled = true;\n      btn.textContent = '⏳ Envoi en cours...';\n      try {\n        const formData = new FormData(e.target);\n        const data = Object.fromEntries(formData);\n        console.log('Envoi données:', { objet: data.objet, destinataires: data.emailDestinataire, wordfileLength: data.wordfile?.length });\n        await fetch('http://localhost:5678/webhook/validate-doc', {\n          method: 'POST',\n          headers: {'Content-Type': 'application/json'},\n          body: JSON.stringify(data)\n        });\n        alert('✅ Document envoyé avec succès!');\n        window.close();\n      } catch(err) {\n        alert('❌ Erreur: ' + err.message);\n        btn.disabled = false;\n        btn.textContent = '✅ Valider et envoyer par email';\n      }\n    };\n  </script>\n</body>\n</html>`;\n\nreturn { json: { html } };"
       },
       "id": "620cece8-96f0-4ee6-b52f-6c42ea381647",
       "name": "Convertir en HTML (Preview)",
@@ -290,7 +284,7 @@
     },
     {
       "parameters": {
-        "functionCode": "// Logger ce qui arrive au webhook\nconsole.log('=== VALIDATION WEBHOOK REÇU ===');\nconsole.log('Body:', $json.body);\n\n// Récupérer toutes les variables\nconst civilite = $json.body?.civilite || $json.civilite;\nconst nom_destinataire = $json.body?.nom_destinataire || $json.nom_destinataire;\nconst statut = $json.body?.statut || $json.statut;\nconst batiment = $json.body?.batiment || $json.batiment;\nconst adresse = $json.body?.adresse || $json.adresse;\nconst cp = $json.body?.cp || $json.cp;\nconst objet = $json.body?.objet || $json.objet;\nconst texte_ia = $json.body?.texte_ia || $json.texte_ia;\nconst number = $json.body?.number || $json.number;\nconst civilite_replace = $json.body?.civilite_replace || $json.civilite_replace;\nconst nom_replace = $json.body?.nom_replace || $json.nom_replace;\nconst email_replace = $json.body?.email_replace || $json.email_replace;\nconst entreprise = $json.body?.entreprise || $json.entreprise;\nconst civilite_nomme = $json.body?.civilite_nomme || $json.civilite_nomme;\nconst nom_nomme = $json.body?.nom_nomme || $json.nom_nomme;\nconst email_nomme = $json.body?.email_nomme || $json.email_nomme;\nconst email_destinataire = $json.body?.email_destinataire || $json.email_destinataire;\nconst nom_exp = $json.body?.nom_exp || $json.nom_exp;\nconst statut_exp = $json.body?.statut_exp || $json.statut_exp;\nconst wordBase64 = $json.body?.wordfile || $json.wordfile;\n\nconsole.log('Variables reçues:', { objet, nom_destinataire, email_destinataire });\n\nif (!email_destinataire) {\n  throw new Error('Aucun destinataire fourni !');\n}\n\nif (!wordBase64) {\n  throw new Error('Fichier Word manquant !');\n}\n\n// Formater les destinataires\nconst emailList = email_destinataire.split(',').map(email => email.trim()).filter(email => email.length > 0).join(', ');\n\n// Retourner les données avec le binaire Word\nreturn {\n  json: {\n    civilite,\n    nom_destinataire,\n    statut,\n    batiment,\n    adresse,\n    cp,\n    objet,\n    texte_ia,\n    number,\n    civilite_replace,\n    nom_replace,\n    email_replace,\n    entreprise,\n    civilite_nomme,\n    nom_nomme,\n    email_nomme,\n    email_destinataire: emailList,\n    nom_exp,\n    statut_exp\n  },\n  binary: {\n    data: {\n      data: wordBase64,\n      mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',\n      fileName: `Document_${objet}_${Date.now()}.docx`\n    }\n  }\n};"
+        "functionCode": "// Logger ce qui arrive au webhook\nconsole.log('=== VALIDATION WEBHOOK REÇU ===');\nconsole.log('Body:', $json.body);\n\n// Récupérer toutes les variables\nconst civiliteDestinataire = $json.body?.civiliteDestinataire || $json.civiliteDestinataire;\nconst nomDestinataire = $json.body?.nomDestinataire || $json.nomDestinataire;\nconst statutDestinataire = $json.body?.statutDestinataire || $json.statutDestinataire;\nconst batiment = $json.body?.batiment || $json.batiment;\nconst adresse = $json.body?.adresse || $json.adresse;\nconst cpVille = $json.body?.cpVille || $json.cpVille;\nconst objet = $json.body?.objet || $json.objet;\nconst numeroCourrier = $json.body?.numeroCourrier || $json.numeroCourrier;\nconst civiliteRemplace = $json.body?.civiliteRemplace || $json.civiliteRemplace;\nconst nomRemplace = $json.body?.nomRemplace || $json.nomRemplace;\nconst codeDocument = $json.body?.codeDocument || $json.codeDocument;\nconst civiliteDelegue = $json.body?.civiliteDelegue || $json.civiliteDelegue;\nconst nomDelegue = $json.body?.nomDelegue || $json.nomDelegue;\nconst emailDelegue = $json.body?.emailDelegue || $json.emailDelegue;\nconst emailDestinataire = $json.body?.emailDestinataire || $json.emailDestinataire;\nconst signatureExp = $json.body?.signatureExp || $json.signatureExp;\nconst wordBase64 = $json.body?.wordfile || $json.wordfile;\n\nconsole.log('Variables reçues:', { objet, nomDestinataire, emailDestinataire });\n\nif (!emailDestinataire) {\n  throw new Error('Aucun destinataire fourni !');\n}\n\nif (!wordBase64) {\n  throw new Error('Fichier Word manquant !');\n}\n\n// Formater les destinataires\nconst emailList = emailDestinataire.split(',').map(email => email.trim()).filter(email => email.length > 0).join(', ');\n\n// Retourner les données avec le binaire Word\nreturn {\n  json: {\n    civiliteDestinataire,\n    nomDestinataire,\n    statutDestinataire,\n    batiment,\n    adresse,\n    cpVille,\n    objet,\n    numeroCourrier,\n    civiliteRemplace,\n    nomRemplace,\n    codeDocument,\n    civiliteDelegue,\n    nomDelegue,\n    emailDelegue,\n    emailDestinataire: emailList,\n    signatureExp\n  },\n  binary: {\n    data: {\n      data: wordBase64,\n      mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',\n      fileName: `Document_${objet}_${Date.now()}.docx`\n    }\n  }\n};"
       },
       "id": "f5a8011a-d68a-4f41-94bb-26fa42dc983f",
       "name": "Générer Word Final",
@@ -304,9 +298,9 @@
     {
       "parameters": {
         "fromEmail": "contact@fo-metaux.fr",
-        "toEmail": "={{ $json.email_destinataire }}",
+        "toEmail": "={{ $json.emailDestinataire }}",
         "subject": "={{ 'Document généré - ' + $json.objet }}",
-        "text": "={{ 'Bonjour ' + ($json.nom_destinataire || 'Madame, Monsieur') + ',\\n\\nVeuillez trouver ci-joint le document généré.\\n\\nCordialement,\\nFO METAUX' }}",
+        "text": "={{ 'Bonjour ' + ($json.nomDestinataire || 'Madame, Monsieur') + ',\\n\\nVeuillez trouver ci-joint le document généré.\\n\\nCordialement,\\nFO METAUX' }}",
         "attachments": "data",
         "options": {
           "attachmentsPropertyName": "data"

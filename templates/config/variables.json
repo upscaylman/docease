@@ -1,25 +1,25 @@
 {
   "variables_communes": {
-    "entreprise": {
-      "label": "Entreprise",
+    "codeDocument": {
+      "label": "Code Document / Entreprise",
       "type": "text",
       "required": true,
       "placeholder": "Ex: ACME Corp"
     },
-    "civilite": {
-      "label": "Civilité",
+    "civiliteDestinataire": {
+      "label": "Civilité Destinataire",
       "type": "select",
       "options": ["Monsieur", "Madame", "Monsieur et Madame"],
       "required": true
     },
-    "nom_destinataire": {
-      "label": "Nom du destinataire",
+    "nomDestinataire": {
+      "label": "Nom Destinataire",
       "type": "text",
       "required": false,
-      "description": "Nom complet"
+      "placeholder": "Ex: Dupont"
     },
-    "statut": {
-      "label": "Statut",
+    "statutDestinataire": {
+      "label": "Statut Destinataire",
       "type": "text",
       "required": false,
       "placeholder": "Ex: Président, Directeur..."
@@ -34,118 +34,91 @@
       "type": "text",
       "required": false
     },
-    "cp": {
+    "cpVille": {
       "label": "Code postal + Ville",
       "type": "text",
       "required": false,
       "placeholder": "Ex: 75001 Paris"
     },
-    "email_destinataire": {
+    "emailDestinataire": {
       "label": "Email(s) destinataire(s)",
       "type": "email",
       "required": true,
       "description": "Plusieurs emails séparés par virgule"
     },
-    "nom_exp": {
-      "label": "Nom expéditeur",
+    "signatureExp": {
+      "label": "Signature Expéditeur",
       "type": "text",
-      "required": false
-    },
-    "date": {
-      "label": "Date (format court)",
-      "type": "auto",
-      "format": "dd/MM/yyyy",
-      "description": "Généré automatiquement"
-    },
-    "date_complete": {
-      "label": "Date (format long)",
-      "type": "auto",
-      "format": "cccc d MMMM yyyy",
-      "locale": "fr",
-      "description": "Généré automatiquement (ex: vendredi 31 octobre 2025)"
-    },
-    "heure": {
-      "label": "Heure",
-      "type": "auto",
-      "format": "HH:mm",
-      "description": "Généré automatiquement"
-    },
-    "genre": {
-      "label": "Genre (la/le)",
-      "type": "auto",
-      "condition": "civilite === 'Madame' ? 'la' : 'le'",
-      "description": "Généré automatiquement selon la civilité"
+      "required": false,
+      "placeholder": "Ex: FO METAUX"
     }
   },
   "templates": {
-    "securite": {
-      "nom": "Sécurité et Désignation",
+    "designation": {
+      "nom": "Lettre de Désignation",
       "fichier": "template_principal.docx",
-      "description": "Sécurité désignation",
+      "description": "Désignation de délégué syndical",
       "variables_specifiques": {
-        "texte_ia": {
-          "label": "Texte (optionnel IA)",
-          "type": "textarea",
-          "required": false,
-          "rows": 5,
-          "description": "Saisissez le texte ou laissez l'IA le générer"
-        },
-        "number": {
-          "label": "Numéro",
+        "numeroCourrier": {
+          "label": "Numéro de Courrier",
           "type": "text",
-          "required": false,
+          "required": true,
           "placeholder": "Ex: 2025-001"
         },
-        "civilite_nomme": {
-          "label": "Civilité (nommé)",
+        "civiliteDelegue": {
+          "label": "Civilité Délégué",
           "type": "select",
           "options": ["Monsieur", "Madame"],
-          "required": false,
-          "description": "Civilité de la personne nommée"
+          "required": true
         },
-        "nom_nomme": {
-          "label": "Nom (nommé)",
+        "nomDelegue": {
+          "label": "Nom Délégué",
           "type": "text",
-          "required": false,
-          "description": "Nom de la personne nommée"
+          "required": true
         },
-        "email_nomme": {
-          "label": "Email (nommé)",
+        "emailDelegue": {
+          "label": "Email Délégué",
           "type": "email",
-          "required": false,
-          "description": "Email de la personne nommée"
+          "required": false
         },
-        "civilite_replace": {
-          "label": "Civilité (remplaçant)",
+        "civiliteRemplace": {
+          "label": "Civilité Remplaçant",
           "type": "select",
           "options": ["Monsieur", "Madame"],
-          "required": false,
-          "description": "Si différent de la civilité principale"
+          "required": false
         },
-        "nom_replace": {
-          "label": "Nom (remplaçant)",
+        "nomRemplace": {
+          "label": "Nom Remplaçant",
           "type": "text",
-          "required": false,
-          "description": "Si différent du nom principal"
+          "required": false
         }
       }
     },
-    "designation": {
-      "nom": "Mandat Négociation",
-      "fichier": "template_designation.docx",
+    "negociation": {
+      "nom": "Mandat de Négociation",
+      "fichier": "template_principal.docx",
       "description": "Mandat de négociation collective",
       "variables_specifiques": {
         "objet": {
-          "label": "Objet du mandat",
+          "label": "Objet du Mandat",
           "type": "text",
-          "required": true,
-          "placeholder": "Ex: Négociation collective"
+          "required": true
         },
-        "texte_ia": {
-          "label": "Texte (optionnel IA)",
-          "type": "textarea",
-          "required": false,
-          "rows": 5
+        "civiliteDelegue": {
+          "label": "Civilité Mandataire",
+          "type": "select",
+          "options": ["Monsieur", "Madame"],
+          "required": true
+        },
+        "nomDelegue": {
+          "label": "Nom Mandataire",
+          "type": "text",
+          "required": true
+        },
+        "emailDelegue": {
+          "label": "Email Mandataire",
+          "type": "email",
+          "required": false
         }
       }
     }

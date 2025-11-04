@@ -112,7 +112,7 @@
       coordSection.appendChild(coordLabel)
 
       // Ordre des champs pour la section Coordonnées
-      const coordFields = ['entreprise', 'civilite', 'statut', 'batiment', 'adresse', 'cp']
+      const coordFields = ['codeDocument', 'civiliteDestinataire', 'nomDestinataire', 'statutDestinataire', 'batiment', 'adresse', 'cpVille']
       
       coordFields.forEach(key => {
         const variable = variablesConfig.variables_communes[key]
@@ -152,8 +152,8 @@
       otherLabel.textContent = '👤 Données de l\'expéditeur'
       otherSection.appendChild(otherLabel)
       
-      // Ajouter uniquement nom_exp
-      const expediteurFields = ['nom_exp']
+      // Ajouter uniquement signatureExp
+      const expediteurFields = ['signatureExp']
       
       expediteurFields.forEach(key => {
         const variable = variablesConfig.variables_communes[key]
@@ -307,20 +307,19 @@
       }
 
       const testData = {
-        entreprise: ['ACME Corp', 'TechCo', 'Industries SA', 'Solutions SARL'][Math.floor(Math.random() * 4)],
-        civilite: ['Monsieur', 'Madame'][Math.floor(Math.random() * 2)],
-        statut: ['Président', 'Directeur', 'Responsable RH', 'Chef de service'][Math.floor(Math.random() * 4)],
+        codeDocument: ['ACME Corp', 'TechCo', 'Industries SA', 'Solutions SARL'][Math.floor(Math.random() * 4)],
+        civiliteDestinataire: ['Monsieur', 'Madame'][Math.floor(Math.random() * 2)],
+        statutDestinataire: ['Président', 'Directeur', 'Responsable RH', 'Chef de service'][Math.floor(Math.random() * 4)],
         batiment: ['Bâtiment A', 'Bâtiment B', 'Tour Nord', 'Annexe'][Math.floor(Math.random() * 4)],
         adresse: ['123 Rue de la Paix', '45 Avenue des Champs', '78 Boulevard Saint-Michel', '12 Place de la République'][Math.floor(Math.random() * 4)],
-        cp: ['75001 Paris', '69002 Lyon', '13001 Marseille', '44000 Nantes'][Math.floor(Math.random() * 4)],
-        number: ['2025-' + String(Math.floor(Math.random() * 100) + 1).padStart(3, '0')],
-        civilite_replace: ['Monsieur', 'Madame'][Math.floor(Math.random() * 2)],
-        nom_replace: ['Durand', 'Petit', 'Robert', 'Moreau'][Math.floor(Math.random() * 4)],
-        civilite_nomme: ['Monsieur', 'Madame'][Math.floor(Math.random() * 2)],
-        nom_nomme: ['Lefebvre', 'Girard', 'Rousseau', 'Leroy'][Math.floor(Math.random() * 4)],
-        email_nomme: ['lefebvre@example.com', 'girard@example.com', 'rousseau@example.com'][Math.floor(Math.random() * 3)],
-        nom_exp: ['FO METAUX', 'Force Ouvrière', 'Syndicat FO'][Math.floor(Math.random() * 3)],
-        texte_ia: 'Ceci est un texte de test généré automatiquement pour la démonstration.',
+        cpVille: ['75001 Paris', '69002 Lyon', '13001 Marseille', '44000 Nantes'][Math.floor(Math.random() * 4)],
+        numeroCourrier: ['2025-' + String(Math.floor(Math.random() * 100) + 1).padStart(3, '0')],
+        civiliteRemplace: ['Monsieur', 'Madame'][Math.floor(Math.random() * 2)],
+        nomRemplace: ['Durand', 'Petit', 'Robert', 'Moreau'][Math.floor(Math.random() * 4)],
+        civiliteDelegue: ['Monsieur', 'Madame'][Math.floor(Math.random() * 2)],
+        nomDelegue: ['Lefebvre', 'Girard', 'Rousseau', 'Leroy'][Math.floor(Math.random() * 4)],
+        emailDelegue: ['lefebvre@example.com', 'girard@example.com', 'rousseau@example.com'][Math.floor(Math.random() * 3)],
+        signatureExp: ['FO METAUX', 'Force Ouvrière', 'Syndicat FO'][Math.floor(Math.random() * 3)],
         emails: ['epheandrill@gmail.com', 'bouvier.jul@gmail.com']
       }
       
@@ -343,8 +342,8 @@
 
       // Collecter toutes les données des champs dynamiques
       const data = {
-        template: templateSelect.value,
-        destinataires: document.getElementById("destinataires").value
+        templateType: templateSelect.value,
+        emailDestinataire: document.getElementById("destinataires").value
       }
 
       // Ajouter toutes les valeurs des champs générés dynamiquement
@@ -352,6 +351,8 @@
       allInputs.forEach(input => {
         data[input.id] = input.value || ''
       })
+
+      console.log('📤 Données envoyées:', data)
 
       try {
         const res = await fetch("http://localhost:3000/webhook/formulaire-doc", {
@@ -362,7 +363,7 @@
 
         if (!res.ok) {
           const errorText = await res.text()
-          console.error(`Erreur ${res.status}:`, errorText)
+          console.error(`❌ Erreur ${res.status}:`, errorText)
           
           let errorMessage = `Erreur ${res.status}: `
           if (res.status === 404) {
@@ -382,7 +383,9 @@
           return
         }
 
+        console.log('✅ Réponse reçue, status:', res.status)
         const result = await res.json()
+        console.log('📥 Résultat:', result)
         const previewWindow = window.open('', '_blank', 'width=900,height=700')
         previewWindow.document.write(result.html)
         previewWindow.document.close()
