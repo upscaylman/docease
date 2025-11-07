@@ -33,3 +33,51 @@ desktop.ini
 tmp/
 temp/
 *.tmp
+
+# Continue session files
+.continue/
+
+# Documentation temporaire et debug
+*_DYNAMIQUE.md
+CORRECTIONS_*.md
+DIAGNOSTIC_*.md
+GUIDE_*.md
+INSTRUCTIONS_*.md
+MCP_*.md
+MIGRATION_*.md
+QUICK_*.md
+RESUME_*.md
+SOLUTION_*.md
+WORKFLOW_*.md
+
+# Scripts de debug et test temporaires
+activate-workflow.ps1
+check-executions.ps1
+debug-node.ps1
+fix-*.ps1
+get-*.ps1
+test-*.ps1
+
+# Fichiers JSON temporaires
+exec-*.json
+exec_*.json
+execution-*.json
+execution_*.json
+last-execution.json
+payload_*.json
+temp_*.json
+workflow-current.json
+workflow_*.json
+workflows/gpt_generator*.json
+
+# Fichiers temporaires de formulaire
+templates/form/form_temp.html
+templates/form/send-button-fix.js
+
+# Templates Word temporaires
+templates/samples/
+templates/word/template_designation.docx
+templates/word/template_negociation.docx
+
+# MCP server (si c'est du dev local)
+mcp-server/

@@ -63,6 +63,82 @@ Sauvegarde tous les workflows et données n8n.
 backups/n8n_backup_YYYYMMDD_HHMMSS.tar.gz
 ```
 
+---
+
+## 🎨 Gestion des Templates (NOUVEAU)
+
+### add-new-template.ps1
+🆕 Assistant interactif pour ajouter un nouveau template facilement.
+
+**Usage :**
+```powershell
+.\scripts\add-new-template.ps1
+```
+
+**Fonctionnalités :**
+- Guide pas à pas pour créer un template
+- Génère automatiquement la configuration JSON
+- Valide les fichiers Word
+- Ajoute les variables spécifiques
+
+**Exemple :**
+```
+Clé: convocation
+Nom: Lettre de Convocation
+Fichier: template_convocation.docx
+Variables: dateReunion, lieuReunion...
+```
+
+### backup-workflow-html.ps1
+💾 Sauvegarde les templates HTML du workflow avant réimport.
+
+**Usage :**
+```powershell
+.\scripts\backup-workflow-html.ps1
+```
+
+**Fonctionnalités :**
+- Récupère le workflow via l'API n8n
+- Sauvegarde tous les nodes avec du HTML
+- Crée un backup horodaté
+- Sauvegarde aussi le workflow complet
+
+**Localisation :**
+```
+templates/backup/YYYYMMDD_HHMMSS_NodeName.js
+templates/backup/YYYYMMDD_HHMMSS_workflow_complete.json
+```
+
+### restore-workflow-html.ps1
+🔄 Restaure automatiquement les templates HTML sauvegardés.
+
+**Usage :**
+```powershell
+.\scripts\restore-workflow-html.ps1
+```
+
+**Fonctionnalités :**
+- Liste les backups disponibles
+- Restaure automatiquement les nodes
+- Met à jour le workflow via l'API
+- Gère les nodes renommés
+
+### test-dynamic-templates.ps1
+🧪 Teste le système de templates dynamiques complet.
+
+**Usage :**
+```powershell
+.\scripts\test-dynamic-templates.ps1
+```
+
+**Tests effectués :**
+- ✅ Configuration variables.json valide
+- ✅ Fichiers Word existent
+- ✅ Workflow n8n est dynamique
+- ✅ Connectivité n8n et formulaire
+- ✅ Cohérence des variables
+- ✅ Scripts utilitaires présents
+
 ## 🪟 Utilisation sur Windows
 
 Les scripts `.sh` sont conçus pour Linux/macOS. Sur Windows, vous avez plusieurs options :
