@@ -1,48 +1,241 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Génération de document</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    body {
+      background: linear-gradient(-45deg, #6750A4, #ff0055, #5E35B1, #4686ff);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+    }
+
+    /* Material Design 3 - Elevation */
+    .elevation-1 {
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+    }
+
+    .elevation-2 {
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+    }
+
+    .elevation-3 {
+      box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    /* Material Design 3 - Inputs */
+    .md3-input {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid #79747E;
+      border-radius: 12px;
+    }
+
+    .md3-input:focus {
+      outline: none;
+      border: 2px solid #6750A4;
+      border-radius: 12px;
+    }
+
+    .md3-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%236750A4' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+    }
+
+    /* Material Design 3 - Buttons */
+    .md3-button {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 20px;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+      text-transform: none;
+    }
+
+    .md3-button:hover {
+      box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .md3-button:active {
+      transform: scale(0.98);
+    }
+
+    /* Material Design 3 - Cards */
+    .md3-card {
+      border-radius: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .md3-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Email chips */
+    .email-chip {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .email-chip:hover {
+      background-color: #E8DEF8;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-start min-h-screen py-10">
+<body class="bg-gray-100 flex flex-col items-center justify-start min-h-screen py-8 px-4">
 
-  <form id="docForm" class="bg-white p-6 rounded-2xl shadow-md w-full max-w-md space-y-4">
-    <h2 class="text-2xl font-bold text-center">Génération de document</h2>
-    
-    <button type="button" id="fillTestData" class="w-full py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 text-sm">
-      🎲 Remplir avec données de test
-    </button>
+  <form id="docForm" class="bg-white p-8 md3-card elevation-3 w-full max-w-7xl space-y-6">
+    <!-- Header -->
+    <div class="text-center mb-6">
+      <h1 class="text-4xl font-bold text-[#1C1B1F] mb-2">Génération de document</h1>
+      <p class="text-[#49454F] text-lg">Créez vos documents professionnels en quelques clics</p>
+    </div>
 
-    <!-- Sélecteur de template (toujours visible) -->
-    <select id="template" class="w-full p-2 border rounded-lg" required>
-      <option value="">📄 Choisir un type de document...</option>
-    </select>
+    <!-- Actions rapides -->
+    <div class="flex gap-3 justify-center mb-6">
+      <button type="button" id="fillTestData" class="md3-button px-6 py-2.5 bg-[#E8DEF8] text-[#6750A4] hover:bg-[#D0BCFF] elevation-1 flex items-center gap-2">
+        <span class="material-icons text-xl">casino</span>
+        Remplir avec données de test
+      </button>
+    </div>
 
-    <!-- Champs dynamiques générés depuis variables.json -->
-    <div id="dynamicFields" class="space-y-4"></div>
+    <!-- Sélecteur de template -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium text-[#49454F] mb-2 flex items-center gap-2">
+        <span class="material-icons text-[#6750A4]">description</span>
+        Type de document
+      </label>
+      <select id="template" class="md3-input md3-select w-full p-3.5 text-base" required>
+        <option value="">Choisir un type de document...</option>
+      </select>
+    </div>
 
-    <!-- Destinataires (toujours visible) -->
+    <!-- Champs dynamiques en 3 colonnes -->
+    <div id="dynamicFields" class="space-y-6"></div>
+
+    <!-- Destinataires -->
     <div class="w-full">
-      <label class="block text-sm font-medium text-gray-700 mb-1">Destinataires</label>
-      <div id="emailContainer" class="w-full p-2 border rounded-lg bg-white flex flex-wrap gap-2 items-center min-h-[42px] cursor-text">
-        <input id="emailInput" type="text" placeholder="Tapez une adresse email et appuyez sur virgule ou espace..." class="flex-1 outline-none min-w-[200px]">
+      <label class="block text-sm font-medium text-[#49454F] mb-2 flex items-center gap-2">
+        <span class="material-icons text-[#6750A4]">email</span>
+        Destinataires
+      </label>
+      <div id="emailContainer" class="md3-input w-full p-3 bg-white flex flex-wrap gap-2 items-center min-h-[52px] cursor-text">
+        <input id="emailInput" type="text" placeholder="Tapez une adresse email et appuyez sur virgule ou espace..." class="flex-1 outline-none min-w-[250px] text-base">
       </div>
       <input id="destinataires" type="hidden" required>
     </div>
 
-    <button type="submit" class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-      Générer le document
-    </button>
+    <!-- Bouton d'action -->
+    <div class="flex gap-3">
+      <button type="button" id="previewBtn" disabled class="md3-button flex-1 py-3.5 bg-[#E8DEF8] text-[#6750A4] hover:bg-[#D0BCFF] elevation-1 flex items-center justify-center gap-2 text-base disabled:opacity-50 disabled:cursor-not-allowed transition-opacity">
+        <span class="material-icons">visibility</span>
+        Prévisualiser
+      </button>
+    </div>
 
-    <p id="message" class="text-center text-gray-700"></p>
+    <p id="message" class="text-center text-[#49454F] text-sm"></p>
   </form>
 
-  <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="bg-white rounded-2xl shadow-lg w-full max-w-4xl max-h-[90vh] overflow-auto p-6 relative">
-      <button id="closeModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
-      <div id="previewContent"></div>
+  <!-- Modal de prévisualisation Material Design 3 -->
+  <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50 backdrop-blur-sm">
+    <div class="bg-white md3-card elevation-3 w-full max-w-6xl max-h-[90vh] overflow-hidden relative m-4 flex flex-col">
+      <!-- Header du modal -->
+      <div class="flex items-center justify-between p-6 border-b border-gray-200">
+        <div class="flex items-center gap-3">
+          <span class="material-icons text-[#6750A4] text-3xl">preview</span>
+          <div>
+            <h2 class="text-2xl font-bold text-[#1C1B1F]">Prévisualisation du document</h2>
+            <p class="text-sm text-[#49454F]" id="previewSubtitle">Vérifiez les informations avant génération</p>
+          </div>
+        </div>
+        <button id="closeModal" class="text-[#49454F] hover:text-[#1C1B1F] transition-colors md3-button p-2 rounded-full hover:bg-gray-100">
+          <span class="material-icons text-3xl">close</span>
+        </button>
+      </div>
+
+      <!-- Contenu scrollable -->
+      <div class="flex-1 overflow-auto p-6">
+        <div id="previewContent"></div>
+      </div>
+
+      <!-- Footer avec actions -->
+      <div class="flex items-center justify-between gap-3 p-6 border-t border-gray-200 bg-gray-50">
+        <button id="closeModalBtn" class="md3-button px-6 py-2.5 bg-gray-200 text-[#1C1B1F] hover:bg-gray-300 elevation-1 flex items-center gap-2">
+          <span class="material-icons">close</span>
+          Fermer
+        </button>
+        <div class="flex gap-3">
+          <button id="downloadWordBtn" class="md3-button px-6 py-2.5 bg-[#E8DEF8] text-[#6750A4] hover:bg-[#D0BCFF] elevation-1 flex items-center gap-2" disabled>
+            <span class="material-icons">download</span>
+            Télécharger le document
+          </button>
+          <button id="sendEmailBtn" class="md3-button px-6 py-2.5 bg-[#6750A4] text-white hover:bg-[#7E57C2] elevation-2 flex items-center gap-2">
+            <span class="material-icons">send</span>
+            Générer et envoyer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal pour afficher le document Word -->
+  <div id="wordViewerModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-[60] backdrop-blur-sm">
+    <div class="bg-white md3-card elevation-3 w-full max-w-7xl h-[95vh] overflow-hidden relative m-4 flex flex-col">
+      <!-- Header du modal Word -->
+      <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-[#6750A4]">
+        <div class="flex items-center gap-3">
+          <span class="material-icons text-white text-2xl">description</span>
+          <div>
+            <h2 class="text-xl font-bold text-white">Aperçu du document Word</h2>
+            <p class="text-sm text-white opacity-90" id="wordViewerSubtitle">Génération en cours...</p>
+          </div>
+        </div>
+        <button id="closeWordViewer" class="text-white hover:bg-white hover:bg-opacity-20 transition-colors md3-button p-2 rounded-full">
+          <span class="material-icons text-2xl">close</span>
+        </button>
+      </div>
+
+      <!-- Contenu iframe -->
+      <div class="flex-1 overflow-hidden relative bg-gray-100">
+        <div id="wordViewerLoading" class="absolute inset-0 flex items-center justify-center bg-white z-10">
+          <div class="text-center">
+            <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[#6750A4] border-t-transparent mb-4"></div>
+            <p class="text-[#49454F] text-lg font-medium">Génération du document Word...</p>
+            <p class="text-[#49454F] text-sm mt-2">Cela peut prendre quelques secondes</p>
+          </div>
+        </div>
+        <iframe id="wordViewerFrame" class="w-full h-full border-0" style="display:none;"></iframe>
+      </div>
+
+      <!-- Footer avec actions -->
+      <div class="flex items-center justify-between gap-3 p-4 border-t border-gray-200 bg-gray-50">
+        <div class="text-sm text-[#49454F]">
+          <span class="material-icons text-base align-middle mr-1">info</span>
+          Le document est généré par n8n et affiché via Google Docs Viewer
+        </div>
+        <div class="flex gap-3">
+          <button id="downloadWordBtn" class="md3-button px-6 py-2.5 bg-[#E8DEF8] text-[#6750A4] hover:bg-[#D0BCFF] elevation-1 flex items-center gap-2" disabled>
+            <span class="material-icons">download</span>
+            Télécharger
+          </button>
+          <button id="closeWordViewerBtn" class="md3-button px-6 py-2.5 bg-gray-200 text-[#1C1B1F] hover:bg-gray-300 elevation-1 flex items-center gap-2">
+            <span class="material-icons">close</span>
+            Fermer
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -95,126 +288,205 @@
     // Générer les champs dynamiquement
     function generateFields(templateKey) {
       if (!variablesConfig) return
-      
+
       dynamicFields.innerHTML = ''
       currentTemplate = templateKey
-      
+
       const template = variablesConfig.templates[templateKey]
       if (!template) return
 
-      // === SECTION COORDONNÉES ===
+      // === CONTENEUR 3 COLONNES ===
+      const gridContainer = document.createElement('div')
+      gridContainer.className = 'grid grid-cols-1 md:grid-cols-3 gap-6'
+
+      // === COLONNE 1: COORDONNÉES (Bleu) ===
       const coordSection = document.createElement('div')
-      coordSection.className = 'space-y-3 p-4 border-2 border-blue-200 rounded-lg bg-blue-50'
-      
+      coordSection.className = 'md3-card elevation-1 p-5 bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-500'
+
       const coordLabel = document.createElement('h3')
-      coordLabel.className = 'text-sm font-semibold text-blue-900 mb-3'
-      coordLabel.textContent = '📋 Coordonnées'
+      coordLabel.className = 'text-base font-semibold text-blue-900 mb-4 flex items-center gap-2'
+      coordLabel.innerHTML = '<span class="material-icons">location_on</span> Coordonnées'
       coordSection.appendChild(coordLabel)
 
+      const coordFieldsContainer = document.createElement('div')
+      coordFieldsContainer.className = 'space-y-4'
+
       // Ordre des champs pour la section Coordonnées
-      const coordFields = ['codeDocument', 'civiliteDestinataire', 'nomDestinataire', 'statutDestinataire', 'batiment', 'adresse', 'cpVille']
-      
+      const coordFields = ['entreprise', 'codeDocument', 'civiliteDestinataire', 'nomDestinataire', 'statutDestinataire', 'batiment', 'adresse', 'cpVille']
+
       coordFields.forEach(key => {
         const variable = variablesConfig.variables_communes[key]
         if (variable && variable.type !== 'auto') {
           const field = createField(key, variable)
-          if (field) coordSection.appendChild(field)
+          if (field) coordFieldsContainer.appendChild(field)
         }
       })
-      
-      dynamicFields.appendChild(coordSection)
 
-      // === VARIABLES SPÉCIFIQUES AU TEMPLATE ===
+      coordSection.appendChild(coordFieldsContainer)
+      gridContainer.appendChild(coordSection)
+
+      // === COLONNE 2: VARIABLES SPÉCIFIQUES (Vert) ===
+      const templateSection = document.createElement('div')
+      templateSection.className = 'md3-card elevation-1 p-5 bg-gradient-to-br from-green-50 to-green-100 border-l-4 border-green-500'
+
+      const templateLabel = document.createElement('h3')
+      templateLabel.className = 'text-base font-semibold text-green-900 mb-4 flex items-center gap-2'
+      templateLabel.innerHTML = '<span class="material-icons">edit_document</span> Contenu de la demande'
+      templateSection.appendChild(templateLabel)
+
+      const templateFieldsContainer = document.createElement('div')
+      templateFieldsContainer.className = 'space-y-4'
+
       if (template.variables_specifiques) {
-        const templateSection = document.createElement('div')
-        templateSection.className = 'space-y-3 p-4 border-2 border-green-200 rounded-lg bg-green-50 mt-4'
-        
-        const templateLabel = document.createElement('h3')
-        templateLabel.className = 'text-sm font-semibold text-green-900 mb-3'
-        templateLabel.textContent = '📝 Contenu de la demande'
-        templateSection.appendChild(templateLabel)
-        
         Object.keys(template.variables_specifiques).forEach(key => {
           const variable = template.variables_specifiques[key]
           const field = createField(key, variable)
-          if (field) templateSection.appendChild(field)
+          if (field) templateFieldsContainer.appendChild(field)
         })
-        
-        dynamicFields.appendChild(templateSection)
       }
 
-      // === BLOC DONNÉES DE L'EXPÉDITEUR ===
+      templateSection.appendChild(templateFieldsContainer)
+      gridContainer.appendChild(templateSection)
+
+      // === COLONNE 3: EXPÉDITEUR (Violet) ===
       const otherSection = document.createElement('div')
-      otherSection.className = 'space-y-3 p-4 border-2 border-purple-200 rounded-lg bg-purple-50 mt-4'
-      
+      otherSection.className = 'md3-card elevation-1 p-5 bg-gradient-to-br from-purple-50 to-purple-100 border-l-4 border-purple-500'
+
       const otherLabel = document.createElement('h3')
-      otherLabel.className = 'text-sm font-semibold text-purple-900 mb-3'
-      otherLabel.textContent = '👤 Données de l\'expéditeur'
+      otherLabel.className = 'text-base font-semibold text-purple-900 mb-4 flex items-center gap-2'
+      otherLabel.innerHTML = '<span class="material-icons">person</span> Expéditeur'
       otherSection.appendChild(otherLabel)
-      
+
+      const otherFieldsContainer = document.createElement('div')
+      otherFieldsContainer.className = 'space-y-4'
+
       // Ajouter uniquement signatureExp
       const expediteurFields = ['signatureExp']
-      
+
       expediteurFields.forEach(key => {
         const variable = variablesConfig.variables_communes[key]
         if (variable && variable.type !== 'auto') {
           const field = createField(key, variable)
-          if (field) otherSection.appendChild(field)
+          if (field) otherFieldsContainer.appendChild(field)
         }
       })
-      
-      if (otherSection.children.length > 1) {
-        dynamicFields.appendChild(otherSection)
-      }
+
+      otherSection.appendChild(otherFieldsContainer)
+      gridContainer.appendChild(otherSection)
+
+      // Ajouter le conteneur 3 colonnes au DOM
+      dynamicFields.appendChild(gridContainer)
     }
 
     // Créer un champ HTML depuis la config
     function createField(key, config) {
+      const fieldContainer = document.createElement('div')
+      fieldContainer.className = 'w-full'
+
+      const label = document.createElement('label')
+      label.htmlFor = key
+      label.className = 'block text-xs font-medium text-gray-700 mb-1.5'
+      label.textContent = config.label
+      fieldContainer.appendChild(label)
+
       if (config.type === 'select') {
         const select = document.createElement('select')
         select.id = key
-        select.className = 'w-full p-2 border rounded-lg'
+        select.className = 'md3-input md3-select w-full p-2.5 text-sm bg-white'
         select.required = config.required || false
-        
+
         const defaultOption = document.createElement('option')
         defaultOption.value = ''
-        defaultOption.textContent = config.label
+        defaultOption.textContent = `Choisir...`
         select.appendChild(defaultOption)
-        
+
         config.options.forEach(opt => {
           const option = document.createElement('option')
           option.value = opt
           option.textContent = opt
           select.appendChild(option)
         })
-        
-        return select
+
+        fieldContainer.appendChild(select)
+        return fieldContainer
       } else if (config.type === 'textarea') {
         const textarea = document.createElement('textarea')
         textarea.id = key
         textarea.placeholder = config.placeholder || config.label
         textarea.rows = config.rows || 3
-        textarea.className = 'w-full p-2 border rounded-lg'
+        textarea.className = 'md3-input w-full p-2.5 text-sm resize-none'
         textarea.required = config.required || false
-        return textarea
+        fieldContainer.appendChild(textarea)
+        return fieldContainer
       } else {
         const input = document.createElement('input')
         input.id = key
         input.type = config.type === 'email' ? 'email' : 'text'
         input.placeholder = config.placeholder || config.label
-        input.className = 'w-full p-2 border rounded-lg'
+        input.className = 'md3-input w-full p-2.5 text-sm'
         input.required = config.required || false
         if (config.default) input.value = config.default
-        return input
+        fieldContainer.appendChild(input)
+        return fieldContainer
       }
+    }
+
+    // Fonction pour vérifier si tous les champs required sont remplis
+    function checkRequiredFields() {
+      const previewBtn = document.getElementById('previewBtn')
+
+      // Vérifier si un template est sélectionné
+      if (!templateSelect.value) {
+        previewBtn.disabled = true
+        return
+      }
+
+      // Vérifier le champ destinataires (email)
+      const destinataires = document.getElementById('destinataires')
+      if (!destinataires || !destinataires.value || destinataires.value.trim() === '') {
+        previewBtn.disabled = true
+        return
+      }
+
+      // Récupérer tous les champs required dans dynamicFields
+      const requiredFields = dynamicFields.querySelectorAll('[required]')
+      let allFilled = true
+
+      requiredFields.forEach(field => {
+        if (!field.value || field.value.trim() === '') {
+          allFilled = false
+        }
+      })
+
+      // Activer/désactiver le bouton
+      previewBtn.disabled = !allFilled
     }
 
     // Détecter changement de template
     templateSelect.addEventListener('change', (e) => {
       if (e.target.value) {
         generateFields(e.target.value)
+
+        // Ajouter des listeners sur tous les champs pour vérifier la validation
+        setTimeout(() => {
+          const allInputs = dynamicFields.querySelectorAll('input, select, textarea')
+          allInputs.forEach(input => {
+            input.addEventListener('input', checkRequiredFields)
+            input.addEventListener('change', checkRequiredFields)
+          })
+
+          // Ajouter listener sur le champ destinataires aussi
+          const destinataires = document.getElementById('destinataires')
+          if (destinataires) {
+            destinataires.addEventListener('input', checkRequiredFields)
+            destinataires.addEventListener('change', checkRequiredFields)
+          }
+
+          checkRequiredFields()
+        }, 100)
       } else {
         dynamicFields.innerHTML = ''
+        document.getElementById('previewBtn').disabled = true
       }
     })
 
@@ -229,10 +501,13 @@
     
     function createChip(email) {
       const chip = document.createElement('div')
-      chip.className = 'flex items-center gap-1 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm'
+      chip.className = 'email-chip flex items-center gap-1.5 bg-[#E8DEF8] text-[#21005D] px-3 py-1.5 rounded-full text-sm font-medium elevation-1'
       chip.innerHTML = `
+        <span class="material-icons text-base">email</span>
         <span>${email}</span>
-        <button type="button" class="ml-1 text-blue-600 hover:text-blue-900 font-bold text-lg leading-none">&times;</button>
+        <button type="button" class="ml-1 text-[#6750A4] hover:text-[#21005D] transition-colors">
+          <span class="material-icons text-base">close</span>
+        </button>
       `
       chip.querySelector('button').addEventListener('click', () => {
         const index = emails.indexOf(email)
@@ -247,6 +522,7 @@
     
     function updateHiddenField() {
       destinatairesHidden.value = emails.join(', ')
+      checkRequiredFields()
     }
     
     function addEmail(email) {
@@ -307,6 +583,7 @@
       }
 
       const testData = {
+        entreprise: ['ACME Corp', 'TechCo Industries', 'Solutions SARL', 'Métallurgie SA'][Math.floor(Math.random() * 4)],
         codeDocument: ['ACME Corp', 'TechCo', 'Industries SA', 'Solutions SARL'][Math.floor(Math.random() * 4)],
         civiliteDestinataire: ['Monsieur', 'Madame'][Math.floor(Math.random() * 2)],
         statutDestinataire: ['Président', 'Directeur', 'Responsable RH', 'Chef de service'][Math.floor(Math.random() * 4)],
@@ -336,68 +613,611 @@
       testData.emails.forEach(email => addEmail(email))
     })
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault()
-      msg.textContent = "Envoi en cours..."
 
-      // Collecter toutes les données des champs dynamiques
+
+    closeModal.addEventListener("click", () => {
+      previewModal.classList.add("hidden")
+    })
+
+    document.getElementById("closeModalBtn").addEventListener("click", () => {
+      previewModal.classList.add("hidden")
+    })
+
+    // Fonction pour générer la prévisualisation locale
+    function generateLocalPreview() {
+      if (!templateSelect.value) {
+        msg.textContent = "⚠️ Veuillez sélectionner un type de document"
+        msg.style.color = "#dc2626"
+        return
+      }
+
+      // Collecter les données du formulaire
       const data = {
         templateType: templateSelect.value,
         emailDestinataire: document.getElementById("destinataires").value
       }
 
-      // Ajouter toutes les valeurs des champs générés dynamiquement
       const allInputs = dynamicFields.querySelectorAll('input, select, textarea')
       allInputs.forEach(input => {
         data[input.id] = input.value || ''
       })
 
-      console.log('📤 Données envoyées:', data)
+      // Générer la date actuelle
+      const now = new Date()
+      const dateStr = now.toLocaleDateString('fr-FR')
+      const dateCompleteStr = now.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
+
+      // Déterminer le type de document
+      const templateConfig = variablesConfig.templates[data.templateType]
+      const typeDocumentLabel = templateConfig ? templateConfig.nom : 'Document'
+
+      // Générer le HTML de prévisualisation
+      const previewHTML = `
+        <div class="bg-white rounded-lg">
+          <!-- En-tête du document -->
+          <div class="text-center mb-6 pb-4 border-b-2 border-[#6750A4]">
+            <div class="text-sm text-[#49454F] mb-2">Paris, le <strong class="text-[#6750A4]">${dateStr}</strong></div>
+            <div class="text-xl font-bold text-[#6750A4]">${typeDocumentLabel}</div>
+          </div>
+
+          <!-- Grille 3 colonnes -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+
+            <!-- Colonne 1: Coordonnées (Bleu) -->
+            <div class="md3-card elevation-1 p-5 bg-gradient-to-br from-blue-50 to-blue-100 border-l-4 border-blue-500">
+              <h3 class="text-base font-semibold text-blue-900 mb-4 flex items-center gap-2">
+                <span class="material-icons">location_on</span> Coordonnées
+              </h3>
+              <div class="space-y-2 text-sm">
+                ${data.entreprise ? `<div><span class="font-semibold text-blue-900">Entreprise:</span> <strong class="text-blue-700">${data.entreprise}</strong></div>` : ''}
+                ${data.codeDocument ? `<div><span class="font-semibold text-blue-900">Code:</span> <strong class="text-blue-700">${data.codeDocument}</strong></div>` : ''}
+                ${data.civiliteDestinataire ? `<div><span class="font-semibold text-blue-900">Civilité:</span> <strong class="text-blue-700">${data.civiliteDestinataire}</strong></div>` : ''}
+                ${data.nomDestinataire ? `<div><span class="font-semibold text-blue-900">Nom:</span> <strong class="text-blue-700">${data.nomDestinataire}</strong></div>` : ''}
+                ${data.statutDestinataire ? `<div><span class="font-semibold text-blue-900">Statut:</span> ${data.statutDestinataire}</div>` : ''}
+                ${data.batiment ? `<div><span class="font-semibold text-blue-900">Bâtiment:</span> ${data.batiment}</div>` : ''}
+                ${data.adresse ? `<div><span class="font-semibold text-blue-900">Adresse:</span> ${data.adresse}</div>` : ''}
+                ${data.cpVille ? `<div><span class="font-semibold text-blue-900">CP/Ville:</span> ${data.cpVille}</div>` : ''}
+              </div>
+            </div>
+
+            <!-- Colonne 2: Informations spécifiques (Vert) -->
+            <div class="md3-card elevation-1 p-5 bg-gradient-to-br from-green-50 to-green-100 border-l-4 border-green-500">
+              <h3 class="text-base font-semibold text-green-900 mb-4 flex items-center gap-2">
+                <span class="material-icons">edit_document</span> Contenu de la demande
+              </h3>
+              <div class="space-y-2 text-sm">
+                ${data.numeroCourrier ? `<div><span class="font-semibold text-green-900">N° Courrier:</span> <strong class="text-green-700">${data.numeroCourrier}</strong></div>` : ''}
+                ${data.objet ? `<div><span class="font-semibold text-green-900">Objet:</span> <strong class="text-green-700">${data.objet}</strong></div>` : ''}
+                ${data.civiliteDelegue ? `<div><span class="font-semibold text-green-900">Civilité Délégué:</span> <strong class="text-green-700">${data.civiliteDelegue}</strong></div>` : ''}
+                ${data.nomDelegue ? `<div><span class="font-semibold text-green-900">Nom Délégué:</span> <strong class="text-green-700">${data.nomDelegue}</strong></div>` : ''}
+                ${data.emailDelegue ? `<div><span class="font-semibold text-green-900">Email Délégué:</span> ${data.emailDelegue}</div>` : ''}
+                ${data.civiliteRemplace ? `<div><span class="font-semibold text-green-900">Civilité Remplaçant:</span> <strong class="text-green-700">${data.civiliteRemplace}</strong></div>` : ''}
+                ${data.nomRemplace ? `<div><span class="font-semibold text-green-900">Nom Remplaçant:</span> <strong class="text-green-700">${data.nomRemplace}</strong></div>` : ''}
+              </div>
+            </div>
+
+            <!-- Colonne 3: Expéditeur (Violet) -->
+            <div class="md3-card elevation-1 p-5 bg-gradient-to-br from-purple-50 to-purple-100 border-l-4 border-purple-500">
+              <h3 class="text-base font-semibold text-purple-900 mb-4 flex items-center gap-2">
+                <span class="material-icons">person</span> Expéditeur
+              </h3>
+              <div class="space-y-2 text-sm">
+                ${data.signatureExp ? `<div><span class="font-semibold text-purple-900">Signature:</span> <strong class="text-purple-700">${data.signatureExp}</strong></div>` : ''}
+                <div class="mt-4">
+                  <span class="font-semibold text-purple-900">Destinataires:</span>
+                  <div class="mt-2 space-y-1">
+                    ${data.emailDestinataire ? data.emailDestinataire.split(',').map(email => `<div class="flex items-center gap-2 text-purple-700"><span class="material-icons text-sm">email</span> ${email.trim()}</div>`).join('') : '<div class="text-gray-500 text-xs">Aucun destinataire</div>'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Pied de page -->
+          <div class="mt-6 pt-4 border-t-2 border-gray-200 text-sm text-[#49454F]">
+            <p>Je reste à votre disposition pour toute information complémentaire.</p>
+            <p class="mt-2">Cordialement,</p>
+            ${data.signatureExp ? `<p class="mt-2 font-bold text-[#6750A4]">${data.signatureExp}</p>` : ''}
+          </div>
+
+          <!-- Note informative -->
+          <div class="mt-6 bg-[#E8DEF8] border-l-4 border-[#6750A4] p-4 rounded">
+            <p class="text-sm text-[#21005D]">
+              <span class="material-icons text-base align-middle mr-1">info</span>
+              <strong>Les données en couleur seront insérées dans le template Word</strong>
+            </p>
+          </div>
+        </div>
+      `
+
+      // Afficher dans le modal
+      previewContent.innerHTML = previewHTML
+      document.getElementById("previewSubtitle").textContent = `Type: ${typeDocumentLabel} • Date: ${dateStr}`
+
+      // Activer le bouton de téléchargement
+      document.getElementById("downloadWordBtn").disabled = false
+
+      previewModal.classList.remove("hidden")
+    }
+
+    // Bouton de prévisualisation
+    document.getElementById("previewBtn").addEventListener("click", generateLocalPreview)
+
+    // Variable globale pour stocker le Word généré
+    let generatedWordBase64 = null
+    let currentFormData = null
+
+    // Bouton "Télécharger le document" - génère le Word et permet de le télécharger
+    document.getElementById("downloadWordBtn").addEventListener("click", async () => {
+      const btn = document.getElementById("downloadWordBtn")
+      const originalHTML = btn.innerHTML
 
       try {
-        const res = await fetch("http://localhost:3000/webhook/formulaire-doc", {
+        btn.disabled = true
+        btn.innerHTML = '<span class="material-icons animate-spin">sync</span> Génération...'
+
+        // Collecter les données du formulaire
+        const data = {
+          templateType: templateSelect.value,
+          emailDestinataire: document.getElementById("destinataires").value
+        }
+
+        const allInputs = dynamicFields.querySelectorAll('input, select, textarea')
+        allInputs.forEach(input => {
+          data[input.id] = input.value || ''
+        })
+
+        currentFormData = data
+        console.log('📤 Génération du Word via formulaire-doc:', data)
+
+        // Appeler le webhook formulaire-doc qui génère le Word et le retourne
+        const response = await fetch("http://localhost:5678/webhook/formulaire-doc", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        })
+
+        if (!response.ok) {
+          throw new Error(`Erreur ${response.status}`)
+        }
+
+        // Vérifier le type de contenu
+        const contentType = response.headers.get('content-type')
+        let blob
+
+        if (contentType && contentType.includes('application/json')) {
+          // Réponse JSON avec base64
+          const result = await response.json()
+          console.log('✅ Réponse JSON reçue:', result)
+
+          if (!result.success || !result.data) {
+            throw new Error('Fichier Word non trouvé dans la réponse')
+          }
+
+          // Stocker le base64 pour l'envoi ultérieur
+          generatedWordBase64 = result.data
+
+          // Convertir base64 en blob pour le téléchargement
+          const byteCharacters = atob(result.data)
+          const byteNumbers = new Array(byteCharacters.length)
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i)
+          }
+          const byteArray = new Uint8Array(byteNumbers)
+          blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
+        } else {
+          // Réponse binaire directe
+          console.log('✅ Réponse binaire reçue')
+          blob = await response.blob()
+
+          // Convertir le blob en base64 pour l'envoi ultérieur
+          const reader = new FileReader()
+          generatedWordBase64 = await new Promise((resolve, reject) => {
+            reader.onloadend = () => resolve(reader.result.split(',')[1])
+            reader.onerror = reject
+            reader.readAsDataURL(blob)
+          })
+        }
+
+        console.log('✅ Word converti en blob:', blob.size, 'octets')
+
+        // Télécharger le Word
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `Document_${data.templateType}_${Date.now()}.docx`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+
+        alert('✅ Document téléchargé ! Vous pouvez maintenant cliquer sur "Générer et envoyer" pour envoyer l\'email.')
+
+        btn.disabled = false
+        btn.innerHTML = originalHTML
+      } catch (error) {
+        console.error("Erreur:", error)
+        alert("❌ Erreur lors de la génération : " + error.message)
+        btn.disabled = false
+        btn.innerHTML = originalHTML
+      }
+    })
+
+    // Bouton "Générer et envoyer" - envoie l'email avec le Word en pièce jointe
+    document.getElementById("sendEmailBtn").addEventListener("click", async () => {
+      const btn = document.getElementById("sendEmailBtn")
+      const originalHTML = btn.innerHTML
+
+      try {
+        btn.disabled = true
+        btn.innerHTML = '<span class="material-icons animate-spin">sync</span> Envoi en cours...'
+
+        // Si le Word n'a pas été généré, le générer d'abord
+        if (!generatedWordBase64) {
+          const data = {
+            templateType: templateSelect.value,
+            emailDestinataire: document.getElementById("destinataires").value
+          }
+
+          const allInputs = dynamicFields.querySelectorAll('input, select, textarea')
+          allInputs.forEach(input => {
+            data[input.id] = input.value || ''
+          })
+
+          currentFormData = data
+          console.log('� Génération du Word avant envoi:', data)
+
+          // Pas besoin de générer séparément, validate-doc le fera
+          currentFormData = data
+        }
+
+        // Envoyer l'email avec le Word via validate-doc
+        console.log('📧 Envoi email via validate-doc')
+
+        const sendData = {
+          ...currentFormData,
+          wordfile: generatedWordBase64 || ""
+        }
+
+        const sendResponse = await fetch("http://localhost:5678/webhook/validate-doc", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(sendData)
+        })
+
+        if (!sendResponse.ok) {
+          const errorText = await sendResponse.text(); throw new Error(`Erreur ${sendResponse.status}: ${errorText}`)
+        }
+
+        const sendResult = await sendResponse.json()
+        console.log('📥 Résultat envoi:', sendResult)
+
+        // Fermer le modal
+        previewModal.classList.add("hidden")
+
+        // Réinitialiser
+        generatedWordBase64 = null
+        currentFormData = null
+
+        alert('✅ ' + (sendResult.message || 'Document envoyé par email avec succès !'))
+
+        btn.disabled = false
+        btn.innerHTML = originalHTML
+      } catch (error) {
+        console.error("Erreur:", error)
+        alert("❌ Erreur lors de l'envoi : " + error.message)
+        btn.disabled = false
+        btn.innerHTML = originalHTML
+      }
+    })
+
+    // Fonction utilitaire pour convertir base64 en Blob
+    function base64ToBlob(base64, mimeType) {
+      const byteCharacters = atob(base64)
+      const byteNumbers = new Array(byteCharacters.length)
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i)
+      }
+      const byteArray = new Uint8Array(byteNumbers)
+      return new Blob([byteArray], { type: mimeType })
+    }
+
+    // Variables pour le viewer Word
+    const wordViewerModal = document.getElementById("wordViewerModal")
+    const wordViewerFrame = document.getElementById("wordViewerFrame")
+    const wordViewerLoading = document.getElementById("wordViewerLoading")
+    const closeWordViewer = document.getElementById("closeWordViewer")
+    const closeWordViewerBtn = document.getElementById("closeWordViewerBtn")
+    const downloadWordBtn = document.getElementById("downloadWordBtn")
+    let currentWordBlob = null
+    let currentWordUrl = null
+
+    // Fonction pour générer et afficher le document Word
+    async function generateAndViewWord() {
+      if (!templateSelect.value) {
+        msg.textContent = "⚠️ Veuillez sélectionner un type de document"
+        msg.style.color = "#dc2626"
+        return
+      }
+
+      // Collecter les données du formulaire
+      const data = {
+        templateType: templateSelect.value,
+        emailDestinataire: document.getElementById("destinataires").value
+      }
+
+      const allInputs = dynamicFields.querySelectorAll('input, select, textarea')
+      allInputs.forEach(input => {
+        data[input.id] = input.value || ''
+      })
+
+      console.log('📤 Génération du document Word:', data)
+
+      // Afficher le modal avec loading
+      wordViewerModal.classList.remove("hidden")
+      wordViewerLoading.style.display = "flex"
+      wordViewerFrame.style.display = "none"
+      downloadWordBtn.disabled = true
+
+      const templateConfig = variablesConfig.templates[data.templateType]
+      const typeDocumentLabel = templateConfig ? templateConfig.nom : 'Document'
+      document.getElementById("wordViewerSubtitle").textContent = `Génération de ${typeDocumentLabel}...`
+
+      try {
+        // Appel à n8n pour générer le document Word
+        const res = await fetch("http://localhost:5678/webhook/formulaire-doc", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
         })
 
         if (!res.ok) {
-          const errorText = await res.text()
-          console.error(`❌ Erreur ${res.status}:`, errorText)
-          
-          let errorMessage = `Erreur ${res.status}: `
-          if (res.status === 404) {
-            errorMessage += "Le webhook n'existe pas dans n8n.\n\n"
-            errorMessage += "Vérifiez dans n8n (http://localhost:5678):\n"
-            errorMessage += "1. Que le workflow est importé\n"
-            errorMessage += "2. Que le workflow est ACTIVÉ (toggle vert)\n"
-            errorMessage += "3. Que le webhook a le path 'formulaire-doc'\n"
-            errorMessage += "4. Ouvrez n8n → Workflows → Activez le workflow 'gpt_generator'"
-          } else {
-            errorMessage += errorText || "Erreur inconnue"
-          }
-          
-          msg.textContent = errorMessage
-          msg.style.whiteSpace = "pre-line"
-          msg.style.color = "#dc2626"
-          return
+          throw new Error(`Erreur ${res.status}: ${await res.text()}`)
         }
 
-        console.log('✅ Réponse reçue, status:', res.status)
-        const result = await res.json()
-        console.log('📥 Résultat:', result)
-        const previewWindow = window.open('', '_blank', 'width=900,height=700')
-        previewWindow.document.write(result.html)
-        previewWindow.document.close()
-        msg.textContent = "Prévisualisation ouverte. Cliquez sur 'Valider et envoyer' dans la nouvelle fenêtre."
+        console.log('✅ Document généré, extraction du fichier Word...')
+
+        // Vérifier le type de contenu
+        const contentType = res.headers.get('content-type')
+
+        if (contentType && contentType.includes('application/json')) {
+          // Réponse JSON avec base64
+          const result = await res.json()
+
+          if (!result.success || !result.data) {
+            throw new Error('Fichier Word non trouvé dans la réponse')
+          }
+
+          const wordBase64 = result.data
+          console.log('📄 Fichier Word extrait (JSON base64), taille:', wordBase64.length)
+
+          // Convertir base64 en Blob
+          const binaryString = atob(wordBase64)
+          const bytes = new Uint8Array(binaryString.length)
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i)
+          }
+          currentWordBlob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
+        } else {
+          // Réponse binaire directe
+          console.log('📄 Fichier Word extrait (binaire direct)')
+          currentWordBlob = await res.blob()
+        }
+
+        // Créer une URL pour le blob
+        if (currentWordUrl) {
+          URL.revokeObjectURL(currentWordUrl)
+        }
+        currentWordUrl = URL.createObjectURL(currentWordBlob)
+
+        console.log('✅ Blob créé, affichage dans iframe...')
+
+        // Utiliser Google Docs Viewer pour afficher le document
+        // Note: Google Docs Viewer nécessite une URL publique, donc on va utiliser Office Online Viewer
+        // Ou afficher un message pour télécharger
+
+        // Pour l'instant, on va proposer le téléchargement et afficher un message
+        wordViewerLoading.style.display = "none"
+
+        // Créer un message dans l'iframe
+        const messageHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <style>
+              * { font-family: 'Roboto', sans-serif; }
+              body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                margin: 0;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              }
+              .container {
+                background: white;
+                border-radius: 16px;
+                padding: 48px;
+                text-align: center;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                max-width: 500px;
+              }
+              .icon {
+                font-size: 80px;
+                color: #6750A4;
+                margin-bottom: 24px;
+              }
+              h1 {
+                color: #1C1B1F;
+                font-size: 28px;
+                margin-bottom: 16px;
+              }
+              p {
+                color: #49454F;
+                font-size: 16px;
+                line-height: 1.6;
+                margin-bottom: 32px;
+              }
+              .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: #6750A4;
+                color: white;
+                padding: 16px 32px;
+                border-radius: 24px;
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 16px;
+                transition: all 0.2s;
+                box-shadow: 0 4px 12px rgba(103, 80, 164, 0.3);
+              }
+              .btn:hover {
+                background: #7E57C2;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(103, 80, 164, 0.4);
+              }
+              .success {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: #E8F5E9;
+                color: #2E7D32;
+                padding: 12px 24px;
+                border-radius: 24px;
+                margin-bottom: 24px;
+                font-weight: 500;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <span class="material-icons icon">check_circle</span>
+              <div class="success">
+                <span class="material-icons">done</span>
+                Document généré avec succès !
+              </div>
+              <h1>Votre document est prêt</h1>
+              <p>
+                Le document Word a été généré avec succès.<br>
+                Cliquez sur le bouton ci-dessous pour le télécharger et l'ouvrir dans Microsoft Word ou LibreOffice.
+              </p>
+              <a href="${currentWordUrl}" download="document_${Date.now()}.docx" class="btn">
+                <span class="material-icons">download</span>
+                Télécharger le document Word
+              </a>
+            </div>
+          </body>
+          </html>
+        `
+
+        wordViewerFrame.srcdoc = messageHTML
+        wordViewerFrame.style.display = "block"
+
+        // Activer le bouton de téléchargement
+        downloadWordBtn.disabled = false
+        downloadWordBtn.onclick = () => {
+          const a = document.createElement('a')
+          a.href = currentWordUrl
+          a.download = `document_${typeDocumentLabel.replace(/\s+/g, '_')}_${Date.now()}.docx`
+          a.click()
+        }
+
+        document.getElementById("wordViewerSubtitle").textContent = `${typeDocumentLabel} - Prêt à télécharger`
+
       } catch (err) {
-        console.error(err)
-        msg.textContent = `Erreur: ${err.message}. Vérifiez que le serveur de formulaire est démarré et que n8n fonctionne.`
+        console.error('❌ Erreur:', err)
+        wordViewerLoading.style.display = "none"
+
+        const errorHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <style>
+              * { font-family: 'Roboto', sans-serif; }
+              body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                margin: 0;
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+              }
+              .container {
+                background: white;
+                border-radius: 16px;
+                padding: 48px;
+                text-align: center;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                max-width: 500px;
+              }
+              .icon {
+                font-size: 80px;
+                color: #dc2626;
+                margin-bottom: 24px;
+              }
+              h1 {
+                color: #1C1B1F;
+                font-size: 28px;
+                margin-bottom: 16px;
+              }
+              p {
+                color: #49454F;
+                font-size: 16px;
+                line-height: 1.6;
+              }
+              .error-details {
+                background: #FEE;
+                border-left: 4px solid #dc2626;
+                padding: 16px;
+                margin-top: 24px;
+                text-align: left;
+                border-radius: 8px;
+                font-family: monospace;
+                font-size: 14px;
+                color: #dc2626;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <span class="material-icons icon">error</span>
+              <h1>Erreur de génération</h1>
+              <p>Une erreur s'est produite lors de la génération du document Word.</p>
+              <div class="error-details">${err.message}</div>
+            </div>
+          </body>
+          </html>
+        `
+
+        wordViewerFrame.srcdoc = errorHTML
+        wordViewerFrame.style.display = "block"
+        document.getElementById("wordViewerSubtitle").textContent = "Erreur de génération"
+      }
+    }
+
+    // Fermer le modal Word
+    closeWordViewer.addEventListener("click", () => {
+      wordViewerModal.classList.add("hidden")
+      if (currentWordUrl) {
+        URL.revokeObjectURL(currentWordUrl)
+        currentWordUrl = null
       }
     })
 
-    closeModal.addEventListener("click", () => {
-      previewModal.classList.add("hidden")
+    closeWordViewerBtn.addEventListener("click", () => {
+      wordViewerModal.classList.add("hidden")
+      if (currentWordUrl) {
+        URL.revokeObjectURL(currentWordUrl)
+        currentWordUrl = null
+      }
     })
   </script>
 
