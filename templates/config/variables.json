@@ -1,10 +1,16 @@
 {
   "variables_communes": {
     "codeDocument": {
-      "label": "Code Document / Entreprise",
+      "label": "Numéro du document",
       "type": "text",
       "required": true,
-      "placeholder": "Ex: ACME Corp"
+      "placeholder": "Ex : DOC-2024-001"
+    },
+    "entreprise": {
+      "label": "Entreprise",
+      "type": "text",
+      "placeholder": "Ex: ACME Corp",
+      "required": true
     },
     "civiliteDestinataire": {
       "label": "Civilité Destinataire",
@@ -56,7 +62,7 @@
   "templates": {
     "designation": {
       "nom": "Lettre de Désignation",
-      "fichier": "template_principal.docx",
+      "fichier": "template_designation.docx",
       "description": "Désignation de délégué syndical",
       "variables_specifiques": {
         "numeroCourrier": {
@@ -96,7 +102,7 @@
     },
     "negociation": {
       "nom": "Mandat de Négociation",
-      "fichier": "template_principal.docx",
+      "fichier": "template_negociation.docx",
       "description": "Mandat de négociation collective",
       "variables_specifiques": {
         "objet": {

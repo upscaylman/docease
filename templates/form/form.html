@@ -999,7 +999,7 @@
 
       const testData = {
         entreprise: ['ACME Corp', 'TechCo Industries', 'Solutions SARL', 'Métallurgie SA'][Math.floor(Math.random() * 4)],
-        codeDocument: ['ACME Corp', 'TechCo', 'Industries SA', 'Solutions SARL'][Math.floor(Math.random() * 4)],
+        codeDocument: ['DOC-2024-001', 'REF-2024-042', 'NUM-2024-123', 'CODE-2024-789'][Math.floor(Math.random() * 4)],
         civiliteDestinataire: ['Monsieur', 'Madame'][Math.floor(Math.random() * 2)],
         statutDestinataire: ['Président', 'Directeur', 'Responsable RH', 'Chef de service'][Math.floor(Math.random() * 4)],
         batiment: ['Bâtiment A', 'Bâtiment B', 'Tour Nord', 'Annexe'][Math.floor(Math.random() * 4)],
@@ -1088,10 +1088,10 @@
                 ${data.codeDocument ? `<div><span class="font-semibold text-blue-900">Code:</span> <strong class="text-blue-700">${data.codeDocument}</strong></div>` : ''}
                 ${data.civiliteDestinataire ? `<div><span class="font-semibold text-blue-900">Civilité:</span> <strong class="text-blue-700">${data.civiliteDestinataire}</strong></div>` : ''}
                 ${data.nomDestinataire ? `<div><span class="font-semibold text-blue-900">Nom:</span> <strong class="text-blue-700">${data.nomDestinataire}</strong></div>` : ''}
-                ${data.statutDestinataire ? `<div><span class="font-semibold text-blue-900">Statut:</span> ${data.statutDestinataire}</div>` : ''}
-                ${data.batiment ? `<div><span class="font-semibold text-blue-900">Bâtiment:</span> ${data.batiment}</div>` : ''}
-                ${data.adresse ? `<div><span class="font-semibold text-blue-900">Adresse:</span> ${data.adresse}</div>` : ''}
-                ${data.cpVille ? `<div><span class="font-semibold text-blue-900">CP/Ville:</span> ${data.cpVille}</div>` : ''}
+                ${data.statutDestinataire ? `<div><span class="font-semibold text-blue-900">Statut:</span> <strong class="text-blue-700">${data.statutDestinataire}</strong></div>` : ''}
+                ${data.batiment ? `<div><span class="font-semibold text-blue-900">Bâtiment:</span> <strong class="text-blue-700">${data.batiment}</strong></div>` : ''}
+                ${data.adresse ? `<div><span class="font-semibold text-blue-900">Adresse:</span> <strong class="text-blue-700">${data.adresse}</strong></div>` : ''}
+                ${data.cpVille ? `<div><span class="font-semibold text-blue-900">CP/Ville:</span> <strong class="text-blue-700">${data.cpVille}</strong></div>` : ''}
               </div>
             </div>
 
@@ -1105,7 +1105,7 @@
                 ${data.objet ? `<div><span class="font-semibold text-green-900">Objet:</span> <strong class="text-green-700">${data.objet}</strong></div>` : ''}
                 ${data.civiliteDelegue ? `<div><span class="font-semibold text-green-900">Civilité Délégué:</span> <strong class="text-green-700">${data.civiliteDelegue}</strong></div>` : ''}
                 ${data.nomDelegue ? `<div><span class="font-semibold text-green-900">Nom Délégué:</span> <strong class="text-green-700">${data.nomDelegue}</strong></div>` : ''}
-                ${data.emailDelegue ? `<div><span class="font-semibold text-green-900">Email Délégué:</span> ${data.emailDelegue}</div>` : ''}
+                ${data.emailDelegue ? `<div><span class="font-semibold text-green-900">Email Délégué:</span> <strong class="text-green-700">${data.emailDelegue}</strong></div>` : ''}
                 ${data.civiliteRemplace ? `<div><span class="font-semibold text-green-900">Civilité Remplaçant:</span> <strong class="text-green-700">${data.civiliteRemplace}</strong></div>` : ''}
                 ${data.nomRemplace ? `<div><span class="font-semibold text-green-900">Nom Remplaçant:</span> <strong class="text-green-700">${data.nomRemplace}</strong></div>` : ''}
               </div>
@@ -1118,15 +1118,24 @@
               </h3>
               <div class="space-y-2 text-sm">
                 ${data.signatureExp ? `<div><span class="font-semibold text-purple-900">Signature:</span> <strong class="text-purple-700">${data.signatureExp}</strong></div>` : ''}
-                <div class="mt-4">
-                  <span class="font-semibold text-purple-900">Destinataires:</span>
-                  <div class="mt-2 space-y-1">
-                    ${data.emailDestinataire ? data.emailDestinataire.split(',').map(email => `<div class="flex items-center gap-2 text-purple-700"><span class="material-icons text-sm">email</span> ${email.trim()}</div>`).join('') : '<div class="text-gray-500 text-xs">Aucun destinataire</div>'}
-                  </div>
-                </div>
               </div>
             </div>
 
+          </div>
+
+          <!-- Bloc Destinataires (Orange) - Pleine largeur sous les 3 colonnes -->
+          <div class="md3-card elevation-1 p-5 bg-gradient-to-br from-orange-50 to-orange-100 border-l-4 border-orange-500 mb-6">
+            <h3 class="text-base font-semibold text-orange-900 mb-4 flex items-center gap-2">
+              <span class="material-icons">mail</span> Destinataires
+            </h3>
+            <div class="flex flex-wrap gap-2">
+              ${data.emailDestinataire ? data.emailDestinataire.split(',').map(email => `
+                <div class="inline-flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-orange-300 text-orange-700 text-sm">
+                  <span class="material-icons text-base">email</span>
+                  <span class="font-medium">${email.trim()}</span>
+                </div>
+              `).join('') : '<div class="text-gray-500 text-sm">Aucun destinataire</div>'}
+            </div>
           </div>
 
           <!-- Pied de page -->
