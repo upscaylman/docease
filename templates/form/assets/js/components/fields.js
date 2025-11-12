@@ -71,35 +71,59 @@ function createSelectField(key, config) {
  * @returns {HTMLElement}
  */
 function createTextareaField(key, config) {
-  // Si le champ a une icône, créer un wrapper avec icône
-  if (config.icon) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'relative';
+  const wrapper = document.createElement('div');
+  wrapper.className = 'relative';
 
+  // Icône en haut à gauche (optionnelle)
+  if (config.icon) {
     const icon = document.createElement('span');
     icon.className = 'material-icons absolute left-3 top-3 text-gray-400 text-base pointer-events-none';
     icon.textContent = config.icon;
-
-    const textarea = document.createElement('textarea');
-    textarea.id = key;
-    textarea.placeholder = config.placeholder || config.label;
-    textarea.rows = config.rows || 3;
-    textarea.className = 'md3-input w-full p-2.5 pl-10 text-sm resize-none';
-    textarea.required = config.required || false;
-
     wrapper.appendChild(icon);
-    wrapper.appendChild(textarea);
-    return wrapper;
-  } else {
-    // Textarea simple sans icône
-    const textarea = document.createElement('textarea');
-    textarea.id = key;
-    textarea.placeholder = config.placeholder || config.label;
-    textarea.rows = config.rows || 3;
-    textarea.className = 'md3-input w-full p-2.5 text-sm resize-none';
-    textarea.required = config.required || false;
-    return textarea;
   }
+
+  const textarea = document.createElement('textarea');
+  textarea.id = key;
+  textarea.placeholder = config.placeholder || config.label;
+  textarea.rows = config.rows || 3;
+  textarea.className = config.icon ? 'md3-input w-full p-2.5 pl-10 pr-10 text-sm resize-none' : 'md3-input w-full p-2.5 pr-10 text-sm resize-none';
+  textarea.required = config.required || false;
+
+  // Bouton pour effacer le champ
+  const clearBtn = document.createElement('button');
+  clearBtn.type = 'button';
+  clearBtn.className = 'absolute right-2 top-3 text-gray-400 hover:text-red-500 transition-colors hidden';
+  clearBtn.innerHTML = '<span class="material-icons text-base">close</span>';
+  clearBtn.title = 'Effacer';
+
+  // Afficher/masquer le bouton selon si le champ est rempli
+  const toggleClearBtn = () => {
+    if (textarea.value.trim()) {
+      clearBtn.classList.remove('hidden');
+    } else {
+      clearBtn.classList.add('hidden');
+    }
+  };
+
+  textarea.addEventListener('input', toggleClearBtn);
+  textarea.addEventListener('change', toggleClearBtn);
+
+  // Effacer le champ au clic
+  clearBtn.addEventListener('click', () => {
+    textarea.value = '';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    textarea.dispatchEvent(new Event('change', { bubbles: true }));
+    clearBtn.classList.add('hidden');
+    textarea.focus();
+  });
+
+  wrapper.appendChild(textarea);
+  wrapper.appendChild(clearBtn);
+
+  // Vérifier initialement si le champ a une valeur
+  toggleClearBtn();
+
+  return wrapper;
 }
 
 /**
@@ -109,37 +133,60 @@ function createTextareaField(key, config) {
  * @returns {HTMLElement}
  */
 function createInputField(key, config) {
-  // Si le champ a une icône, créer un wrapper avec icône
-  if (config.icon) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'relative';
+  const wrapper = document.createElement('div');
+  wrapper.className = 'relative';
 
+  // Icône à gauche (optionnelle)
+  if (config.icon) {
     const icon = document.createElement('span');
     icon.className = 'material-icons absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-base pointer-events-none';
     icon.textContent = config.icon;
-
-    const input = document.createElement('input');
-    input.id = key;
-    input.type = config.type === 'email' ? 'email' : 'text';
-    input.placeholder = config.placeholder || config.label;
-    input.className = 'md3-input w-full p-2.5 pl-10 text-sm';
-    input.required = config.required || false;
-    if (config.default) input.value = config.default;
-
     wrapper.appendChild(icon);
-    wrapper.appendChild(input);
-    return wrapper;
-  } else {
-    // Champ simple sans icône
-    const input = document.createElement('input');
-    input.id = key;
-    input.type = config.type === 'email' ? 'email' : 'text';
-    input.placeholder = config.placeholder || config.label;
-    input.className = 'md3-input w-full p-2.5 text-sm';
-    input.required = config.required || false;
-    if (config.default) input.value = config.default;
-    return input;
   }
+
+  const input = document.createElement('input');
+  input.id = key;
+  input.type = config.type === 'email' ? 'email' : 'text';
+  input.placeholder = config.placeholder || config.label;
+  input.className = config.icon ? 'md3-input w-full p-2.5 pl-10 pr-10 text-sm' : 'md3-input w-full p-2.5 pr-10 text-sm';
+  input.required = config.required || false;
+  if (config.default) input.value = config.default;
+
+  // Bouton pour effacer le champ
+  const clearBtn = document.createElement('button');
+  clearBtn.type = 'button';
+  clearBtn.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors hidden';
+  clearBtn.innerHTML = '<span class="material-icons text-base">close</span>';
+  clearBtn.title = 'Effacer';
+
+  // Afficher/masquer le bouton selon si le champ est rempli
+  const toggleClearBtn = () => {
+    if (input.value.trim()) {
+      clearBtn.classList.remove('hidden');
+    } else {
+      clearBtn.classList.add('hidden');
+    }
+  };
+
+  input.addEventListener('input', toggleClearBtn);
+  input.addEventListener('change', toggleClearBtn);
+
+  // Effacer le champ au clic
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    clearBtn.classList.add('hidden');
+    input.focus();
+  });
+
+  wrapper.appendChild(input);
+  wrapper.appendChild(clearBtn);
+
+  // Vérifier initialement si le champ a une valeur
+  toggleClearBtn();
+
+  return wrapper;
 }
 
 /**

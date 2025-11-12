@@ -332,6 +332,52 @@ function initFloatingActionBar() {
       fillTestData.click();
     });
   }
+
+  // Bouton effacer tout
+  const clearAllDataBtn = document.getElementById('clearAllDataBtn');
+  if (clearAllDataBtn) {
+    clearAllDataBtn.addEventListener('click', () => {
+      if (confirm('⚠️ Êtes-vous sûr de vouloir effacer toutes les données du formulaire ?')) {
+        clearAllFormData();
+      }
+    });
+  }
+}
+
+/**
+ * Effacer toutes les données du formulaire
+ */
+function clearAllFormData() {
+  // Effacer tous les inputs
+  const allInputs = document.querySelectorAll('#coordonneesFields input, #contenuFields input, #expediteurFields input');
+  allInputs.forEach(input => {
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+
+  // Effacer tous les textareas
+  const allTextareas = document.querySelectorAll('#coordonneesFields textarea, #contenuFields textarea, #expediteurFields textarea');
+  allTextareas.forEach(textarea => {
+    textarea.value = '';
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+    textarea.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+
+  // Effacer tous les selects
+  const allSelects = document.querySelectorAll('#coordonneesFields select, #contenuFields select, #expediteurFields select');
+  allSelects.forEach(select => {
+    select.selectedIndex = 0;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+
+  // Effacer le champ destinataires caché
+  const destinataires = document.getElementById('destinataires');
+  if (destinataires) {
+    destinataires.value = '';
+  }
+
+  console.log('✅ Toutes les données du formulaire ont été effacées');
 }
 
 /**
