@@ -224,13 +224,11 @@ function initTemplatesGallery(config) {
       card.classList.add('selected');
     }
 
-    // Icône selon le type de document
-    const icon = getTemplateIcon(template.nom);
+    // Image selon le type de template
+    const imagePath = getTemplateImage(key);
 
     card.innerHTML = `
-      <div class="template-thumbnail">
-        <span class="material-icons">${icon}</span>
-      </div>
+      <img src="${imagePath}" alt="${template.nom}" class="template-thumbnail">
       <h3 class="font-bold text-gray-800 mb-1">${template.nom}</h3>
       <p class="text-xs text-gray-600">${template.description || 'Document professionnel'}</p>
     `;
@@ -276,6 +274,19 @@ function getTemplateIcon(nom) {
   if (nomLower.includes('devis')) return 'request_quote';
   if (nomLower.includes('lettre')) return 'mail';
   return 'description';
+}
+
+/**
+ * Obtenir l'image appropriée selon la clé du template
+ */
+function getTemplateImage(templateKey) {
+  const images = {
+    'designation': 'assets/img/designation_template.png',
+    'nego': 'assets/img/nego_template.png'
+  };
+
+  // Retourner l'image correspondante ou une image par défaut
+  return images[templateKey] || 'assets/img/designation_template.png';
 }
 
 /**

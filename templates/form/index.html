@@ -67,6 +67,7 @@
       padding: 1rem;
       flex-shrink: 0;
       max-height: 300px;
+      box-shadow: 0 8px 32px #00000026, inset 0 0 0 1px #fff3;
     }
     @media (min-width: 768px) {
       .templates-sidebar {
@@ -92,56 +93,37 @@
       background: #9ca3af;
     }
     .template-card {
-      border: 2px solid #e5e7eb;
+      border: none;
       border-radius: 12px;
       padding: 0.5rem;
       cursor: pointer;
       transition: all 0.2s;
-      background: white;
+      background: transparent;
     }
     @media (min-width: 768px) {
       .template-card {
         padding: 0.75rem;
       }
     }
-    .template-card:hover {
-      border-color: #2563eb;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-      transform: translateY(-2px);
-    }
-    .template-card.selected {
-      border-color: #2563eb;
-      background: #eff6ff;
-      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.25);
-    }
     .template-thumbnail {
-      width: 100%;
-      height: 100px;
-      background: linear-gradient(135deg, #f3f4f6 0%, #c0c3a5 100%);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 160px;
+      height: 225px;
+      border-radius: 3px;
       margin-bottom: 0.5rem;
-      overflow: hidden;
-      position: relative;
+      margin-left: auto;
+      margin-right: auto;
+      object-fit: cover;
+      transition: all 0.3s ease;
+      display: block;
+      border: 2px solid transparent;
+      box-shadow: 0 8px 32px #00000026, inset 0 0 0 1px #fff3;
     }
-    @media (min-width: 768px) {
-      .template-thumbnail {
-        height: 160px;
-      }
-    }
-    .template-thumbnail .material-icons {
-      font-size: 40px;
-      color: #686a6c;
-    }
-    @media (min-width: 768px) {
-      .template-thumbnail .material-icons {
-        font-size: 56px;
-      }
+    .template-card:hover .template-thumbnail {
+      transform: scale(1.05);
+      border-color: #93c5fd;
     }
     .template-card.selected .template-thumbnail {
-      background: linear-gradient(135deg, #2563eb 0%, #adaea4 100%);
+      border-color: #2563eb;
     }
     .template-card.selected .template-thumbnail .material-icons {
       color: white;
