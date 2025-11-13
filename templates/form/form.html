@@ -19,8 +19,8 @@
     }
 
     body {
-      /* background: linear-gradient(-45deg, #6750A4, #ff0055, #5E35B1, #4686ff); */
-      background: linear-gradient(-45deg, #6750a459, #0093ff40, #5e35b19e, #4686ff80);
+      /* background: linear-gradient(-45deg, #0072ff, #ff0055, #5E35B1, #4686ff); */
+      background: linear-gradient(-45deg, #0093ff, #0093ff40, #c9d7e9, #4686ff80);
       background-size: 400% 400%;
       animation: gradient 15s ease infinite;
     }
@@ -47,7 +47,7 @@
 
     .md3-input:focus {
       outline: none;
-      border: 2px solid #6750A4;
+      border: 2px solid #0072ff;
       border-radius: 50px;
     }
 
@@ -136,7 +136,7 @@
     }
 
     .tab-button.active {
-      background: linear-gradient(135deg, #6750A4 0%, #7E57C2 100%);
+      background: linear-gradient(135deg, #0072ff 0%, #0093ff 100%);
       color: white;
       box-shadow: 0 4px 12px rgba(103, 80, 164, 0.4);
       transform: translateX(4px);
@@ -181,7 +181,7 @@
     }
 
     .step-indicator.active {
-      background: linear-gradient(135deg, #6750A4 0%, #7E57C2 100%);
+      background: linear-gradient(135deg, #0072ff 0%, #0093ff 100%);
       color: white;
       transform: scale(1.15);
       box-shadow: 0 6px 16px rgba(103, 80, 164, 0.5);
@@ -201,7 +201,7 @@
       max-height: calc(100vh - 32px);
       overflow-y: auto;
       scrollbar-width: thin;
-      scrollbar-color: #6750A4 #E8DEF8;
+      scrollbar-color: #0072ff #E8DEF8;
     }
 
     #docForm::-webkit-scrollbar {
@@ -214,12 +214,12 @@
     }
 
     #docForm::-webkit-scrollbar-thumb {
-      background: linear-gradient(135deg, #6750A4 0%, #7E57C2 100%);
+      background: linear-gradient(135deg, #0072ff 0%, #0093ff 100%);
       border-radius: 10px;
     }
 
     #docForm::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(135deg, #7E57C2 0%, #6750A4 100%);
+      background: linear-gradient(135deg, #0093ff 0%, #0072ff 100%);
     }
 
     /* Responsive - Mobile First */
@@ -411,16 +411,16 @@
   <form id="docForm" class="bg-white p-6 md:p-10 md3-card elevation-3 w-full max-w-7xl space-y-8 rounded-3xl">
     <!-- Header -->
     <div class="text-center mb-8">
-      <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#6750A4] to-[#7E57C2] rounded-3xl mb-4 elevation-2">
+      <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#0072ff] to-[#0093ff] rounded-3xl mb-4 elevation-2">
         <span class="material-icons text-5xl text-white">description</span>
       </div>
-      <h1 class="text-4xl md:text-5xl font-bold text-[#1C1B1F] mb-3 bg-gradient-to-r from-[#6750A4] to-[#7E57C2] bg-clip-text text-transparent">Génération de document</h1>
+      <h1 class="text-4xl md:text-5xl font-bold text-[#1C1B1F] mb-3 bg-gradient-to-r from-[#0072ff] to-[#0093ff] bg-clip-text text-transparent">Génération de document</h1>
       <p class="text-[#49454F] text-lg md:text-xl">Créez vos documents professionnels en quelques clics</p>
     </div>
 
     <!-- Actions rapides -->
     <div class="flex gap-3 justify-center mb-8">
-      <button type="button" id="fillTestData" class="md3-button px-6 py-3 bg-[#E8DEF8] text-[#6750A4] hover:bg-[#D0BCFF] elevation-2 flex items-center gap-2 rounded-full font-semibold transition-all hover:scale-105">
+      <button type="button" id="fillTestData" class="md3-button px-6 py-3 bg-[#E8DEF8] text-[#0072ff] hover:bg-[#D0BCFF] elevation-2 flex items-center gap-2 rounded-full font-semibold transition-all hover:scale-105">
         <span class="material-icons text-xl">casino</span>
         <span class="hidden sm:inline">Remplir avec données de test</span>
         <span class="sm:hidden">Test</span>
@@ -430,10 +430,10 @@
     <!-- Sélecteur de template -->
     <div class="mb-8 section-card">
       <label class="block text-lg font-semibold text-[#1C1B1F] mb-4 flex items-center gap-3">
-        <span class="material-icons text-2xl text-[#6750A4]">description</span>
+        <span class="material-icons text-2xl text-[#0072ff]">description</span>
         Type de document <span class="text-red-500">*</span>
       </label>
-      <select id="template" class="md3-input md3-select w-full p-4 text-base rounded-xl border-2 border-[#E8DEF8] focus:border-[#6750A4] transition-all" required>
+      <select id="template" class="md3-input md3-select w-full p-4 text-base rounded-xl border-2 border-[#E8DEF8] focus:border-[#0072ff] transition-all" required>
         <option value="">📄 Choisir un type de document...</option>
       </select>
     </div>
@@ -463,7 +463,7 @@
         <!-- Section Coordonnées -->
         <div id="tab-coordonnees" class="tab-section active section-card">
           <h3 class="section-title text-xl font-bold text-[#1C1B1F] mb-4 flex items-center gap-2">
-            <span class="material-icons text-2xl text-[#6750A4]">person</span>
+            <span class="material-icons text-2xl text-[#0072ff]">person</span>
             Coordonnées
           </h3>
           <div id="coordonneesFields" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
@@ -472,7 +472,7 @@
         <!-- Section Contenu -->
         <div id="tab-contenu" class="tab-section section-card">
           <h3 class="section-title text-xl font-bold text-[#1C1B1F] mb-4 flex items-center gap-2">
-            <span class="material-icons text-2xl text-[#6750A4]">article</span>
+            <span class="material-icons text-2xl text-[#0072ff]">article</span>
             Contenu de la demande
           </h3>
           <div id="contenuFields" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
@@ -481,7 +481,7 @@
         <!-- Section Expéditeur -->
         <div id="tab-expediteur" class="tab-section section-card">
           <h3 class="section-title text-xl font-bold text-[#1C1B1F] mb-4 flex items-center gap-2">
-            <span class="material-icons text-2xl text-[#6750A4]">send</span>
+            <span class="material-icons text-2xl text-[#0072ff]">send</span>
             Expéditeur
           </h3>
           <div id="expediteurFields" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
@@ -493,7 +493,7 @@
             <span class="material-icons">arrow_back</span>
             <span class="hidden sm:inline">Précédent</span>
           </button>
-          <button type="button" id="nextBtn" class="md3-button px-6 py-3 bg-gradient-to-r from-[#6750A4] to-[#7E57C2] text-white hover:shadow-lg elevation-2 flex items-center justify-center gap-2 rounded-full font-semibold transition-all ml-auto">
+          <button type="button" id="nextBtn" class="md3-button px-6 py-3 bg-gradient-to-r from-[#0072ff] to-[#0093ff] text-white hover:shadow-lg elevation-2 flex items-center justify-center gap-2 rounded-full font-semibold transition-all ml-auto">
             <span class="hidden sm:inline">Suivant</span>
             <span class="material-icons">arrow_forward</span>
           </button>
@@ -504,10 +504,10 @@
     <!-- Destinataires (après les onglets) -->
     <div id="destinatairesSection" class="w-full mt-6 section-card" style="display: none;">
       <label class="block text-base font-semibold text-[#1C1B1F] mb-3 flex items-center gap-2">
-        <span class="material-icons text-xl text-[#6750A4]">email</span>
+        <span class="material-icons text-xl text-[#0072ff]">email</span>
         Destinataires <span class="text-red-500">*</span>
       </label>
-      <div id="emailContainer" class="md3-input w-full p-3 bg-white flex flex-wrap gap-2 items-center min-h-[52px] cursor-text rounded-xl border-2 border-[#E8DEF8] focus-within:border-[#6750A4] transition-all">
+      <div id="emailContainer" class="md3-input w-full p-3 bg-white flex flex-wrap gap-2 items-center min-h-[52px] cursor-text rounded-xl border-2 border-[#E8DEF8] focus-within:border-[#0072ff] transition-all">
         <input id="emailInput" type="text" placeholder="Tapez une adresse email et appuyez sur virgule ou espace..." class="flex-1 outline-none min-w-[200px] text-base">
       </div>
       <input id="destinataires" type="hidden" required>
@@ -515,7 +515,7 @@
 
     <!-- Bouton d'action -->
     <div id="previewBtnContainer" class="flex gap-3 mt-6" style="display: none;">
-      <button type="button" id="previewBtn" disabled class="md3-button w-full py-3.5 bg-gradient-to-r from-[#6750A4] to-[#7E57C2] text-white hover:shadow-2xl elevation-3 flex items-center justify-center gap-2 text-base font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none transition-all transform hover:scale-105 active:scale-95">
+      <button type="button" id="previewBtn" disabled class="md3-button w-full py-3.5 bg-gradient-to-r from-[#0072ff] to-[#0093ff] text-white hover:shadow-2xl elevation-3 flex items-center justify-center gap-2 text-base font-bold rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none transition-all transform hover:scale-105 active:scale-95">
         <span class="material-icons">visibility</span>
         Prévisualiser le document
       </button>
@@ -530,7 +530,7 @@
       <!-- Header du modal -->
       <div class="flex items-center justify-between p-6 border-b border-gray-200">
         <div class="flex items-center gap-3">
-          <span class="material-icons text-[#6750A4] text-3xl">preview</span>
+          <span class="material-icons text-[#0072ff] text-3xl">preview</span>
           <div>
             <h2 class="text-2xl font-bold text-[#1C1B1F]">Prévisualisation du document</h2>
             <p class="text-sm text-[#49454F]" id="previewSubtitle">Vérifiez les informations avant génération</p>
@@ -553,12 +553,12 @@
           Fermer
         </button>
         <div class="flex gap-3">
-          <button id="downloadWordBtn" class="md3-button px-6 py-2.5 bg-[#E8DEF8] text-[#6750A4] hover:bg-[#D0BCFF] elevation-1 flex items-center gap-2" disabled>
+          <button id="downloadWordBtn" class="md3-button px-6 py-2.5 bg-[#E8DEF8] text-[#0072ff] hover:bg-[#D0BCFF] elevation-1 flex items-center gap-2" disabled>
             <span class="material-icons">download</span>
             Télécharger le document
           </button>
           <!-- Bouton d'envoi par email désactivé temporairement -->
-          <!-- <button id="sendEmailBtn" class="md3-button px-6 py-2.5 bg-[#6750A4] text-white hover:bg-[#7E57C2] elevation-2 flex items-center gap-2">
+          <!-- <button id="sendEmailBtn" class="md3-button px-6 py-2.5 bg-[#0072ff] text-white hover:bg-[#0093ff] elevation-2 flex items-center gap-2">
             <span class="material-icons">send</span>
             Générer et envoyer
           </button> -->
@@ -571,7 +571,7 @@
   <div id="wordViewerModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-[60] backdrop-blur-sm">
     <div class="bg-white md3-card elevation-3 w-full max-w-7xl h-[95vh] overflow-hidden relative m-4 flex flex-col">
       <!-- Header du modal Word -->
-      <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-[#6750A4]">
+      <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-[#0072ff]">
         <div class="flex items-center gap-3">
           <span class="material-icons text-white text-2xl">description</span>
           <div>
@@ -588,7 +588,7 @@
       <div class="flex-1 overflow-hidden relative bg-gray-100">
         <div id="wordViewerLoading" class="absolute inset-0 flex items-center justify-center bg-white z-10">
           <div class="text-center">
-            <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[#6750A4] border-t-transparent mb-4"></div>
+            <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[#0072ff] border-t-transparent mb-4"></div>
             <p class="text-[#49454F] text-lg font-medium">Génération du document Word...</p>
             <p class="text-[#49454F] text-sm mt-2">Cela peut prendre quelques secondes</p>
           </div>
@@ -603,7 +603,7 @@
           Le document est généré par n8n et affiché via Google Docs Viewer
         </div>
         <div class="flex gap-3">
-          <button id="downloadWordBtn" class="md3-button px-6 py-2.5 bg-[#E8DEF8] text-[#6750A4] hover:bg-[#D0BCFF] elevation-1 flex items-center gap-2" disabled>
+          <button id="downloadWordBtn" class="md3-button px-6 py-2.5 bg-[#E8DEF8] text-[#0072ff] hover:bg-[#D0BCFF] elevation-1 flex items-center gap-2" disabled>
             <span class="material-icons">download</span>
             Télécharger
           </button>
@@ -921,7 +921,7 @@
       chip.innerHTML = `
         <span class="material-icons text-base">email</span>
         <span>${email}</span>
-        <button type="button" class="ml-1 text-[#6750A4] hover:text-[#21005D] transition-colors">
+        <button type="button" class="ml-1 text-[#0072ff] hover:text-[#21005D] transition-colors">
           <span class="material-icons text-base">close</span>
         </button>
       `
@@ -1071,9 +1071,9 @@
       const previewHTML = `
         <div class="bg-white rounded-lg">
           <!-- En-tête du document -->
-          <div class="text-center mb-6 pb-4 border-b-2 border-[#6750A4]">
-            <div class="text-sm text-[#49454F] mb-2">Paris, le <strong class="text-[#6750A4]">${dateStr}</strong></div>
-            <div class="text-xl font-bold text-[#6750A4]">${typeDocumentLabel}</div>
+          <div class="text-center mb-6 pb-4 border-b-2 border-[#0072ff]">
+            <div class="text-sm text-[#49454F] mb-2">Paris, le <strong class="text-[#0072ff]">${dateStr}</strong></div>
+            <div class="text-xl font-bold text-[#0072ff]">${typeDocumentLabel}</div>
           </div>
 
           <!-- Grille 3 colonnes -->
@@ -1143,11 +1143,11 @@
           <div class="mt-6 pt-4 border-t-2 border-gray-200 text-sm text-[#49454F]">
             <p>Je reste à votre disposition pour toute information complémentaire.</p>
             <p class="mt-2">Cordialement,</p>
-            ${data.signatureExp ? `<p class="mt-2 font-bold text-[#6750A4]">${data.signatureExp}</p>` : ''}
+            ${data.signatureExp ? `<p class="mt-2 font-bold text-[#0072ff]">${data.signatureExp}</p>` : ''}
           </div>
 
           <!-- Note informative -->
-          <div class="mt-6 bg-[#E8DEF8] border-l-4 border-[#6750A4] p-4 rounded">
+          <div class="mt-6 bg-[#E8DEF8] border-l-4 border-[#0072ff] p-4 rounded">
             <p class="text-sm text-[#21005D]">
               <span class="material-icons text-base align-middle mr-1">info</span>
               <strong>Les données en couleur seront insérées dans le template Word</strong>
@@ -1476,7 +1476,7 @@
               }
               .icon {
                 font-size: 80px;
-                color: #6750A4;
+                color: #0072ff;
                 margin-bottom: 24px;
               }
               h1 {
@@ -1494,7 +1494,7 @@
                 display: inline-flex;
                 align-items: center;
                 gap: 8px;
-                background: #6750A4;
+                background: #0072ff;
                 color: white;
                 padding: 16px 32px;
                 border-radius: 24px;
@@ -1505,7 +1505,7 @@
                 box-shadow: 0 4px 12px rgba(103, 80, 164, 0.3);
               }
               .btn:hover {
-                background: #7E57C2;
+                background: #0093ff;
                 transform: translateY(-2px);
                 box-shadow: 0 6px 16px rgba(103, 80, 164, 0.4);
               }

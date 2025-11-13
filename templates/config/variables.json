@@ -56,11 +56,10 @@
       "icon": "location_city"
     },
     "emailDestinataire": {
-      "label": "Email(s) destinataire(s)",
+      "label": "Email Destinataire",
       "type": "email",
-      "required": false,
-      "description": "Plusieurs emails séparés par virgule",
-      "placeholder": "contact@exemple.com",
+      "required": true,
+      "placeholder": "destinataire@exemple.com",
       "icon": "email"
     },
     "signatureExp": {

@@ -62,13 +62,16 @@ export const CONFIG = {
   FIELD_ORDER: {
     coordonnees: [
       'entreprise',
-      'codeDocument',
       'civiliteDestinataire',
       'nomDestinataire',
       'statutDestinataire',
       'batiment',
       'adresse',
-      'cpVille'
+      'cpVille',
+      'emailDestinataire'
+    ],
+    contenu: [
+      'codeDocument'
     ],
     expediteur: [
       'signatureExp'

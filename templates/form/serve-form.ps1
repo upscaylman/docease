@@ -105,6 +105,33 @@ function Handle-Request {
             $Response.StatusCode = 404
         }
     }
+    # Servir les fichiers images (PNG, JPG, JPEG, GIF, SVG)
+    elseif ($Path -match "^/assets/img/(.+\.(png|jpg|jpeg|gif|svg))$") {
+        $imgFile = Join-Path $ScriptDir "assets\img\$($Matches[1])"
+        if (Test-Path $imgFile) {
+            $Buffer = [System.IO.File]::ReadAllBytes($imgFile)
+
+            # Déterminer le Content-Type selon l'extension
+            $extension = $Matches[2].ToLower()
+            $contentType = switch ($extension) {
+                "png"  { "image/png" }
+                "jpg"  { "image/jpeg" }
+                "jpeg" { "image/jpeg" }
+                "gif"  { "image/gif" }
+                "svg"  { "image/svg+xml" }
+                default { "application/octet-stream" }
+            }
+
+            $Response.ContentType = $contentType
+            $Response.ContentLength64 = $Buffer.Length
+            $Response.StatusCode = 200
+
+            $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+        } else {
+            Write-Host "Image non trouvee: $imgFile" -ForegroundColor Red
+            $Response.StatusCode = 404
+        }
+    }
     else {
         $Response.StatusCode = 404
     }

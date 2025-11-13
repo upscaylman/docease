@@ -50,7 +50,7 @@ export function collectFormData() {
 
   const data = {
     templateType: templateType,
-    emailDestinataire: destinataires?.value || ''
+    emailEnvoi: destinataires?.value || ''
   };
 
   // Ajouter le nom du template pour le nom de fichier
@@ -156,7 +156,7 @@ export function generatePreviewHTML(data) {
           <div class="space-y-2 text-sm">
             ${data.signatureExp ? `<div><span class="font-semibold text-purple-900">${getFieldLabel('signatureExp')}:</span> <strong class="text-purple-700">${data.signatureExp}</strong></div>` : ''}
             <div class="mt-4">
-              <span class="font-semibold text-purple-900">Destinataires:</span>
+              <span class="font-semibold text-purple-900">Destinataires email:</span>
               <div class="mt-2 space-y-1">
                 ${data.emailDestinataire ? data.emailDestinataire.split(',').map(email =>
                   `<div class="flex items-center gap-2 text-purple-700"><span class="material-icons text-sm">email</span> ${email.trim()}</div>`

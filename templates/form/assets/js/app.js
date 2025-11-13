@@ -412,12 +412,47 @@ FO METAUX`;
 function openShareModal() {
   const modal = document.getElementById('shareModal');
   const messageTextarea = document.getElementById('shareEmailMessage');
+  const emailInput = document.getElementById('shareEmailInput');
+  const emailContainer = document.getElementById('shareEmailContainer');
 
   if (modal) {
     // Préremplir le message d'email
     if (messageTextarea) {
       messageTextarea.value = generateDefaultEmailMessage();
     }
+
+    // Pré-remplir les emails depuis le champ caché (données de test)
+    const destinatairesInput = document.getElementById('destinataires');
+    if (destinatairesInput && destinatairesInput.value && emailContainer) {
+      const emails = destinatairesInput.value.split(',').map(e => e.trim()).filter(e => e);
+
+      // Vider les chips existants
+      const existingChips = emailContainer.querySelectorAll('.email-chip');
+      existingChips.forEach(chip => chip.remove());
+
+      // Ajouter les emails comme chips dans le modal
+      emails.forEach(email => {
+        if (email && email.includes('@')) {
+          // Créer le chip manuellement pour le modal de partage
+          const chip = document.createElement('div');
+          chip.className = 'email-chip flex items-center gap-1.5 bg-[#E8DEF8] text-[#21005D] px-3 py-1.5 rounded-full text-sm font-medium elevation-1';
+          chip.innerHTML = `
+            <span class="material-icons text-base">email</span>
+            <span>${email}</span>
+            <button type="button" class="ml-1 text-[#0072ff] hover:text-[#21005D] transition-colors">
+              <span class="material-icons text-base">close</span>
+            </button>
+          `;
+
+          chip.querySelector('button').addEventListener('click', () => {
+            chip.remove();
+          });
+
+          emailContainer.insertBefore(chip, emailInput);
+        }
+      });
+    }
+
     modal.classList.remove('hidden');
   }
 }
@@ -541,7 +576,11 @@ function initShareModal() {
       emailInput.value = '';
     }
 
-    if (shareEmails.length === 0) {
+    // Récupérer les emails depuis les chips (au lieu du tableau shareEmails)
+    const emailChips = emailContainer.querySelectorAll('.email-chip span:nth-child(2)');
+    const emails = Array.from(emailChips).map(span => span.textContent.trim()).filter(e => e);
+
+    if (emails.length === 0) {
       alert('⚠️ Veuillez entrer au moins une adresse email pour partager le document');
       return;
     }
@@ -553,7 +592,7 @@ function initShareModal() {
     // Mettre à jour le champ destinataires caché
     const destinatairesInput = document.getElementById('destinataires');
     if (destinatairesInput) {
-      destinatairesInput.value = shareEmails.join(', ');
+      destinatairesInput.value = emails.join(', ');
     }
 
     // Stocker le message personnalisé dans un champ caché ou dans le state

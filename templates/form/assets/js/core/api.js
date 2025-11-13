@@ -90,10 +90,11 @@ export async function generateWordDocument(data) {
  * Envoyer un email avec le document Word en pièce jointe
  * @param {Object} data - Données du formulaire
  * @param {string} wordBase64 - Document Word en base64
+ * @param {string} customMessage - Message personnalisé pour l'email (optionnel)
  * @returns {Promise<Object>} Résultat de l'envoi
  * @throws {Error} Si l'envoi échoue
  */
-export async function sendEmailWithWord(data, wordBase64) {
+export async function sendEmailWithWord(data, wordBase64, customMessage = null) {
   try {
     console.log('📧 Envoi de l\'email avec le Word en pièce jointe');
 
@@ -101,6 +102,11 @@ export async function sendEmailWithWord(data, wordBase64) {
       ...data,
       wordfile: wordBase64
     };
+
+    // Ajouter le message personnalisé s'il existe
+    if (customMessage) {
+      payload.customEmailMessage = customMessage;
+    }
 
     console.log('📤 Payload envoyé:', payload);
 

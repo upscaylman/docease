@@ -294,6 +294,36 @@ function Handle-Request {
             $Response.OutputStream.Write($errorBuffer, 0, $errorBuffer.Length)
         }
     }
+    # Serve image files (PNG, JPG, JPEG, GIF, SVG)
+    elseif ($Path -match "^/assets/img/(.+\.(png|jpg|jpeg|gif|svg))$") {
+        $imgFile = Join-Path $ScriptDir "assets\img\$($Matches[1])"
+        Write-Host "[REQUEST] Image requested: $imgFile" -ForegroundColor Cyan
+
+        if (Test-Path $imgFile) {
+            $Buffer = [System.IO.File]::ReadAllBytes($imgFile)
+
+            # Determine Content-Type based on extension
+            $extension = $Matches[2].ToLower()
+            $contentType = switch ($extension) {
+                "png"  { "image/png" }
+                "jpg"  { "image/jpeg" }
+                "jpeg" { "image/jpeg" }
+                "gif"  { "image/gif" }
+                "svg"  { "image/svg+xml" }
+                default { "application/octet-stream" }
+            }
+
+            $Response.ContentType = $contentType
+            $Response.ContentLength64 = $Buffer.Length
+            $Response.StatusCode = 200
+
+            $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+            Write-Host "[SUCCESS] Image served: $($Buffer.Length) bytes" -ForegroundColor Green
+        } else {
+            Write-Host "[ERROR] Image not found: $imgFile" -ForegroundColor Red
+            $Response.StatusCode = 404
+        }
+    }
     elseif ($Path -eq "/favicon.ico") {
         $Response.StatusCode = 404
         $Response.Close()

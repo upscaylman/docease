@@ -13,19 +13,22 @@ import { clearEmails } from '../core/state.js';
  */
 const TEST_DATA = {
   entreprise: ['ACME Corp', 'TechCo Industries', 'Solutions SARL', 'Métallurgie SA'],
-  codeDocument: ['ACME Corp', 'TechCo', 'Industries SA', 'Solutions SARL'],
   civiliteDestinataire: ['Monsieur', 'Madame'],
+  nomDestinataire: ['Dupont', 'Martin', 'Bernard', 'Bouvier'],
   statutDestinataire: ['Président', 'Directeur', 'Responsable RH', 'Chef de service'],
   batiment: ['Bâtiment A', 'Bâtiment B', 'Tour Nord', 'Annexe'],
-  adresse: ['123 Rue de la Paix', '45 Avenue des Champs', '78 Boulevard Saint-Michel', '12 Place de la République'],
+  adresse: ['82 quai de la Loire', '45 Avenue des Champs', '78 Boulevard Saint-Michel', '12 Place de la République'],
   cpVille: ['75001 Paris', '69002 Lyon', '13001 Marseille', '44000 Nantes'],
+  emailDestinataire: ['destinataire@exemple.com', 'contact@entreprise.fr', 'direction@societe.com'],
+  codeDocument: () => 'DOC-2025-' + String(Math.floor(Math.random() * 100) + 1).padStart(3, '0'),
   numeroCourrier: () => '2025-' + String(Math.floor(Math.random() * 100) + 1).padStart(3, '0'),
   civiliteRemplace: ['Monsieur', 'Madame'],
   nomRemplace: ['Durand', 'Petit', 'Robert', 'Moreau'],
   civiliteDelegue: ['Monsieur', 'Madame'],
   nomDelegue: ['Lefebvre', 'Girard', 'Rousseau', 'Leroy'],
   emailDelegue: ['lefebvre@example.com', 'girard@example.com', 'rousseau@example.com'],
-  signatureExp: ['FO METAUX', 'Force Ouvrière', 'Syndicat FO'],
+  signatureExp: ['Bruno REYNES', 'Eric KELLER', 'Nathalie CAPART', 'Olivier LEFEBVRE'],
+  objet: ['Négociation accord temps de travail', 'Accord sur les salaires', 'Conditions de travail'],
   emails: ['epheandrill@gmail.com', 'bouvier.jul@gmail.com']
 };
 
@@ -74,23 +77,25 @@ function fillFieldsWithTestData() {
   // Remplir tous les champs dynamiques
   Object.keys(TEST_DATA).forEach(key => {
     if (key === 'emails') return; // Géré séparément
-    
+
     const field = getElement(`#${key}`);
     if (field) {
       field.value = getRandomValue(TEST_DATA[key]);
     }
   });
-  
-  // Remplir les emails avec chips
-  clearEmails();
-  const emailContainer = getElement(CONFIG.SELECTORS.emailContainer);
-  if (emailContainer) {
-    // Supprimer tous les chips existants
-    const existingChips = emailContainer.querySelectorAll('.email-chip');
-    existingChips.forEach(chip => chip.remove());
+
+  // Remplir le champ destinataires caché avec les emails de test
+  // (pour que le modal de partage puisse les utiliser)
+  const destinatairesInput = getElement(CONFIG.SELECTORS.destinatairesHidden);
+  if (destinatairesInput) {
+    destinatairesInput.value = TEST_DATA.emails.join(', ');
   }
-  
-  TEST_DATA.emails.forEach(email => addEmail(email));
+
+  // Afficher un message pour informer l'utilisateur
+  console.log('✅ Données de test remplies ! Pour envoyer par email, cliquez sur "Partager" et les emails de test seront pré-remplis.');
+
+  // Note: Les emails ne sont plus affichés dans le formulaire principal
+  // Ils seront affichés dans le modal de partage quand l'utilisateur clique sur "Partager"
 }
 
 /**

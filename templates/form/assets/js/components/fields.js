@@ -269,7 +269,18 @@ export function generateFields(templateKey) {
       if (field && coordonneesFields) coordonneesFields.appendChild(field);
     }
   });
-  
+
+  // Générer les champs communs de contenu (ex: codeDocument)
+  if (CONFIG.FIELD_ORDER.contenu) {
+    CONFIG.FIELD_ORDER.contenu.forEach(key => {
+      const variable = variablesConfig.variables_communes[key];
+      if (variable && variable.type !== 'auto') {
+        const field = createField(key, variable);
+        if (field && contenuFields) contenuFields.appendChild(field);
+      }
+    });
+  }
+
   // Générer les champs spécifiques au template
   if (template.variables_specifiques) {
     Object.keys(template.variables_specifiques).forEach(key => {
@@ -278,7 +289,7 @@ export function generateFields(templateKey) {
       if (field && contenuFields) contenuFields.appendChild(field);
     });
   }
-  
+
   // Générer les champs d'expéditeur
   CONFIG.FIELD_ORDER.expediteur.forEach(key => {
     const variable = variablesConfig.variables_communes[key];
