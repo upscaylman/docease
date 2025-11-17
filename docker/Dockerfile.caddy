@@ -1,0 +1,17 @@
+# Dockerfile pour compiler Caddy avec le module rate limiting
+# Usage: docker build -f Dockerfile.caddy -t caddy-ratelimit:latest .
+
+FROM caddy:2-builder AS builder
+
+# Compiler Caddy avec le module rate limiting
+# Module: github.com/mholt/caddy-ratelimit
+RUN xcaddy build \
+    --with github.com/mholt/caddy-ratelimit
+
+FROM caddy:2-alpine
+
+# Copier le binaire compilé avec le module rate limiting
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+
+# Vérifier que le module est inclus
+RUN caddy list-modules | grep -q ratelimit && echo "✅ Module ratelimit inclus" || echo "⚠️  Module ratelimit non trouvé"

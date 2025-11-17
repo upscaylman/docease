@@ -3,13 +3,26 @@
 
 # Remplacez votre-domaine.com par votre domaine réel
 votre-domaine.com {
-    # Reverse proxy vers n8n
-    reverse_proxy n8n:5678 {
-        # Headers pour le proxy
-        header_up Host {host}
-        header_up X-Real-IP {remote_host}
-        header_up X-Forwarded-For {remote_host}
-        header_up X-Forwarded-Proto {scheme}
+    # Rate limiting - Protection contre les abus (spam, DoS)
+    # Limite à 10 requêtes par minute par IP
+    # Module: http.handlers.rate_limit (github.com/mholt/caddy-ratelimit)
+    route {
+        rate_limit {
+            zone webhook {
+                key {remote_ip}
+                events 10
+                window 1m
+            }
+        }
+        
+        # Reverse proxy vers n8n
+        reverse_proxy n8n:5678 {
+            # Headers pour le proxy
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
     }
 
     # Headers de sécurité

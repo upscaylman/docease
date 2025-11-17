@@ -32,8 +32,8 @@ $DockerDir = Join-Path $ScriptDir "docker"
 if (Test-Path $DockerDir) {
     Set-Location $DockerDir
     
-    Write-Host "📦 Arrêt des conteneurs Docker..." -ForegroundColor Cyan
-    docker-compose down
+    Write-Host "📦 Arrêt des conteneurs Docker (n8n, PostgreSQL, Ollama)..." -ForegroundColor Cyan
+    docker compose down
     
     if ($LASTEXITCODE -eq 0) {
         Write-Host "✅ Conteneurs Docker arrêtés" -ForegroundColor Green

@@ -36,9 +36,9 @@ if [ ! -f ".env" ]; then
     fi
 fi
 
-# Démarrer les services
-echo -e "${BLUE}📦 Démarrage des conteneurs Docker...${NC}"
-docker-compose up -d
+# Démarrer les services (mode développement par défaut)
+echo -e "${BLUE}📦 Démarrage des conteneurs Docker (mode développement)...${NC}"
+docker compose up -d
 
 # Attendre quelques secondes pour que n8n démarre
 echo -e "${BLUE}⏳ Attente du démarrage de n8n...${NC}"
@@ -53,7 +53,7 @@ if docker ps | grep -q n8n-local; then
     echo "   - Documentation: Voir docs/INSTALLATION.md"
     echo ""
     echo "📊 Statut des conteneurs:"
-    docker-compose ps
+    docker compose ps
     echo ""
     echo "💡 Commandes utiles:"
     echo "   - Voir les logs: ./scripts/logs.sh"

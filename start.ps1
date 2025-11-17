@@ -39,13 +39,13 @@ if (-not (Test-Path ".env")) {
     }
 }
 
-# Démarrer les services
-Write-Host "📦 Démarrage des conteneurs Docker..." -ForegroundColor Cyan
-docker-compose up -d
+# Démarrer les services (mode développement par défaut)
+Write-Host "📦 Démarrage des conteneurs Docker (mode développement)..." -ForegroundColor Cyan
+docker compose up -d
 
-# Attendre quelques secondes pour que n8n démarre
-Write-Host "⏳ Attente du démarrage de n8n..." -ForegroundColor Cyan
-Start-Sleep -Seconds 5
+# Attendre que PostgreSQL soit prêt et que n8n démarre
+Write-Host "⏳ Attente du démarrage de PostgreSQL et n8n..." -ForegroundColor Cyan
+Start-Sleep -Seconds 8
 
 # Vérifier que le conteneur est en cours d'exécution
 if (docker ps | Select-String -Pattern "n8n-local") {
@@ -64,14 +64,15 @@ if (docker ps | Select-String -Pattern "n8n-local") {
     Write-Host "📋 Informations:" -ForegroundColor Cyan
     Write-Host "   - Interface n8n: http://localhost:5678"
     Write-Host "   - Formulaire: http://localhost:3000"
+    Write-Host "   - PostgreSQL: localhost:5432"
     Write-Host "   - Documentation: Voir docs/INSTALLATION.md"
     Write-Host ""
     Write-Host "📊 Statut des conteneurs:" -ForegroundColor Cyan
-    docker-compose ps
+    docker compose ps
     Write-Host ""
     Write-Host "💡 Commandes utiles:" -ForegroundColor Cyan
-    Write-Host "   - Voir les logs: docker-compose logs -f"
-    Write-Host "   - Arrêter n8n: docker-compose down"
+    Write-Host "   - Voir les logs: docker compose logs -f"
+    Write-Host "   - Arrêter n8n: docker compose down"
     Write-Host "   - Statut: docker ps"
     Write-Host ""
     Write-Host "⚠️  Pour arrêter le serveur de formulaire:" -ForegroundColor Yellow
@@ -79,6 +80,6 @@ if (docker ps | Select-String -Pattern "n8n-local") {
 }
 else {
     Write-Host "❌ Erreur: n8n n'a pas démarré correctement" -ForegroundColor Red
-    Write-Host "   Consultez les logs avec: docker-compose logs" -ForegroundColor Yellow
+    Write-Host "   Consultez les logs avec: docker compose logs" -ForegroundColor Yellow
     exit 1
 }
