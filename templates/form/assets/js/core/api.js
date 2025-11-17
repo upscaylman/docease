@@ -24,11 +24,11 @@ export async function loadVariablesConfig() {
     }
     
     const config = JSON.parse(text);
-    console.log('✅ Variables config loaded:', config);
+    console.log('Variables config loaded:', config);
     
     return config;
   } catch (error) {
-    console.error('❌ Erreur chargement variables.json:', error);
+    console.error('Erreur chargement variables.json:', error);
     throw error;
   }
 }
@@ -41,7 +41,7 @@ export async function loadVariablesConfig() {
  */
 export async function generateWordDocument(data) {
   try {
-    console.log('📤 Génération du Word via formulaire-doc:', data);
+    console.log('Génération du Word via formulaire-doc:', data);
 
     const response = await fetch(CONFIG.WEBHOOK_URL, {
       method: 'POST',
@@ -59,7 +59,7 @@ export async function generateWordDocument(data) {
     if (contentType && contentType.includes('application/json')) {
       // Réponse JSON avec base64
       const result = await response.json();
-      console.log('✅ Réponse JSON reçue:', result);
+      console.log('Réponse JSON reçue:', result);
 
       if (!result.success || !result.data) {
         throw new Error('Fichier Word non trouvé dans la réponse');
@@ -69,7 +69,7 @@ export async function generateWordDocument(data) {
     } else {
       // Réponse binaire directe - convertir en base64
       const blob = await response.blob();
-      console.log('✅ Réponse binaire reçue');
+      console.log('Réponse binaire reçue');
 
       const base64 = await new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -81,7 +81,7 @@ export async function generateWordDocument(data) {
       return { success: true, data: base64 };
     }
   } catch (error) {
-    console.error('❌ Erreur génération Word:', error);
+    console.error('Erreur génération Word:', error);
     throw error;
   }
 }
@@ -96,7 +96,7 @@ export async function generateWordDocument(data) {
  */
 export async function sendEmailWithWord(data, wordBase64, customMessage = null) {
   try {
-    console.log('📧 Envoi de l\'email avec le Word en pièce jointe');
+    console.log('Envoi de l\'email avec le Word en pièce jointe');
 
     const payload = {
       ...data,
@@ -108,7 +108,7 @@ export async function sendEmailWithWord(data, wordBase64, customMessage = null) 
       payload.customEmailMessage = customMessage;
     }
 
-    console.log('📤 Payload envoyé:', payload);
+    console.log('Payload envoyé:', payload);
 
     const response = await fetch(CONFIG.WEBHOOK_EMAIL_URL, {
       method: 'POST',
@@ -130,11 +130,11 @@ export async function sendEmailWithWord(data, wordBase64, customMessage = null) 
       result = { success: true, message: 'Email envoyé avec succès' };
     }
 
-    console.log('✅ Email envoyé:', result);
+    console.log('Email envoyé:', result);
 
     return result;
   } catch (error) {
-    console.error('❌ Erreur envoi email:', error);
+    console.error('Erreur envoi email:', error);
     throw error;
   }
 }

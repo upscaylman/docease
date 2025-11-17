@@ -179,7 +179,7 @@ function createTextareaField(key, config) {
     magicBtn.addEventListener('click', async () => {
       const originalText = textarea.value.trim();
       if (!originalText || originalText.length < 10) {
-        alert('⚠️ Veuillez saisir au moins 10 caractères pour utiliser l\'IA');
+        alert('Veuillez saisir au moins 10 caractères pour utiliser l\'IA');
         return;
       }
 
@@ -212,18 +212,14 @@ function createTextareaField(key, config) {
         textarea.dispatchEvent(new Event('input', { bubbles: true }));
         textarea.dispatchEvent(new Event('change', { bubbles: true }));
 
-        // Afficher un message de succès
-        const successMsg = document.createElement('div');
-        successMsg.className = 'text-xs text-green-600 mt-1';
-        successMsg.textContent = '✨ Texte amélioré avec l\'IA !';
-        if (charCounter) {
-          charCounter.parentNode.insertBefore(successMsg, charCounter.nextSibling);
-          setTimeout(() => successMsg.remove(), 3000);
-        }
+        // Afficher un message de succès via toast
+        const { showSuccessToast } = await import('../utils/toast.js');
+        showSuccessToast('Texte amélioré avec l\'IA !');
 
       } catch (error) {
         console.error('Erreur IA:', error);
-        alert('❌ Erreur lors de l\'amélioration du texte. Vérifiez qu\'Ollama est actif.');
+        const { showErrorToast } = await import('../utils/toast.js');
+        showErrorToast('Erreur lors de l\'amélioration du texte. Vérifiez qu\'Ollama est actif.');
       } finally {
         // Réactiver le bouton
         magicBtn.disabled = false;
@@ -276,6 +272,14 @@ function createInputField(key, config) {
   input.required = config.required || false;
   if (config.default) input.value = config.default;
 
+  // Si c'est le champ codeDocument, le rendre readonly et stylisé
+  if (key === 'codeDocument') {
+    input.readOnly = true;
+    input.className += ' bg-gradient-to-r from-blue-50 to-gray-50 cursor-not-allowed font-mono text-blue-900';
+    input.style.fontWeight = '600';
+    input.style.letterSpacing = '0.5px';
+  }
+
   // Variable pour savoir si on est en train d'effacer via le bouton
   let isClearing = false;
 
@@ -302,7 +306,7 @@ function createInputField(key, config) {
 
       const value = e.target.value.toLowerCase();
       if (value.match(/\b(le|la)\b/)) {
-        alert('⚠️ Les mots "le" ou "la" ne sont pas autorisés dans le statut. Utilisez directement le titre (ex: "Directeur" au lieu de "le Directeur")');
+        alert('Les mots "le" ou "la" ne sont pas autorisés dans le statut. Utilisez directement le titre (ex: "Directeur" au lieu de "le Directeur")');
       }
     });
   }
@@ -355,26 +359,74 @@ function createInputField(key, config) {
 }
 
 /**
+ * Extraire les initiales d'un nom (en tenant compte des traits d'union)
+ * @param {string} fullName - Nom complet (ex: "Jean-Paul Sartre")
+ * @returns {string} Initiales (ex: "JPS")
+ */
+function getInitials(fullName) {
+  if (!fullName) return '';
+
+  // Remplacer les traits d'union par des espaces pour séparer les prénoms composés
+  const normalized = fullName.replace(/-/g, ' ').trim();
+
+  // Extraire les initiales de chaque mot
+  const initials = normalized
+    .split(/\s+/)
+    .map(word => word.charAt(0).toUpperCase())
+    .join('');
+
+  return initials;
+}
+
+/**
+ * Générer automatiquement le code document depuis signatureExp
+ */
+function setupCodeDocumentAutoGeneration() {
+  const signatureExpField = document.getElementById('signatureExp');
+  const codeDocumentField = document.getElementById('codeDocument');
+
+  if (!signatureExpField || !codeDocumentField) return;
+
+  // Générer le code au changement de signatureExp
+  signatureExpField.addEventListener('change', () => {
+    const initials = getInitials(signatureExpField.value);
+    if (initials) {
+      // Format: INITIALES-ANNEE-XXX
+      const year = new Date().getFullYear();
+      const randomNum = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+      codeDocumentField.value = `${initials}-${year}-${randomNum}`;
+
+      console.log(`Code document généré: ${codeDocumentField.value}`);
+    }
+  });
+
+  // Générer automatiquement si signatureExp a déjà une valeur
+  if (signatureExpField.value) {
+    signatureExpField.dispatchEvent(new Event('change'));
+  }
+}
+
+/**
  * Générer les champs dynamiquement selon le template sélectionné
  * @param {string} templateKey - Clé du template
  */
 export function generateFields(templateKey) {
   const variablesConfig = getVariablesConfig();
   if (!variablesConfig) return;
-  
+
   setCurrentTemplate(templateKey);
   const template = variablesConfig.templates[templateKey];
   if (!template) return;
-  
+
   // Vider les conteneurs de champs
   const coordonneesFields = getElement(CONFIG.SELECTORS.coordonneesFields);
   const contenuFields = getElement(CONFIG.SELECTORS.contenuFields);
   const expediteurFields = getElement(CONFIG.SELECTORS.expediteurFields);
-  
+
   if (coordonneesFields) coordonneesFields.innerHTML = '';
   if (contenuFields) contenuFields.innerHTML = '';
   if (expediteurFields) expediteurFields.innerHTML = '';
-  
+
   // Générer les champs de coordonnées
   CONFIG.FIELD_ORDER.coordonnees.forEach(key => {
     const variable = variablesConfig.variables_communes[key];
@@ -412,5 +464,10 @@ export function generateFields(templateKey) {
       if (field && expediteurFields) expediteurFields.appendChild(field);
     }
   });
+
+  // Configurer la génération automatique du code document
+  setTimeout(() => {
+    setupCodeDocumentAutoGeneration();
+  }, 100);
 }
 

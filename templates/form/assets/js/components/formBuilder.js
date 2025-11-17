@@ -20,7 +20,7 @@ let sortableInstance = null; // Instance Sortable pour le drag & drop
  * @param {Object} communes - Variables communes
  */
 export function initFormBuilder(templateType, variables, communes = {}) {
-  console.log('🔧 initFormBuilder appelé', templateType, variables, communes);
+  console.log('initFormBuilder appelé', templateType, variables, communes);
 
   currentTemplate = templateType;
   availableVariables = variables;
@@ -41,7 +41,7 @@ export function initFormBuilder(templateType, variables, communes = {}) {
     }));
   }
 
-  console.log('📋 selectedFields:', selectedFields);
+  console.log('selectedFields:', selectedFields);
 
   // Ajouter le bouton "Personnaliser" si pas déjà présent
   addCustomizeButton();
@@ -94,11 +94,11 @@ function getVariableCategory(key, communes, specifiques) {
  * Ajouter le bouton "Personnaliser les champs" dans la barre flottante
  */
 function addCustomizeButton() {
-  console.log('🔘 addCustomizeButton appelé');
+  console.log('addCustomizeButton appelé');
 
   const customizeBtn = document.getElementById('customizeFieldsBtn');
   if (!customizeBtn) {
-    console.error('❌ Bouton customizeFieldsBtn non trouvé dans le HTML');
+    console.error('Bouton customizeFieldsBtn non trouvé dans le HTML');
     return;
   }
 
@@ -112,7 +112,7 @@ function addCustomizeButton() {
   // Ajouter le listener
   newBtn.addEventListener('click', toggleEditMode);
 
-  console.log('✅ Bouton personnaliser affiché dans la barre flottante');
+  console.log('Bouton personnaliser affiché dans la barre flottante');
 }
 
 /**
@@ -140,7 +140,7 @@ function showEditMode() {
 
   // Détecter l'onglet actif au démarrage
   currentCategory = detectActiveTab();
-  console.log('📍 Catégorie détectée:', currentCategory);
+  console.log('Catégorie détectée:', currentCategory);
 
   // Écouter les clics sur les onglets existants
   listenToExistingTabs();
@@ -186,9 +186,9 @@ function showEditMode() {
 
   // Bouton "Terminer"
   document.getElementById('doneEditBtn').addEventListener('click', () => {
-    console.log('💾 Sauvegarde de la config pour:', currentTemplate);
+    console.log('Sauvegarde de la config pour:', currentTemplate);
     saveFormConfig(currentTemplate, selectedFields);
-    console.log('✅ Config sauvegardée !');
+    console.log('Config sauvegardée !');
     hideEditMode();
   });
 }
@@ -331,7 +331,7 @@ function detectActiveTab() {
   if (activeTabButton) {
     const tabName = activeTabButton.getAttribute('data-tab');
     currentCategory = tabName;
-    console.log('✅ Onglet actif détecté:', tabName);
+    console.log('Onglet actif détecté:', tabName);
     return tabName;
   } else {
     // Vérifier les sections visibles
@@ -341,19 +341,19 @@ function detectActiveTab() {
 
     if (coordSection && coordSection.classList.contains('active')) {
       currentCategory = 'coordonnees';
-      console.log('📍 Section active: Coordonnées');
+      console.log('Section active: Coordonnées');
       return 'coordonnees';
     } else if (contenuSection && contenuSection.classList.contains('active')) {
       currentCategory = 'contenu';
-      console.log('📄 Section active: Contenu');
+      console.log('Section active: Contenu');
       return 'contenu';
     } else if (expediteurSection && expediteurSection.classList.contains('active')) {
       currentCategory = 'expediteur';
-      console.log('✍️ Section active: Expéditeur');
+      console.log('Section active: Expéditeur');
       return 'expediteur';
     } else {
       currentCategory = 'coordonnees'; // Par défaut
-      console.log('📍 Onglet par défaut: Coordonnées');
+      console.log('Onglet par défaut: Coordonnées');
       return 'coordonnees';
     }
   }
@@ -369,7 +369,7 @@ function listenToExistingTabs() {
   tabButtons.forEach(button => {
     button.addEventListener('click', () => {
       const tabName = button.getAttribute('data-tab');
-      console.log('🔄 Changement vers:', tabName);
+      console.log('Changement vers:', tabName);
       currentCategory = tabName;
       // Rafraîchir les chips avec la nouvelle catégorie
       setTimeout(() => renderAvailableVariablesChips(), 100);
@@ -445,24 +445,24 @@ function renderVariablesPalette() {
     }
   });
 
-  console.log('🎯 Catégorie actuelle:', currentCategory);
-  console.log('📦 Catégories disponibles:', Object.keys(categories));
+  console.log('Catégorie actuelle:', currentCategory);
+  console.log('Catégories disponibles:', Object.keys(categories));
 
   // Afficher chaque catégorie (filtrer selon currentCategory)
   Object.entries(categories).forEach(([catKey, catData]) => {
-    console.log(`🔍 Vérification catégorie ${catKey}:`, catData);
+    console.log(`Vérification catégorie ${catKey}:`, catData);
 
     // Filtrer selon la catégorie sélectionnée
     if (currentCategory !== catKey) {
-      console.log(`❌ Catégorie ${catKey} ignorée (currentCategory=${currentCategory})`);
+      console.log(`Catégorie ${catKey} ignorée (currentCategory=${currentCategory})`);
       return;
     }
     if (Object.keys(catData.vars).length === 0) {
-      console.log(`❌ Catégorie ${catKey} vide`);
+      console.log(`Catégorie ${catKey} vide`);
       return;
     }
 
-    console.log(`✅ Affichage catégorie ${catKey}`);
+    console.log(`Affichage catégorie ${catKey}`);
 
     const section = document.createElement('div');
     section.className = 'mb-4';
@@ -596,18 +596,18 @@ function renderAvailableVariablesChips() {
 
   container.innerHTML = '';
 
-  console.log('🎨 Rendu des chips, catégorie:', currentCategory);
-  console.log('📦 Variables communes:', variablesCommunes);
-  console.log('📦 Variables spécifiques:', availableVariables);
+  console.log('Rendu des chips, catégorie:', currentCategory);
+  console.log('Variables communes:', variablesCommunes);
+  console.log('Variables spécifiques:', availableVariables);
 
   // Fusionner toutes les variables
   const allVars = { ...variablesCommunes, ...availableVariables };
-  console.log('📦 Toutes les variables:', allVars);
+  console.log('Toutes les variables:', allVars);
 
   Object.entries(allVars).forEach(([key, config]) => {
     const category = getVariableCategory(key, variablesCommunes, availableVariables);
 
-    console.log(`🔍 Variable ${key}: catégorie=${category}, currentCategory=${currentCategory}`);
+    console.log(`Variable ${key}: catégorie=${category}, currentCategory=${currentCategory}`);
 
     // Filtrer selon la catégorie active
     if (currentCategory !== category) return;
@@ -634,7 +634,7 @@ function renderAvailableVariablesChips() {
     container.appendChild(chip);
   });
 
-  console.log('✅ Chips rendus:', container.children.length);
+  console.log('Chips rendus:', container.children.length);
 }
 
 /**
@@ -673,7 +673,7 @@ function addFieldVisually(key, config, category) {
 
   const container = document.getElementById(containerId);
   if (!container) {
-    console.error('❌ Conteneur non trouvé:', containerId);
+    console.error('Conteneur non trouvé:', containerId);
     return;
   }
 
@@ -708,7 +708,7 @@ function addFieldVisually(key, config, category) {
     removeFieldSimple(key, fieldWrapper);
   });
 
-  console.log('✅ Champ ajouté:', key, 'dans', containerId);
+  console.log('Champ ajouté:', key, 'dans', containerId);
 }
 
 /**
@@ -811,7 +811,7 @@ function makeFieldsEditable() {
               type: config.type || 'text',
               category: category
             });
-            console.log(`✅ Ajouté à selectedFields: ${fieldKey}`);
+            console.log(`Ajouté à selectedFields: ${fieldKey}`);
           }
         }
 
@@ -831,12 +831,12 @@ function makeFieldsEditable() {
         chosenClass: 'sortable-chosen',
         dragClass: 'sortable-drag',
         onEnd: (evt) => {
-          console.log(`🔄 Drag & drop terminé dans ${id}`);
+          console.log(`Drag & drop terminé dans ${id}`);
           updateSelectedFieldsOrder();
         }
       });
 
-      console.log(`✅ Drag & drop activé sur ${id} (${existingFields.length} champs)`);
+      console.log(`Drag & drop activé sur ${id} (${existingFields.length} champs)`);
     }
   });
 
@@ -889,14 +889,14 @@ function initDragAndDrop() {
  */
 function saveFormConfig(templateType, fields) {
   const key = `formConfig_${templateType}`;
-  console.log(`💾 Sauvegarde dans localStorage avec clé: ${key}`);
-  console.log('📦 Données à sauvegarder:', fields);
+  console.log(`Sauvegarde dans localStorage avec clé: ${key}`);
+  console.log('Données à sauvegarder:', fields);
   localStorage.setItem(key, JSON.stringify(fields));
-  console.log('✅ Sauvegarde réussie !');
+  console.log('Sauvegarde réussie !');
 
   // Vérifier que c'est bien sauvegardé
   const verification = localStorage.getItem(key);
-  console.log('🔍 Vérification:', verification);
+  console.log('Vérification:', verification);
 }
 
 /**
@@ -905,8 +905,8 @@ function saveFormConfig(templateType, fields) {
 function loadFormConfig(templateType) {
   const key = `formConfig_${templateType}`;
   const saved = localStorage.getItem(key);
-  console.log(`📂 Chargement depuis localStorage avec clé: ${key}`);
-  console.log('📦 Données chargées:', saved);
+  console.log(`Chargement depuis localStorage avec clé: ${key}`);
+  console.log('Données chargées:', saved);
   return saved ? JSON.parse(saved) : null;
 }
 

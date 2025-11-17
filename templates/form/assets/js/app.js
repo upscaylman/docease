@@ -13,14 +13,14 @@ import { initTabs } from './components/tabs.js';
 import { initPreviewButtons } from './components/preview.js';
 import { checkRequiredFields, generateLocalPreview } from './utils/validation.js';
 import { initTestDataButton } from './utils/testData.js';
-import { showMessage } from './utils/helpers.js';
+import { showErrorToast } from './utils/toast.js';
 import { initFormBuilder, getSelectedFields, hasCustomConfig, hideCustomizeButton } from './components/formBuilder.js';
 
 /**
  * Initialiser l'application
  */
 async function initApp() {
-  console.log('🚀 Initialisation de l\'application...');
+  console.log('Initialisation de l\'application...');
 
   try {
     // Charger la configuration des variables
@@ -48,13 +48,10 @@ async function initApp() {
     // Restaurer le template sélectionné si on revient du builder
     restoreLastTemplate();
 
-    console.log('✅ Application initialisée avec succès');
+    console.log('Application initialisée avec succès');
   } catch (error) {
-    console.error('❌ Erreur lors de l\'initialisation:', error);
-    const msg = getElement(CONFIG.SELECTORS.message);
-    if (msg) {
-      showMessage(msg, `${CONFIG.MESSAGES.ERROR_LOAD_CONFIG}: ${error.message}`, 'error');
-    }
+    console.error('Erreur lors de l\'initialisation:', error);
+    showErrorToast(`${CONFIG.MESSAGES.ERROR_LOAD_CONFIG}: ${error.message}`);
   }
 }
 
@@ -66,7 +63,7 @@ function populateTemplateSelector(config) {
   const templateSelect = getElement(CONFIG.SELECTORS.templateSelect);
   if (!templateSelect) return;
   
-  templateSelect.innerHTML = '<option value="">📄 Choisir un type de document...</option>';
+  templateSelect.innerHTML = '<option value="">Choisir un type de document...</option>';
   
   Object.keys(config.templates).forEach(key => {
     const template = config.templates[key];
@@ -122,14 +119,14 @@ function initTemplateSelector() {
         // Initialiser le form builder pour le template "custom"
         if (templateKey === 'custom') {
           const config = await loadVariablesConfig();
-          console.log('📦 Config chargée:', config);
+          console.log('Config chargée:', config);
           const templateConfig = config.templates ? config.templates[templateKey] : null;
-          console.log('📄 Template config:', templateConfig);
+          console.log('Template config:', templateConfig);
           if (templateConfig && templateConfig.variables_specifiques) {
-            console.log('✅ Appel initFormBuilder');
+            console.log('Appel initFormBuilder');
             initFormBuilder(templateKey, templateConfig.variables_specifiques, config.variables_communes || {});
           } else {
-            console.error('❌ Pas de variables_specifiques trouvées');
+            console.error('Pas de variables_specifiques trouvées');
           }
         }
 
@@ -384,7 +381,7 @@ function initFloatingActionBar() {
   const clearAllDataBtn = document.getElementById('clearAllDataBtn');
   if (clearAllDataBtn) {
     clearAllDataBtn.addEventListener('click', () => {
-      if (confirm('⚠️ Êtes-vous sûr de vouloir effacer toutes les données du formulaire ?')) {
+      if (confirm('Êtes-vous sûr de vouloir effacer toutes les données du formulaire ?')) {
         clearAllFormData();
       }
     });
@@ -424,7 +421,7 @@ function clearAllFormData() {
     destinataires.value = '';
   }
 
-  console.log('✅ Toutes les données du formulaire ont été effacées');
+  console.log('Toutes les données du formulaire ont été effacées');
 }
 
 /**
@@ -628,7 +625,7 @@ function initShareModal() {
     const emails = Array.from(emailChips).map(span => span.textContent.trim()).filter(e => e);
 
     if (emails.length === 0) {
-      alert('⚠️ Veuillez entrer au moins une adresse email pour partager le document');
+      alert('Veuillez entrer au moins une adresse email pour partager le document');
       return;
     }
 
@@ -663,7 +660,7 @@ function initShareModal() {
 function restoreLastTemplate() {
   const lastTemplate = sessionStorage.getItem('lastSelectedTemplate');
   if (lastTemplate) {
-    console.log('🔄 Restauration du template:', lastTemplate);
+    console.log('Restauration du template:', lastTemplate);
     const templateSelect = document.getElementById('template');
     if (templateSelect) {
       templateSelect.value = lastTemplate;
@@ -679,7 +676,7 @@ function restoreLastTemplate() {
  * Sauvegarder les valeurs du formulaire pour un template
  */
 function saveFormValues(templateKey) {
-  console.log('💾 Sauvegarde des valeurs pour:', templateKey);
+  console.log('Sauvegarde des valeurs pour:', templateKey);
   const formData = {};
 
   // Récupérer tous les champs du formulaire
@@ -705,7 +702,7 @@ function saveFormValues(templateKey) {
     formData['destinataires'] = destinataires.value;
   }
 
-  console.log('📦 Données sauvegardées:', formData);
+  console.log('Données sauvegardées:', formData);
   localStorage.setItem(`formValues_${templateKey}`, JSON.stringify(formData));
 }
 
@@ -715,13 +712,13 @@ function saveFormValues(templateKey) {
 function restoreFormValues(templateKey) {
   const saved = localStorage.getItem(`formValues_${templateKey}`);
   if (!saved) {
-    console.log('📂 Pas de valeurs sauvegardées pour:', templateKey);
+    console.log('Pas de valeurs sauvegardées pour:', templateKey);
     return;
   }
 
-  console.log('🔄 Restauration des valeurs pour:', templateKey);
+  console.log('Restauration des valeurs pour:', templateKey);
   const formData = JSON.parse(saved);
-  console.log('📦 Données restaurées:', formData);
+  console.log('Données restaurées:', formData);
 
   // Restaurer les valeurs dans les champs
   Object.entries(formData).forEach(([fieldId, value]) => {
@@ -744,9 +741,9 @@ function restoreFormValues(templateKey) {
 
       // Déclencher l'événement input pour mettre à jour l'UI
       input.dispatchEvent(new Event('input', { bubbles: true }));
-      console.log(`✅ Restauré ${fieldId}:`, value);
+      console.log(`Restauré ${fieldId}:`, value);
     } else {
-      console.log(`❌ Champ non trouvé: ${fieldId}`);
+      console.log(`Champ non trouvé: ${fieldId}`);
     }
   });
 }
@@ -755,7 +752,7 @@ function restoreFormValues(templateKey) {
  * Initialiser l'auto-save pour un template
  */
 function initAutoSave(templateKey) {
-  console.log('🔄 Initialisation auto-save pour:', templateKey);
+  console.log('Initialisation auto-save pour:', templateKey);
 
   // Écouter tous les changements de champs
   const inputs = document.querySelectorAll('#dynamicFields input, #dynamicFields select, #dynamicFields textarea');

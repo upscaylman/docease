@@ -92,7 +92,7 @@ function fillFieldsWithTestData() {
   }
 
   // Afficher un message pour informer l'utilisateur
-  console.log('✅ Données de test remplies ! Pour envoyer par email, cliquez sur "Partager" et les emails de test seront pré-remplis.');
+  console.log('Données de test remplies ! Pour envoyer par email, cliquez sur "Partager" et les emails de test seront pré-remplis.');
 
   // Note: Les emails ne sont plus affichés dans le formulaire principal
   // Ils seront affichés dans le modal de partage quand l'utilisateur clique sur "Partager"

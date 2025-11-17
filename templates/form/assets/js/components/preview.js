@@ -6,7 +6,8 @@ import { CONFIG, getElement } from '../core/config.js';
 import { setGeneratedWord, getGeneratedWord, setFormData } from '../core/state.js';
 import { generateWordDocument, sendEmailWithWord, base64ToBlob, downloadBlob } from '../core/api.js';
 import { collectFormData } from '../utils/validation.js';
-import { showMessage, generateFilename } from '../utils/helpers.js';
+import { generateFilename } from '../utils/helpers.js';
+import { showSuccessToast, showErrorToast } from '../utils/toast.js';
 
 /**
  * Ouvrir le modal de prévisualisation
@@ -37,7 +38,7 @@ export async function downloadWord() {
     const data = collectFormData();
     setFormData(data);
     
-    console.log('📤 Génération du Word via formulaire-doc:', data);
+    console.log('Génération du Word via formulaire-doc:', data);
     
     // Appeler le webhook pour générer le Word
     const result = await generateWordDocument(data);
@@ -47,7 +48,7 @@ export async function downloadWord() {
     
     // Convertir base64 en blob pour le téléchargement
     const blob = base64ToBlob(result.data);
-    console.log('✅ Word converti en blob:', blob.size, 'octets');
+    console.log('Word converti en blob:', blob.size, 'octets');
     
     // Télécharger le Word avec le nom du template
     const templateName = data.templateName || data.templateType || 'Document';
@@ -55,22 +56,14 @@ export async function downloadWord() {
     const filename = generateFilename(cleanName, 'docx');
     downloadBlob(blob, filename);
     
-    if (msg) {
-      showMessage(msg, CONFIG.MESSAGES.SUCCESS_DOWNLOAD, 'success');
-    } else {
-      alert(CONFIG.MESSAGES.SUCCESS_DOWNLOAD);
-    }
+    showSuccessToast(CONFIG.MESSAGES.SUCCESS_DOWNLOAD);
     
     btn.disabled = false;
     btn.innerHTML = originalHTML;
   } catch (error) {
     console.error('Erreur:', error);
     
-    if (msg) {
-      showMessage(msg, `${CONFIG.MESSAGES.ERROR_GENERATION} : ${error.message}`, 'error');
-    } else {
-      alert(`${CONFIG.MESSAGES.ERROR_GENERATION} : ${error.message}`);
-    }
+    showErrorToast(`${CONFIG.MESSAGES.ERROR_GENERATION} : ${error.message}`);
     
     btn.disabled = false;
     btn.innerHTML = originalHTML;
@@ -97,7 +90,7 @@ export async function sendEmail() {
 
     // Si pas de Word généré, le générer d'abord
     if (!wordBase64) {
-      console.log('📄 Génération du Word avant envoi...');
+      console.log('Génération du Word avant envoi...');
       const data = collectFormData();
       setFormData(data);
 
@@ -113,7 +106,7 @@ export async function sendEmail() {
     const customMessage = document.body.getAttribute('data-custom-email-message');
 
     // Envoyer l'email avec le Word
-    console.log('📧 Envoi de l\'email avec le Word en pièce jointe');
+    console.log('Envoi de l\'email avec le Word en pièce jointe');
     await sendEmailWithWord(data, wordBase64, customMessage);
 
     // Nettoyer le message personnalisé après envoi
@@ -121,11 +114,7 @@ export async function sendEmail() {
       document.body.removeAttribute('data-custom-email-message');
     }
 
-    if (msg) {
-      showMessage(msg, CONFIG.MESSAGES.SUCCESS_EMAIL_SENT, 'success');
-    } else {
-      alert(CONFIG.MESSAGES.SUCCESS_EMAIL_SENT);
-    }
+    showSuccessToast(CONFIG.MESSAGES.SUCCESS_EMAIL_SENT);
 
     btn.disabled = false;
     btn.innerHTML = originalHTML;
@@ -140,11 +129,7 @@ export async function sendEmail() {
   } catch (error) {
     console.error('Erreur:', error);
 
-    if (msg) {
-      showMessage(msg, `${CONFIG.MESSAGES.ERROR_SEND_EMAIL} : ${error.message}`, 'error');
-    } else {
-      alert(`${CONFIG.MESSAGES.ERROR_SEND_EMAIL} : ${error.message}`);
-    }
+    showErrorToast(`${CONFIG.MESSAGES.ERROR_SEND_EMAIL} : ${error.message}`);
 
     btn.disabled = false;
     btn.innerHTML = originalHTML;

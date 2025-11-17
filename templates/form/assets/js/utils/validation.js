@@ -69,6 +69,12 @@ export function collectFormData() {
     });
   }
 
+  // Ajouter le message personnalisé s'il existe (depuis l'attribut data)
+  const customMessage = document.body.getAttribute('data-custom-email-message');
+  if (customMessage) {
+    data.customEmailMessage = customMessage;
+  }
+
   return data;
 }
 
@@ -188,10 +194,8 @@ export async function generateLocalPreview() {
   const previewModal = getElement(CONFIG.SELECTORS.previewModal);
 
   if (!templateSelect?.value) {
-    if (msg) {
-      msg.textContent = CONFIG.MESSAGES.ERROR_SELECT_TEMPLATE;
-      msg.style.color = '#dc2626';
-    }
+    const { showWarningToast } = await import('./toast.js');
+    showWarningToast(CONFIG.MESSAGES.ERROR_SELECT_TEMPLATE);
     return;
   }
 
@@ -213,7 +217,7 @@ export async function generateLocalPreview() {
   try {
     // Collecter les données et générer le document
     const data = collectFormData();
-    console.log('📄 Génération du document pour prévisualisation...');
+    console.log('Génération du document pour prévisualisation...');
 
     // Importer dynamiquement les fonctions nécessaires
     const { generateWordDocument, base64ToBlob } = await import('../core/api.js');
@@ -276,7 +280,10 @@ export async function generateLocalPreview() {
                     <span class="material-icons text-white text-2xl">check_circle</span>
                   </div>
                   <div class="flex-1">
-                    <h3 class="text-lg font-bold text-green-800 mb-1">✅ Document généré avec succès !</h3>
+                    <h3 class="text-lg font-bold text-green-800 mb-1 flex items-center gap-2">
+                      <span class="material-icons text-green-600">check_circle</span>
+                      Document généré avec succès !
+                    </h3>
                     <p class="text-sm text-gray-700 mb-2">
                       <strong>${typeDocumentLabel}</strong> • ${fileSizeKB} KB
                     </p>
@@ -315,8 +322,9 @@ export async function generateLocalPreview() {
                 </div>
               </div>
 
-              <div class="mt-4 text-center text-sm text-gray-500">
-                <p>💡 Prévisualisation au format A4 • Utilisez les boutons en bas pour télécharger ou envoyer</p>
+              <div class="mt-4 text-center text-sm text-gray-500 flex items-center justify-center gap-2">
+                <span class="material-icons text-base">lightbulb</span>
+                <p>Prévisualisation au format A4 • Utilisez les boutons en bas pour télécharger ou envoyer</p>
               </div>
             </div>
           `;
@@ -388,10 +396,10 @@ export async function generateLocalPreview() {
         });
     }
 
-    console.log('✅ Document généré et prêt pour prévisualisation');
+    console.log('Document généré et prêt pour prévisualisation');
 
   } catch (error) {
-    console.error('❌ Erreur lors de la génération:', error);
+    console.error('Erreur lors de la génération:', error);
 
     if (previewContent) {
       previewContent.innerHTML = `

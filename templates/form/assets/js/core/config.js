@@ -47,13 +47,13 @@ export const CONFIG = {
   
   // Messages
   MESSAGES: {
-    ERROR_LOAD_CONFIG: '❌ Impossible de charger la configuration',
+    ERROR_LOAD_CONFIG: 'Impossible de charger la configuration',
     ERROR_EMPTY_RESPONSE: 'Empty response from server',
-    ERROR_SELECT_TEMPLATE: '⚠️ Veuillez sélectionner un type de document',
-    ERROR_GENERATION: '❌ Erreur lors de la génération',
-    ERROR_SEND_EMAIL: '❌ Erreur lors de l\'envoi de l\'email',
-    SUCCESS_DOWNLOAD: '✅ Document téléchargé ! Vous pouvez maintenant cliquer sur "Générer et envoyer" pour envoyer l\'email.',
-    SUCCESS_EMAIL_SENT: '✅ Email envoyé avec succès !',
+    ERROR_SELECT_TEMPLATE: 'Veuillez sélectionner un type de document',
+    ERROR_GENERATION: 'Erreur lors de la génération',
+    ERROR_SEND_EMAIL: 'Erreur lors de l\'envoi de l\'email',
+    SUCCESS_DOWNLOAD: 'Document téléchargé ! Vous pouvez maintenant cliquer sur "Générer et envoyer" pour envoyer l\'email.',
+    SUCCESS_EMAIL_SENT: 'Email envoyé avec succès !',
     GENERATING: 'Génération en cours...',
     SENDING: 'Envoi en cours...'
   },
