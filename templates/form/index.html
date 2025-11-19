@@ -332,8 +332,21 @@
       background: #363e45;
       color: white;
     }
+    #clearAllDataBtn {
+      color: #eb2f06 !important;
+      background-color: transparent !important;
+    }
     #clearAllDataBtn:hover {
       background-color: #f8c29154 !important;
+      color: #eb2f06 !important;
+    }
+    #fillTestDataFloating {
+      color: #363e45 !important;
+      background-color: #f3f4f6 !important;
+    }
+    #fillTestDataFloating:hover {
+      background-color: #e5e7eb !important;
+      color: #363e45 !important;
     }
     #headerPreviewBtn:disabled,
     #headerDownloadBtn:disabled {
@@ -468,11 +481,11 @@
               <span class="material-icons text-base md:text-lg">build</span>
               <span class="hidden sm:inline">Personnaliser</span>
             </button>
-            <button type="button" id="clearAllDataBtn" class="md3-button px-3 md:px-4 py-1.5 md:py-2 bg-red-50 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap" style="color: #eb2f06;">
+            <button type="button" id="clearAllDataBtn" class="md3-button px-3 md:px-4 py-1.5 md:py-2 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap">
               <span class="material-icons text-base md:text-lg">delete_sweep</span>
               <span class="hidden sm:inline">Effacer tout</span>
             </button>
-            <button type="button" id="fillTestDataFloating" class="md3-button px-3 md:px-4 py-1.5 md:py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap">
+            <button type="button" id="fillTestDataFloating" class="md3-button px-3 md:px-4 py-1.5 md:py-2 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap">
               <span class="material-icons text-base md:text-lg">casino</span>
               <span class="hidden sm:inline">Données de test</span>
             </button>
