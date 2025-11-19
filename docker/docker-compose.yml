@@ -1,11 +1,10 @@
-version: '3.8'
-
 # ============================================
 # CONFIGURATION DÉVELOPPEMENT (PAR DÉFAUT)
 # ============================================
 # Ce fichier est utilisé par défaut pour les tests locaux
 # Pour la production, utilisez : docker-compose.prod.yml
 # ============================================
+# Note: La version '3.8' a été supprimée car elle est obsolète dans Docker Compose v2+
 
 services:
   postgres:

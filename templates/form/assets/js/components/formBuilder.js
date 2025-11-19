@@ -150,14 +150,14 @@ function showEditMode() {
   if (!existingBanner) {
     const banner = document.createElement('div');
     banner.id = 'builderBanner';
-    banner.className = 'builder-banner-simple bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4';
+    banner.className = 'builder-banner-simple rounded-lg p-4 mb-4';
     banner.innerHTML = `
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
-          <span class="material-icons text-blue-600">build</span>
-          <span class="font-semibold text-lg">Mode Construction</span>
+          <span class="material-icons" style="color: #1e3799;">build</span>
+          <span class="font-semibold" style="font-size: 1.5rem; line-height: 1.75rem; color: #1e3799;">Mode Construction</span>
         </div>
-        <button id="doneEditBtn" type="button" class="md3-button-filled px-4 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 rounded-lg flex items-center gap-2">
+        <button id="doneEditBtn" type="button" class="md3-button-filled px-4 py-2 text-sm text-white rounded-lg flex items-center gap-2" style="background: #079992;">
           <span class="material-icons text-base">check</span> Terminer
         </button>
       </div>
@@ -219,6 +219,10 @@ function addBuilderStyles() {
       animation: rotate 2s linear infinite;
     }
 
+    #doneEditBtn:hover {
+      background: #068a7a !important;
+    }
+
     @keyframes rotate {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
@@ -231,7 +235,7 @@ function addBuilderStyles() {
       left: -4px;
       right: -4px;
       bottom: -4px;
-      border: 3px dashed #3b82f6;
+      border: 5px dashed #99aad4;
       border-radius: 12px;
       pointer-events: none;
       animation: dashMove 20s linear infinite;
@@ -302,14 +306,14 @@ function addBuilderStyles() {
     .sortable-ghost {
       opacity: 1 !important;
       background: rgba(59, 130, 246, 0.05) !important;
-      border: 2px dashed #3b82f6 !important;
+      border: 5px dashed #99aad4 !important;
       border-radius: 8px !important;
     }
 
     .sortable-chosen {
       cursor: grabbing !important;
       opacity: 0.5 !important;
-      border: 2px dashed #3b82f6 !important;
+      border: 5px dashed #99aad4 !important;
       border-radius: 8px !important;
     }
 
@@ -624,7 +628,7 @@ function renderAvailableVariablesChips() {
     chip.disabled = isAdded;
     chip.innerHTML = `
       <span class="material-icons text-sm">${config.icon || 'label'}</span>
-      <span>{${key}}</span>
+      <span>${config.label || key}</span>
     `;
 
     if (!isAdded) {
@@ -688,7 +692,7 @@ function addFieldVisually(key, config, category) {
         <span class="material-icons">drag_indicator</span>
       </button>
       <div class="flex-1">
-        <label class="block text-xs font-medium text-gray-700 mb-1.5">
+        <label class="block text-xs text-gray-700 mb-1.5" style="font-weight: 800;">
           ${config.label}
           ${config.required ? '<span style="color: #c4232d; font-weight: bold;"> *</span>' : ''}
         </label>

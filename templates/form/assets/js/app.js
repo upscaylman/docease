@@ -4,12 +4,12 @@
  */
 
 import { CONFIG, getElement } from './core/config.js';
-import { setVariablesConfig } from './core/state.js';
+import { setVariablesConfig, getVariablesConfig } from './core/state.js';
 import { loadVariablesConfig } from './core/api.js';
 import { generateFields } from './components/fields.js';
 import { initEmailChips } from './components/emailChips.js';
 import { initModals } from './components/modal.js';
-import { initTabs } from './components/tabs.js';
+import { initTabs, switchTab } from './components/tabs.js';
 import { initPreviewButtons } from './components/preview.js';
 import { checkRequiredFields, generateLocalPreview } from './utils/validation.js';
 import { initTestDataButton } from './utils/testData.js';
@@ -105,6 +105,12 @@ function initTemplateSelector() {
       if (destinatairesSection) destinatairesSection.style.display = 'block';
       if (previewBtnContainer) previewBtnContainer.style.display = 'flex';
 
+      // Mettre à jour le nom du template sélectionné
+      updateSelectedTemplateName(templateKey);
+
+      // S'assurer que la première section est active
+      switchTab('coordonnees');
+
       // Générer les champs dynamiques
       generateFields(templateKey);
 
@@ -154,6 +160,50 @@ function initTemplateSelector() {
 
       const previewBtn = getElement(CONFIG.SELECTORS.previewBtn);
       if (previewBtn) previewBtn.disabled = true;
+    }
+  });
+}
+
+/**
+ * Mettre à jour le nom du template sélectionné dans les sections du formulaire
+ * @param {string} templateKey - Clé du template sélectionné
+ */
+function updateSelectedTemplateName(templateKey) {
+  // Mettre à jour les titres dans les sections du formulaire
+  updateTemplateNameInSections(templateKey);
+}
+
+/**
+ * Mettre à jour le nom du template dans les sections du formulaire
+ * @param {string} templateKey - Clé du template sélectionné
+ */
+function updateTemplateNameInSections(templateKey) {
+  const variablesConfig = getVariablesConfig();
+  let templateName = '-';
+  
+  if (variablesConfig && variablesConfig.templates && variablesConfig.templates[templateKey]) {
+    templateName = variablesConfig.templates[templateKey].nom || templateKey;
+  }
+  
+  // Mettre à jour dans chaque section
+  const sections = [
+    { containerId: 'templateNameTitleCoordonnees', textId: 'templateNameTextCoordonnees' },
+    { containerId: 'templateNameTitleContenu', textId: 'templateNameTextContenu' },
+    { containerId: 'templateNameTitleExpediteur', textId: 'templateNameTextExpediteur' }
+  ];
+  
+  sections.forEach(section => {
+    const container = document.getElementById(section.containerId);
+    const textElement = document.getElementById(section.textId);
+    
+    if (container && textElement) {
+      if (templateKey && templateName !== '-') {
+        textElement.textContent = templateName;
+        container.style.display = 'block';
+      } else {
+        textElement.textContent = '-';
+        container.style.display = 'none';
+      }
     }
   });
 }
@@ -275,6 +325,9 @@ function initTemplatesGallery(config) {
       // Mettre à jour la sélection visuelle
       document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
+      
+      // Mettre à jour le nom du template dans la barre d'action
+      updateSelectedTemplateName(key);
     });
 
     gallery.appendChild(card);
@@ -325,45 +378,72 @@ function getTemplateImage(templateKey) {
  * Initialiser la barre d'action flottante
  */
 function initFloatingActionBar() {
-  // Synchroniser les boutons de navigation flottants avec les onglets existants
+  // Synchroniser les boutons de navigation flottants avec les onglets
   const floatingButtons = document.querySelectorAll('.tab-button-floating');
-  const originalButtons = document.querySelectorAll('.tab-button');
 
-  floatingButtons.forEach((btn, index) => {
-    btn.addEventListener('click', () => {
+  floatingButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
       const tab = btn.dataset.tab;
-
-      // Activer l'onglet correspondant
-      const targetButton = document.querySelector(`.tab-button[data-tab="${tab}"]`);
-      if (targetButton) {
-        targetButton.click();
+      if (!tab) {
+        console.warn('Bouton sans data-tab:', btn);
+        return;
       }
 
-      // Mettre à jour l'état visuel des boutons flottants
+      console.log('Changement d\'onglet vers:', tab);
+
+      // Utiliser directement switchTab pour changer d'onglet
+      switchTab(tab);
+
+      // Mettre à jour l'état visuel des boutons flottants (switchTab le fait déjà, mais on le fait aussi ici pour être sûr)
       floatingButtons.forEach(b => {
         b.classList.remove('active');
-        b.querySelector('.step-indicator-floating').classList.remove('active');
+        const indicator = b.querySelector('.step-indicator-floating');
+        if (indicator) {
+          indicator.classList.remove('active');
+        }
       });
       btn.classList.add('active');
-      btn.querySelector('.step-indicator-floating').classList.add('active');
-    });
-  });
-
-  // Observer les changements sur les onglets originaux pour synchroniser
-  const observer = new MutationObserver(() => {
-    originalButtons.forEach((btn, index) => {
-      if (btn.classList.contains('active')) {
-        floatingButtons[index]?.classList.add('active');
-        floatingButtons[index]?.querySelector('.step-indicator-floating')?.classList.add('active');
-      } else {
-        floatingButtons[index]?.classList.remove('active');
-        floatingButtons[index]?.querySelector('.step-indicator-floating')?.classList.remove('active');
+      const indicator = btn.querySelector('.step-indicator-floating');
+      if (indicator) {
+        indicator.classList.add('active');
       }
     });
   });
+  
+  console.log(`Initialisé ${floatingButtons.length} boutons flottants`);
 
-  originalButtons.forEach(btn => {
-    observer.observe(btn, { attributes: true, attributeFilter: ['class'] });
+  // Synchroniser les boutons flottants avec l'onglet actif
+  // Observer les changements sur les sections pour synchroniser
+  const observer = new MutationObserver(() => {
+    const activeSection = document.querySelector('.tab-section.active');
+    if (activeSection) {
+      const tabId = activeSection.id.replace('tab-', '');
+      floatingButtons.forEach(btn => {
+        const btnTab = btn.dataset.tab;
+        if (btnTab === tabId) {
+          btn.classList.add('active');
+          const indicator = btn.querySelector('.step-indicator-floating');
+          if (indicator) {
+            indicator.classList.add('active');
+          }
+        } else {
+          btn.classList.remove('active');
+          const indicator = btn.querySelector('.step-indicator-floating');
+          if (indicator) {
+            indicator.classList.remove('active');
+          }
+        }
+      });
+    }
+  });
+
+  // Observer toutes les sections d'onglets
+  const tabSections = document.querySelectorAll('.tab-section');
+  tabSections.forEach(section => {
+    observer.observe(section, { attributes: true, attributeFilter: ['class'] });
   });
 
   // Bouton données de test flottant
@@ -530,7 +610,6 @@ function openShareModal() {
 function initShareModal() {
   const modal = document.getElementById('shareModal');
   const closeBtn = document.getElementById('closeShareModal');
-  const closeBtnFooter = document.getElementById('closeShareModalBtn');
   const confirmBtn = document.getElementById('confirmShareBtn');
   const emailInput = document.getElementById('shareEmailInput');
   const emailContainer = document.getElementById('shareEmailContainer');
@@ -650,7 +729,6 @@ function initShareModal() {
   };
 
   closeBtn?.addEventListener('click', closeModal);
-  closeBtnFooter?.addEventListener('click', closeModal);
 
   // Fermer en cliquant sur le fond
   modal.addEventListener('click', (e) => {

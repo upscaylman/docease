@@ -17,8 +17,8 @@ export function createChip(email) {
   chip.innerHTML = `
     <span class="material-icons text-base">email</span>
     <span>${email}</span>
-    <button type="button" class="ml-1 text-[#0072ff] hover:text-[#21005D] transition-colors">
-      <span class="material-icons text-base">close</span>
+    <button type="button" class="ml-1 flex items-center justify-center text-[#0072ff] hover:text-[#21005D] transition-colors">
+      <span class="material-icons" style="font-size: 14px;">close</span>
     </button>
   `;
   

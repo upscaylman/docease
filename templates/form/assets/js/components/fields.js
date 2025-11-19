@@ -18,7 +18,8 @@ export function createField(key, config) {
 
   const label = document.createElement('label');
   label.htmlFor = key;
-  label.className = 'block text-xs font-medium text-gray-700 mb-1.5';
+  label.className = 'block text-xs text-gray-700 mb-1.5';
+  label.style.fontWeight = '800';
   label.textContent = config.label;
 
   // Ajouter une astérisque rouge pour les champs obligatoires
@@ -108,8 +109,8 @@ function createTextareaField(key, config) {
   // Bouton pour effacer le champ
   const clearBtn = document.createElement('button');
   clearBtn.type = 'button';
-  clearBtn.className = 'absolute right-2 top-3 text-gray-400 hover:text-red-500 transition-colors hidden';
-  clearBtn.innerHTML = '<span class="material-icons text-base">close</span>';
+  clearBtn.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors hidden';
+  clearBtn.innerHTML = '<span class="material-icons" style="font-size: 14px;">close</span>';
   clearBtn.title = 'Effacer';
 
   // Bouton "crayon magique" pour améliorer le texte avec l'IA (uniquement pour texteIa)
@@ -370,8 +371,8 @@ function createInputField(key, config) {
   // Bouton pour effacer le champ
   const clearBtn = document.createElement('button');
   clearBtn.type = 'button';
-  clearBtn.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors hidden';
-  clearBtn.innerHTML = '<span class="material-icons text-base">close</span>';
+  clearBtn.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors hidden';
+  clearBtn.innerHTML = '<span class="material-icons" style="font-size: 14px;">close</span>';
   clearBtn.title = 'Effacer';
 
   // Afficher/masquer le bouton selon si le champ est rempli

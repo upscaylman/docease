@@ -12,8 +12,12 @@ const TABS = ['coordonnees', 'contenu', 'expediteur'];
  * @param {string} tabName - Nom de l'onglet à activer
  */
 export function switchTab(tabName) {
-  if (!TABS.includes(tabName)) return;
+  if (!TABS.includes(tabName)) {
+    console.warn('Onglet invalide:', tabName);
+    return;
+  }
   
+  console.log('switchTab appelé pour:', tabName);
   setActiveTab(tabName);
   const currentIndex = TABS.indexOf(tabName);
   
@@ -37,16 +41,47 @@ export function switchTab(tabName) {
     }
   }
   
+  // S'assurer que le conteneur est visible
+  const tabsContainer = document.getElementById('tabsContainer');
+  if (tabsContainer && tabsContainer.style.display === 'none') {
+    tabsContainer.style.display = 'flex';
+    console.log('Conteneur tabsContainer affiché');
+  }
+  
   // Mettre à jour les sections
   const tabSections = getElements('.tab-section');
   tabSections.forEach(section => {
     section.classList.remove('active');
+    section.style.display = 'none'; // Forcer le masquage
   });
   
   const activeSection = document.getElementById(`tab-${tabName}`);
   if (activeSection) {
     activeSection.classList.add('active');
+    activeSection.style.display = 'block'; // Forcer l'affichage
+    console.log('Section activée:', activeSection.id);
+  } else {
+    console.error('Section non trouvée:', `tab-${tabName}`);
   }
+  
+  // Mettre à jour les boutons flottants
+  const floatingButtons = document.querySelectorAll('.tab-button-floating');
+  floatingButtons.forEach(btn => {
+    const btnTab = btn.dataset.tab;
+    if (btnTab === tabName) {
+      btn.classList.add('active');
+      const indicator = btn.querySelector('.step-indicator-floating');
+      if (indicator) {
+        indicator.classList.add('active');
+      }
+    } else {
+      btn.classList.remove('active');
+      const indicator = btn.querySelector('.step-indicator-floating');
+      if (indicator) {
+        indicator.classList.remove('active');
+      }
+    }
+  });
   
   // Mettre à jour les indicateurs d'étapes complétées
   updateStepIndicators();
@@ -139,6 +174,20 @@ export function initTabs() {
       }
     });
   });
+  
+  // Initialiser l'onglet actif - s'assurer que toutes les sections sont cachées sauf la première
+  const tabSections = getElements('.tab-section');
+  tabSections.forEach(section => {
+    section.classList.remove('active');
+    section.style.display = 'none';
+  });
+  
+  // Activer la première section
+  const firstSection = document.getElementById('tab-coordonnees');
+  if (firstSection) {
+    firstSection.classList.add('active');
+    firstSection.style.display = 'block';
+  }
   
   // Initialiser l'onglet actif
   switchTab('coordonnees');

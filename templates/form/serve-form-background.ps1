@@ -237,6 +237,23 @@ function Handle-Request {
             $Response.StatusCode = 404
         }
     }
+    # Serve design-system CSS files
+    elseif ($Path -match "^/assets/design-system/(.+\.css)$") {
+        $cssPath = $Matches[1] -replace "/", "\"
+        $cssFile = Join-Path $ScriptDir "assets\design-system\$cssPath"
+        if (Test-Path $cssFile) {
+            $Content = Get-Content $cssFile -Raw -Encoding UTF8
+            $Buffer = [System.Text.Encoding]::UTF8.GetBytes($Content)
+
+            $Response.ContentType = "text/css; charset=utf-8"
+            $Response.ContentLength64 = $Buffer.Length
+            $Response.StatusCode = 200
+
+            $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+        } else {
+            $Response.StatusCode = 404
+        }
+    }
     # Serve JS files
     elseif ($Path -match "^/assets/js/(.+\.js)$") {
         $jsPath = $Matches[1] -replace "/", "\"
@@ -325,7 +342,8 @@ function Handle-Request {
         }
     }
     elseif ($Path -eq "/favicon.ico") {
-        $Response.StatusCode = 404
+        # Retourner un favicon vide pour éviter l'erreur 404
+        $Response.StatusCode = 204
         $Response.Close()
         return
     }

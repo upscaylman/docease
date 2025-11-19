@@ -66,7 +66,7 @@ textarea ~ .material-icons {
 
 .md3-select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%236750A4' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23363e45' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 8px center;
   padding-right: 40px;
@@ -127,6 +127,29 @@ textarea ~ .material-icons {
   cursor: not-allowed;
 }
 
+/* Boutons de fermeture de modaux - Style commun */
+.modal-close-button,
+#closeModal,
+#closeShareModal {
+  background-color: white !important;
+  background: white !important;
+  transition: all var(--transition-fast);
+}
+
+.modal-close-button:hover,
+#closeModal:hover,
+#closeShareModal:hover {
+  background-color: #f3f4f6 !important;
+  background: #f3f4f6 !important;
+}
+
+/* Icône de croix avec couleur spécifique */
+.modal-close-button .material-icons,
+#closeModal .material-icons,
+#closeShareModal .material-icons {
+  color: #36434e !important;
+}
+
 /* ========================================
    Material Design 3 - Cards
    ======================================== */
@@ -138,6 +161,16 @@ textarea ~ .material-icons {
 
 .md3-card:hover {
   transform: translateY(-2px);
+}
+
+/* Supprimer la bordure des sections d'onglets */
+.tab-section.section-card {
+  border: none !important;
+}
+
+.tab-section.section-card:hover {
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* ========================================
@@ -167,6 +200,7 @@ textarea ~ .material-icons {
   padding: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
   color: var(--color-primary);
   transition: color var(--transition-fast);
 }

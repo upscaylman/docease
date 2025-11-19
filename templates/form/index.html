@@ -30,7 +30,7 @@
     body {
       margin: 0 !important;
       padding: 0 !important;
-      background: linear-gradient(135deg, #363e45 0%, #355976 100%) !important;
+      background: linear-gradient(135deg, #181a1c 0%, #079992 100%) !important;
       background-size: 400% 400% !important;
       animation: gradient 15s ease infinite !important;
       display: flex;
@@ -44,6 +44,11 @@
       padding: 0;
       flex-shrink: 0;
     }
+    @media (max-width: 767px) {
+      :root {
+        --header-height: 64px;
+      }
+    }
     .main-content {
       flex: 1;
       width: 100%;
@@ -51,10 +56,42 @@
       flex-direction: column;
       gap: 0;
       overflow: hidden;
+      position: relative;
+    }
+    @media (max-width: 767px) {
+      /* Le form-container prend toute la hauteur disponible sur mobile */
+      .form-container {
+        height: calc(100vh - var(--header-height, 64px) - 60px); /* Hauteur viewport - header - volet collapsed */
+        min-height: calc(100vh - var(--header-height, 64px) - 60px);
+      }
     }
     @media (min-width: 768px) {
       .main-content {
         flex-direction: row;
+      }
+    }
+    @media (max-width: 767px) {
+      .main-content {
+        padding-bottom: 60px; /* Espace pour le volet collapsed */
+      }
+      .main-content:has(.templates-sidebar:not(.collapsed)) {
+        padding-bottom: 0; /* Pas d'espace quand déplié car il est fixed */
+      }
+    }
+    .form-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      min-width: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    @media (min-width: 768px) {
+      .form-wrapper {
+        width: calc(100% - 240px);
+        max-width: calc(100% - 240px);
+        flex: 0 0 calc(100% - 240px);
       }
     }
     .form-container {
@@ -65,6 +102,16 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
+      padding-bottom: 0;
+      position: relative;
+    }
+    @media (max-width: 767px) {
+      /* Le form-container prend toute la hauteur disponible sur mobile */
+      .form-container {
+        height: calc(100vh - var(--header-height, 64px) - 60px); /* Hauteur viewport - header - volet collapsed */
+        min-height: calc(100vh - var(--header-height, 64px) - 60px);
+        padding-bottom: 2rem;
+      }
     }
     @media (min-width: 768px) {
       .form-container {
@@ -90,14 +137,29 @@
       overflow-x: hidden;
       padding: 0.75rem;
       flex-shrink: 0;
-      box-shadow: 0 8px 32px #00000026, inset 0 0 0 1px #fff3, 0 10px 15px -3px rgba(0, 0, 0, 0.52), 0 4px 6px -4px rgba(0, 0, 0, 0.32);
+      box-shadow: 0 8px 32px #00000094, inset 0 0 0 1px #fff3;
       transition: max-height 300ms cubic-bezier(0.2, 0, 0, 1);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+    @media (min-width: 768px) {
+      .templates-sidebar {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        z-index: 1;
+      }
     }
     .templates-sidebar.collapsed {
-      max-height: 60px;
+      max-height: 60px; /* Valeur par défaut, sera calculée dynamiquement en JS */
     }
     .templates-sidebar:not(.collapsed) {
-      max-height: 300px;
+      max-height: 70vh;
+      overflow-y: auto;
     }
     .templates-sidebar-content {
       transition: opacity 200ms ease, transform 200ms ease;
@@ -156,6 +218,8 @@
     @media (min-width: 768px) {
       .templates-sidebar {
         width: 240px;
+        min-width: 240px;
+        max-width: 240px;
         border-top: none;
         border-left: 1px solid #e5e7eb;
         padding: 1.5rem 1rem;
@@ -163,7 +227,8 @@
         height: 100%;
         overflow-y: auto;
         overflow-x: hidden;
-        box-shadow: 0 8px 32px #00000026, inset 0 0 0 1px #fff3;
+        box-shadow: 0 8px 32px #00000094, inset 0 0 0 1px #fff3;
+        flex-shrink: 0;
       }
     }
     .templates-sidebar::-webkit-scrollbar {
@@ -380,13 +445,86 @@
     .relative .material-icons.text-gray-400 {
       color: #a9a9a9 !important;
     }
+    /* Footer principal */
+    .main-footer {
+      width: 100%;
+      max-width: 100%;
+      background: #181a1c;
+      border-top: none;
+      flex-shrink: 0;
+      margin-left: 0;
+      box-sizing: border-box;
+      position: relative;
+      left: 0;
+      right: 0;
+      z-index: 1;
+    }
+    @media (max-width: 767px) {
+      /* Masquer complètement le footer sur mobile */
+      .main-footer {
+        display: none !important;
+      }
+    }
+    @media (min-width: 768px) {
+      /* Afficher le footer en desktop */
+      .main-footer {
+        display: block !important;
+      }
+    }
+    .divider-gradient {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+    }
+    @media (min-width: 768px) {
+      .main-footer .text-center.md\:text-left {
+        text-align: left !important;
+      }
+      .main-footer .text-center.md\:text-left h3,
+      .main-footer .text-center.md\:text-left p {
+        text-align: left !important;
+      }
+    }
+    /* Alignement du début du carré du logo avec le début du container du formulaire */
+    header .container {
+      max-width: 1280px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      padding-left: 2rem !important;
+      padding-right: 2rem !important;
+    }
+    /* Alignement du footer avec le container du formulaire */
+    .main-footer .container {
+      max-width: 1280px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1rem; /* même que form-container mobile */
+      padding-right: 1rem;
+    }
+    @media (min-width: 768px) {
+      .main-footer .container {
+        padding-left: 3rem; /* même que form-container md: 2rem 3rem */
+        padding-right: 3rem;
+      }
+    }
+    @media (min-width: 1024px) {
+      .main-footer .container {
+        padding-left: 4rem; /* même que form-container lg: 3rem 4rem */
+        padding-right: 4rem;
+      }
+    }
+    @media (min-width: 1280px) {
+      .main-footer .container {
+        padding-left: 5rem; /* même que form-container xl: 3rem 5rem */
+        padding-right: 5rem;
+      }
+    }
   </style>
 </head>
 <body>
 
   <!-- Header -->
   <header class="glass-effect-strong border-b border-outlineVariant/50 sticky top-0 z-40 animate-slide-down backdrop-blur-xl">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="container mx-auto">
       <div class="flex items-center justify-between h-16 sm:h-18">
         <!-- Logo et Titre -->
         <div class="flex items-center space-x-6 cursor-pointer transition-opacity hover:opacity-80">
@@ -396,7 +534,7 @@
           <!-- Logo texte -->
           <div style="margin-left: 0.8rem;">
             <span class="text-xl font-bold whitespace-nowrap">
-              <span style="color: #079992;">DocEasy</span>
+              <span style="color: #079992;">DocEase</span>
               <span class="hidden sm:inline" style="color: #363e45;"> by FO Metaux</span>
             </span>
           </div>
@@ -444,6 +582,8 @@
   </header>
 
   <div class="main-content">
+    <!-- Conteneur pour formulaire et footer -->
+    <div class="form-wrapper">
     <!-- Formulaire principal -->
     <div class="form-container">
       <!-- Titre de section -->
@@ -486,9 +626,9 @@
 
           <!-- Boutons d'action -->
           <div class="flex items-center gap-2">
-            <button type="button" id="customizeFieldsBtn" class="md3-button px-3 md:px-4 py-1.5 md:py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap" style="display: none;">
-              <span class="material-icons text-base md:text-lg">build</span>
-              <span class="hidden sm:inline">Personnaliser</span>
+            <button type="button" id="customizeFieldsBtn" class="md3-button px-3 md:px-4 py-1.5 md:py-2 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap" style="display: none; background: #1e3799; color: white;">
+              <span class="material-icons text-base md:text-lg" style="color: white;">build</span>
+              <span class="hidden sm:inline" style="color: white;">Personnaliser</span>
             </button>
             <button type="button" id="clearAllDataBtn" class="md3-button px-3 md:px-4 py-1.5 md:py-2 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap">
               <span class="material-icons text-base md:text-lg">delete_sweep</span>
@@ -536,7 +676,11 @@
       <div class="flex-1 min-w-0" id="dynamicFields">
         <!-- Section Coordonnées -->
         <div id="tab-coordonnees" class="tab-section active section-card">
-          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 -mt-6 mb-6" style="background: linear-gradient(to right, #b8e9945c, white);">
+          <!-- Nom du template sélectionné -->
+          <div id="templateNameTitleCoordonnees" class="px-6 -mx-6 mb-2" style="display: none; margin-top: -2.5rem; padding-bottom: 1rem;">
+            <h2 class="text-2xl font-bold text-gray-800" id="templateNameTextCoordonnees">-</h2>
+          </div>
+          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #b8e9945c, white);">
             <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #363e45;">
               <span class="material-icons" style="font-size: 28px; color: rgb(184, 233, 148);">person</span>
             </div>
@@ -550,7 +694,11 @@
 
         <!-- Section Contenu -->
         <div id="tab-contenu" class="tab-section section-card">
-          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 -mt-6 mb-6" style="background: linear-gradient(to right, #b8e9945c, white);">
+          <!-- Nom du template sélectionné -->
+          <div id="templateNameTitleContenu" class="px-6 -mx-6 mb-2" style="display: none; margin-top: -2.5rem; padding-bottom: 1rem;">
+            <h2 class="text-2xl font-bold text-gray-800" id="templateNameTextContenu">-</h2>
+          </div>
+          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #b8e9945c, white);">
             <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #363e45;">
               <span class="material-icons" style="font-size: 28px; color: rgb(184, 233, 148);">article</span>
             </div>
@@ -564,7 +712,11 @@
 
         <!-- Section Signataire -->
         <div id="tab-expediteur" class="tab-section section-card">
-          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 -mt-6 mb-6" style="background: linear-gradient(to right, #b8e9945c, white);">
+          <!-- Nom du template sélectionné -->
+          <div id="templateNameTitleExpediteur" class="px-6 -mx-6 mb-2" style="display: none; margin-top: -2.5rem; padding-bottom: 1rem;">
+            <h2 class="text-2xl font-bold text-gray-800" id="templateNameTextExpediteur">-</h2>
+          </div>
+          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #b8e9945c, white);">
             <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #363e45;">
               <span class="material-icons" style="font-size: 28px; color: rgb(184, 233, 148);">send</span>
             </div>
@@ -601,8 +753,8 @@
             <p class="text-sm" id="previewSubtitle" style="color: #363e45;">Vérifiez les informations avant génération</p>
           </div>
         </div>
-        <button id="closeModal" class="text-[#49454F] hover:text-[#1C1B1F] transition-colors md3-button p-2 rounded-full hover:bg-gray-100">
-          <span class="material-icons text-3xl">close</span>
+        <button id="closeModal" class="modal-close-button md3-button p-2 rounded-full" style="background: white !important;">
+          <span class="material-icons text-3xl" style="color: #36434e !important;">close</span>
         </button>
       </div>
 
@@ -684,8 +836,8 @@
             <p class="text-sm" style="color: #363e45;">Ajoutez les destinataires pour l'envoi par email</p>
           </div>
         </div>
-        <button id="closeShareModal" class="transition-colors md3-button p-2 rounded-full hover:bg-gray-100" style="color: #363e45;">
-          <span class="material-icons text-3xl">close</span>
+        <button id="closeShareModal" class="modal-close-button md3-button p-2 rounded-full" style="background: white !important;">
+          <span class="material-icons text-3xl" style="color: #36434e !important;">close</span>
         </button>
       </div>
 
@@ -725,11 +877,7 @@
       </div>
 
       <!-- Footer avec actions -->
-      <div class="flex items-center justify-between gap-3 p-6 border-t border-gray-200 bg-gray-50">
-        <button id="closeShareModalBtn" class="md3-button px-6 py-2.5 bg-white border border-gray-300 hover:bg-gray-50 elevation-1 flex items-center gap-2 rounded-lg" style="color: #363e45;">
-          <span class="material-icons">close</span>
-          Annuler
-        </button>
+      <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50" style="justify-content: flex-end;">
         <button id="confirmShareBtn" class="md3-button px-6 py-2.5 text-white elevation-2 flex items-center gap-2 rounded-lg" style="background: #38ada9;">
           <span class="material-icons">send</span>
           Générer et envoyer
@@ -739,6 +887,72 @@
   </div>
   </form>
   </div>
+
+    <!-- Footer principal -->
+    <footer class="main-footer">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
+          <div class="text-center md:text-left w-full md:w-auto md:pl-0">
+            <h3 class="text-lg font-bold text-white">DocEase by FO Metaux</h3>
+            <p class="text-sm text-white" style="font-weight: 200;">Votre solution pour créer vos documents.</p>
+          </div>
+          <nav class="flex flex-row flex-wrap justify-center md:justify-end items-center gap-x-8 gap-y-3 w-full md:w-auto">
+            <a href="https://www.fo-metaux.org/pages/organisation-fo-metaux" class="text-sm text-white underline px-3" style="font-weight: 200;" target="_blank" rel="noopener noreferrer">A propos de nous</a>
+            <a href="https://www.fo-metaux.fr/nous-contacter" class="text-sm text-white underline px-3" style="font-weight: 200;" target="_blank" rel="noopener noreferrer">Contact</a>
+            <a href="https://www.fo-metaux.org/mentions-legales" class="text-sm text-white underline px-3" style="font-weight: 200;" target="_blank" rel="noopener noreferrer">Mentions Légales</a>
+            <a href="https://www.fo-metaux.org/politique-de-confidentialite" class="text-sm text-white underline px-3" style="font-weight: 200;" target="_blank" rel="noopener noreferrer">Politique de confidentialité</a>
+            <a href="https://www.fo-metaux.fr/" class="text-sm text-white underline px-3" style="font-weight: 200;" target="_blank" rel="noopener noreferrer">fo-metaux.fr</a>
+          </nav>
+        </div>
+        <div class="divider-gradient mt-10 mb-8"></div>
+        <div class="flex flex-col items-center gap-4">
+          <div class="flex items-center gap-3">
+            <div class="relative inline-block">
+              <a href="https://www.facebook.com/federationfometaux" target="_blank" rel="noopener noreferrer" class="text-white min-h-[40px] min-w-[40px] p-2 rounded-full" aria-label="Facebook">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-facebook h-5 w-5" aria-hidden="true">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+              </a>
+            </div>
+            <div class="relative inline-block">
+              <a href="https://x.com/fedefometaux" target="_blank" rel="noopener noreferrer" class="text-white min-h-[40px] min-w-[40px] p-2 rounded-full" aria-label="X">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-twitter h-5 w-5" aria-hidden="true">
+                  <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+                </svg>
+              </a>
+            </div>
+            <div class="relative inline-block">
+              <a href="https://www.linkedin.com/company/f%C3%A9d%C3%A9ration-fo-de-la-m%C3%A9tallurgie/" target="_blank" rel="noopener noreferrer" class="text-white min-h-[40px] min-w-[40px] p-2 rounded-full" aria-label="LinkedIn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin h-5 w-5" aria-hidden="true">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                  <rect width="4" height="12" x="2" y="9"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+              </a>
+            </div>
+            <div class="relative inline-block">
+              <a href="https://www.youtube.com/user/fometauxtpe" target="_blank" rel="noopener noreferrer" class="text-white min-h-[40px] min-w-[40px] p-2 rounded-full" aria-label="YouTube">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube h-5 w-5" aria-hidden="true">
+                  <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path>
+                  <path d="m10 15 5-3-5-3z"></path>
+                </svg>
+              </a>
+            </div>
+            <div class="relative inline-block">
+              <a href="https://www.instagram.com/fometallurgie/" target="_blank" rel="noopener noreferrer" class="text-white min-h-[40px] min-w-[40px] p-2 rounded-full" aria-label="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram h-5 w-5" aria-hidden="true">
+                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <p class="text-xs text-white">Site réalisé par FO Métaux © <span id="currentYear">2025</span> FO Métaux. Tous droits réservés.<span class="ml-2 text-white">Version <span id="appVersion">1.2.0</span></span></p>
+        </div>
+      </div>
+    </footer>
+    </div>
 
     <!-- Panneau latéral des templates -->
     <aside class="templates-sidebar collapsed">
@@ -773,14 +987,38 @@
   <!-- Configuration des variables d'environnement (pour Netlify) -->
   <script>
     // Variables d'environnement - peuvent être surchargées par Netlify
+    // En développement local, utilisez le proxy sur localhost:3000
+    // En production (Netlify), ces valeurs seront remplacées par les variables d'environnement
     window.ENV = {
-      WEBHOOK_URL: 'https://dee-wakeful-succulently.ngrok-free.dev/webhook/7f72ac69-35b7-4771-a5c6-7acb18947254',
-      WEBHOOK_EMAIL_URL: 'https://dee-wakeful-succulently.ngrok-free.dev/webhook/1ee6e745-fc31-4fd8-bc59-531bd4a69997'
+      WEBHOOK_URL: 'http://localhost:3000/webhook/7f72ac69-35b7-4771-a5c6-7acb18947254',
+      WEBHOOK_EMAIL_URL: 'http://localhost:3000/webhook/1ee6e745-fc31-4fd8-bc59-531bd4a69997'
     };
+    
+    // Configuration de la version de l'application
+    // Modifiez cette valeur pour mettre à jour la version dans tout le site
+    window.APP_VERSION = '1.2.0';
   </script>
 
   <!-- JavaScript Modules -->
   <script type="module" src="assets/js/app.js?v=1.0.0"></script>
+  
+  <!-- Script pour mettre à jour l'année et la version automatiquement -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Mise à jour de l'année
+      const yearElement = document.getElementById('currentYear');
+      if (yearElement) {
+        const currentYear = new Date().getFullYear();
+        yearElement.textContent = currentYear;
+      }
+      
+      // Mise à jour de la version
+      const versionElement = document.getElementById('appVersion');
+      if (versionElement && window.APP_VERSION) {
+        versionElement.textContent = window.APP_VERSION;
+      }
+    });
+  </script>
   
   <!-- Script pour le collapse des templates sur mobile -->
   <script>
@@ -789,8 +1027,93 @@
       const sidebar = document.querySelector('.templates-sidebar');
       
       if (toggleBtn && sidebar) {
+        // Fonction pour calculer la hauteur optimale du volet plié
+        function calculateCollapsedHeight() {
+          // Vérifier si on est sur mobile
+          if (window.innerWidth >= 768) return;
+          
+          // Obtenir la hauteur de la fenêtre
+          const viewportHeight = window.innerHeight;
+          
+          // Obtenir la hauteur du header
+          const header = document.querySelector('header');
+          const headerHeight = header ? header.offsetHeight : 0;
+          
+          // Obtenir la hauteur du formulaire principal
+          const formContainer = document.querySelector('.form-container');
+          const formHeight = formContainer ? formContainer.offsetHeight : 0;
+          
+          // Calculer l'espace disponible pour le volet
+          // On réserve un peu d'espace pour le padding et les marges
+          const availableSpace = viewportHeight - headerHeight - formHeight;
+          
+          // Hauteur minimale pour le bouton toggle (environ 48px + padding)
+          const minHeight = 60;
+          
+          // Hauteur maximale pour le volet plié (ne pas dépasser 20% de l'écran)
+          const maxHeight = Math.min(availableSpace * 0.2, 80);
+          
+          // Utiliser la hauteur calculée ou la hauteur minimale
+          const calculatedHeight = Math.max(minHeight, maxHeight);
+          
+          return calculatedHeight;
+        }
+        
+        // Appliquer la hauteur calculée au volet plié
+        function updateCollapsedHeight() {
+          if (window.innerWidth < 768 && sidebar.classList.contains('collapsed')) {
+            const height = calculateCollapsedHeight();
+            sidebar.style.maxHeight = height + 'px';
+          } else {
+            sidebar.style.maxHeight = '';
+          }
+        }
+        
+        // Mettre à jour au chargement
+        updateCollapsedHeight();
+        
+        // Mettre à jour la hauteur du form-container sur mobile
+        function updateFormContainerHeight() {
+          if (window.innerWidth < 768) {
+            const header = document.querySelector('header');
+            const formContainer = document.querySelector('.form-container');
+            if (header && formContainer) {
+              const headerHeight = header.offsetHeight;
+              const sidebarHeight = sidebar.classList.contains('collapsed') ? 60 : sidebar.offsetHeight;
+              const availableHeight = window.innerHeight - headerHeight - sidebarHeight;
+              formContainer.style.height = availableHeight + 'px';
+              formContainer.style.minHeight = availableHeight + 'px';
+            }
+          } else {
+            const formContainer = document.querySelector('.form-container');
+            if (formContainer) {
+              formContainer.style.height = '';
+              formContainer.style.minHeight = '';
+            }
+          }
+        }
+        
+        // Mettre à jour au chargement
+        updateFormContainerHeight();
+        
+        // Mettre à jour lors du redimensionnement
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(function() {
+            updateCollapsedHeight();
+            updateFormContainerHeight();
+          }, 100);
+        });
+        
         toggleBtn.addEventListener('click', function() {
           sidebar.classList.toggle('collapsed');
+          
+          // Mettre à jour la hauteur après le toggle
+          setTimeout(function() {
+            updateCollapsedHeight();
+            updateFormContainerHeight();
+          }, 50);
           
           // Mettre à jour l'aria-label
           const isCollapsed = sidebar.classList.contains('collapsed');
