@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Formulaire de génération de documents pour n8n",
   "scripts": {
-    "build": "node netlify-config.js && npm run build:css",
+    "build": "node netlify-config.js && npm run build:css && npm run build:design-system",
     "build:css": "tailwindcss -i ./src/input.css -o ./assets/css/tailwind.css --minify",
+    "build:design-system": "node build-css.js",
     "prebuild": "echo 'Building with environment variables...'"
   },
   "keywords": [
