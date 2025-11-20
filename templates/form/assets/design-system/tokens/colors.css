@@ -159,7 +159,7 @@
   
   /* Variantes personnalisées de la couleur tertiaire */
   --ds-color-tertiary-variant-1: #fad390; /* Variante claire */
-  --ds-color-tertiary-variant-2: #f6b93b; /* Variante moyenne */
+  --ds-color-tertiary-variant-2: #e04142; /* Variante moyenne */
   --ds-color-tertiary-variant-3: #e58e26; /* Variante foncée */
   
   /* Couleurs tertiaires sémantiques */
@@ -171,7 +171,7 @@
   
   /* Variantes personnalisées (alias pour usage simplifié) */
   --ds-color-tertiary-v1: var(--ds-color-tertiary-variant-1); /* #fad390 */
-  --ds-color-tertiary-v2: var(--ds-color-tertiary-variant-2); /* #f6b93b */
+  --ds-color-tertiary-v2: var(--ds-color-tertiary-variant-2); /* #e04142 */
   --ds-color-tertiary-v3: var(--ds-color-tertiary-variant-3); /* #e58e26 */
   
   /* Texte sur fond tertiaire */
@@ -286,7 +286,7 @@
   --ds-color-quinary-900: #175855;
   
   /* Variantes personnalisées de la couleur cinquième */
-  --ds-color-quinary-variant-1: #b8e994; /* Variante claire */
+  --ds-color-quinary-variant-1: #e062b1; /* Variante claire */
   --ds-color-quinary-variant-2: #78e08f; /* Variante moyenne */
   --ds-color-quinary-variant-3: #079992; /* Variante foncée */
   
@@ -298,7 +298,7 @@
   --ds-color-quinary-darker: var(--ds-color-quinary-900);
   
   /* Variantes personnalisées (alias pour usage simplifié) */
-  --ds-color-quinary-v1: var(--ds-color-quinary-variant-1); /* #b8e994 */
+  --ds-color-quinary-v1: var(--ds-color-quinary-variant-1); /* #e062b1 */
   --ds-color-quinary-v2: var(--ds-color-quinary-variant-2); /* #78e08f */
   --ds-color-quinary-v3: var(--ds-color-quinary-variant-3); /* #079992 */
   

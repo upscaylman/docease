@@ -169,7 +169,7 @@
   border-color: var(--ds-color-tertiary-variant-1);
 }
 
-/* Tertiary Variant 2 - #f6b93b */
+/* Tertiary Variant 2 - #e04142 */
 .ds-badge--tertiary-v2 {
   background-color: var(--ds-color-tertiary-variant-2);
   color: var(--ds-color-on-tertiary);
@@ -263,7 +263,7 @@
   border-color: var(--ds-color-quinary);
 }
 
-/* Quinary Variant 1 - #b8e994 */
+/* Quinary Variant 1 - #e062b1 */
 .ds-badge--quinary-v1 {
   background-color: var(--ds-color-quinary-variant-1);
   color: var(--ds-color-on-quinary);

@@ -291,7 +291,7 @@
   box-shadow: var(--ds-shadow-1);
 }
 
-/* Tertiary Variant 2 - #f6b93b (moyenne) */
+/* Tertiary Variant 2 - #e04142 (moyenne) */
 .ds-button--tertiary-v2 {
   background-color: var(--ds-color-tertiary-variant-2);
   color: var(--ds-color-on-tertiary);
@@ -456,7 +456,7 @@
   opacity: 0.6;
 }
 
-/* Quinary Variant 1 - #b8e994 (claire) */
+/* Quinary Variant 1 - #e062b1 (claire) */
 .ds-button--quinary-v1 {
   background-color: var(--ds-color-quinary-variant-1);
   color: var(--ds-color-on-quinary);

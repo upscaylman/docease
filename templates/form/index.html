@@ -41,7 +41,7 @@
     body {
       margin: 0 !important;
       padding: 0 !important;
-      background: linear-gradient(135deg, #181a1c 0%, #079992 100%) !important;
+      background: #2f2f2f;
       background-size: 400% 400% !important;
       animation: gradient 15s ease infinite !important;
       display: flex;
@@ -406,8 +406,8 @@
       background: #f3f4f6;
     }
     .tab-button-floating.active {
-      background: #e6f7da;
-      color: #363e45;
+      background: #ffecf8;
+      color: #181a1c;
     }
     .step-indicator-floating {
       background: #a9a9a9;
@@ -415,7 +415,7 @@
       transition: background-color var(--transition-fast), color var(--transition-fast);
     }
     .step-indicator-floating.active {
-      background: #363e45;
+      background: #2f2f2f;
       color: white;
     }
     /* Override Design System pour les boutons spécifiques */
@@ -424,6 +424,9 @@
       background: transparent !important;
       background-color: transparent !important;
       box-shadow: none !important;
+      border: 2px solid #eb2f06;
+      border-radius: 2rem;
+      height: 3rem;
     }
     #clearAllDataBtn.md3-button:hover {
       background-color: #f8c29154 !important;
@@ -431,7 +434,7 @@
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
     }
     #fillTestDataFloating.md3-button {
-      color: #363e45 !important;
+      color: #181a1c !important;
       background: #f3f4f6 !important;
       background-color: #f3f4f6 !important;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
@@ -439,7 +442,7 @@
     #fillTestDataFloating.md3-button:hover {
       background-color: #e5e7eb !important;
       background: #e5e7eb !important;
-      color: #363e45 !important;
+      color: #181a1c !important;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
     }
     #headerPreviewBtn:disabled,
@@ -453,7 +456,7 @@
     }
     #headerDownloadBtn:disabled:hover {
       transform: none !important;
-      background-color: #f6b93b !important;
+      background-color: #e04142 !important;
     }
     /* Placeholders et icônes des champs de formulaire */
     input::placeholder,
@@ -469,8 +472,8 @@
     .main-footer {
       width: 100%;
       max-width: 100%;
-      background: #181a1c;
-      border-top: none;
+      background: #2a2a2a;
+      border-top: 1px solid #a9a9a929;
       flex-shrink: 0;
       margin-left: 0;
       box-sizing: border-box;
@@ -549,14 +552,14 @@
       <div class="flex items-center justify-between h-16 sm:h-18">
         <!-- Logo et Titre -->
         <div class="flex items-center space-x-6 cursor-pointer transition-opacity hover:opacity-80">
-          <div class="p-2 rounded-lg flex items-center justify-center h-10 w-10 elevation-2 progressive-glow-quinary transition-transform hover:scale-110" style="background: #079992;">
+          <div class="p-2 rounded-lg flex items-center justify-center h-10 w-10 elevation-2 progressive-glow-quinary transition-transform hover:scale-110" style="background: #aa4584;">
             <span class="material-icons text-white" style="font-size: 24px;">description</span>
           </div>
           <!-- Logo texte -->
           <div style="margin-left: 0.8rem;">
             <span class="text-xl font-bold whitespace-nowrap">
-              <span style="color: #079992;">DocEase</span>
-              <span class="hidden sm:inline" style="color: #363e45;"> by FO Metaux</span>
+              <span style="color: #aa4584;">DocEase</span>
+              <span class="hidden sm:inline" style="color: #181a1c;"> by FO Metaux</span>
             </span>
           </div>
         </div>
@@ -580,7 +583,7 @@
             id="headerDownloadBtn" 
             disabled 
             class="flex items-center justify-center min-h-[44px] px-4 py-2 rounded-full text-sm font-medium text-white elevation-1 state-layer state-layer-blue disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 press-effect gap-2"
-            style="background: #f6b93b;"
+            style="background: #e04142;"
           >
             <span class="material-icons" style="font-size: 20px; line-height: 1;">download</span>
             <span class="hidden md:inline">Télécharger</span>
@@ -592,7 +595,7 @@
             id="headerSendBtn" 
             disabled 
             class="flex items-center justify-center min-h-[44px] px-4 py-2 rounded-full text-sm font-medium text-white elevation-1 state-layer state-layer-blue disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 press-effect gap-2"
-            style="background: #38ada9;"
+            style="background: #d557a6;"
           >
             <span class="material-icons" style="font-size: 20px; line-height: 1;">share</span>
             <span class="hidden sm:inline">Partager</span>
@@ -610,8 +613,8 @@
       <!-- Titre de section -->
       <div class="w-full max-w-6xl mb-4 md:mb-6">
         <div class="flex items-center gap-4">
-          <div class="inline-block p-4 rounded-full progressive-glow-tertiary" style="background: #b8e994;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12" style="color: #363e45;" aria-hidden="true">
+          <div class="inline-block p-4 rounded-full progressive-glow-tertiary" style="background: #e062b1;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12" style="color: #2f2f2f;" aria-hidden="true">
               <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
               <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -647,9 +650,9 @@
 
           <!-- Boutons d'action -->
           <div class="flex items-center gap-2">
-            <button type="button" id="customizeFieldsBtn" class="md3-button px-3 md:px-4 py-1.5 md:py-2 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap" style="display: none; background: #1e3799; color: white;">
-              <span class="material-icons text-base md:text-lg" style="color: white;">build</span>
-              <span class="hidden sm:inline" style="color: white;">Personnaliser</span>
+            <button type="button" id="customizeFieldsBtn" class="md3-button px-3 md:px-4 py-1.5 md:py-2 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap" style="display: none; background: #FFF; color: #3d5264 !important; border: 2px solid #3d5264; border-radius: 2rem; height: 3rem;">
+              <span class="material-icons text-base md:text-lg">build</span>
+              <span class="hidden sm:inline">Personnaliser</span>
             </button>
             <button type="button" id="clearAllDataBtn" class="md3-button px-3 md:px-4 py-1.5 md:py-2 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap">
               <span class="material-icons text-base md:text-lg">delete_sweep</span>
@@ -701,9 +704,9 @@
           <div id="templateNameTitleCoordonnees" class="px-6 -mx-6 mb-2" style="display: none; margin-top: -2.5rem; padding-bottom: 1rem;">
             <h2 class="text-2xl font-bold text-gray-800" id="templateNameTextCoordonnees">-</h2>
           </div>
-          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #b8e9945c, white);">
-            <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #363e45;">
-              <span class="material-icons" style="font-size: 28px; color: rgb(184, 233, 148);">person</span>
+          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #ffecf8, white);border-radius: 1rem;">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #2f2f2f;">
+              <span class="material-icons" style="font-size: 28px; color: #e062b1;">person</span>
             </div>
             <div>
               <h3 class="text-xl font-bold text-gray-900">Coordonnées</h3>
@@ -719,9 +722,9 @@
           <div id="templateNameTitleContenu" class="px-6 -mx-6 mb-2" style="display: none; margin-top: -2.5rem; padding-bottom: 1rem;">
             <h2 class="text-2xl font-bold text-gray-800" id="templateNameTextContenu">-</h2>
           </div>
-          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #b8e9945c, white);">
-            <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #363e45;">
-              <span class="material-icons" style="font-size: 28px; color: rgb(184, 233, 148);">article</span>
+          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #ffecf8, white);border-radius: 1rem;">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #181a1c;">
+              <span class="material-icons" style="font-size: 28px; color: #e062b1;">article</span>
             </div>
             <div>
               <h3 class="text-xl font-bold text-gray-900">Contenu</h3>
@@ -737,9 +740,9 @@
           <div id="templateNameTitleExpediteur" class="px-6 -mx-6 mb-2" style="display: none; margin-top: -2.5rem; padding-bottom: 1rem;">
             <h2 class="text-2xl font-bold text-gray-800" id="templateNameTextExpediteur">-</h2>
           </div>
-          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #b8e9945c, white);">
-            <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #363e45;">
-              <span class="material-icons" style="font-size: 28px; color: rgb(184, 233, 148);">send</span>
+          <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #ffecf8, white);border-radius: 1rem;">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #181a1c;">
+              <span class="material-icons" style="font-size: 28px; color: #e062b1;">send</span>
             </div>
             <div>
               <h3 class="text-xl font-bold text-gray-900">Signataire</h3>
@@ -770,8 +773,8 @@
         <div class="flex items-center gap-3">
           <span class="material-icons" style="color: #4a69bd; font-size: 42px; line-height: 1;">visibility</span>
           <div>
-            <h2 class="text-2xl font-bold" style="color: #363e45;">Prévisualisation du document</h2>
-            <p class="text-sm" id="previewSubtitle" style="color: #363e45;">Vérifiez les informations avant génération</p>
+            <h2 class="text-2xl font-bold" style="color: #181a1c;">Prévisualisation du document</h2>
+            <p class="text-sm" id="previewSubtitle" style="color: #181a1c;">Vérifiez les informations avant génération</p>
           </div>
         </div>
         <button id="closeModal" class="modal-close-button md3-button p-2 rounded-full" style="background: white !important;">
@@ -787,11 +790,11 @@
       <!-- Footer avec actions -->
       <div class="flex items-center p-6 border-t border-gray-200 bg-gray-50" style="justify-content: flex-end;">
         <div class="flex gap-3">
-          <button id="downloadWordBtn" class="md3-button px-6 py-2.5 text-white elevation-1 flex items-center gap-2" style="background: #f6b93b;">
+          <button id="downloadWordBtn" class="md3-button px-6 py-2.5 text-white elevation-1 flex items-center gap-2" style="background: #e04142; border-radius: 2rem;">
             <span class="material-icons">download</span>
             Télécharger le document
           </button>
-          <button id="sendEmailBtn" class="md3-button px-6 py-2.5 text-white elevation-2 flex items-center gap-2" style="background: #38ada9;">
+          <button id="sendEmailBtn" class="md3-button px-6 py-2.5 text-white elevation-2 flex items-center gap-2" style="background: #d557a6;">
             <span class="material-icons">share</span>
             Partager
           </button>
@@ -851,10 +854,10 @@
       <!-- Header du modal -->
       <div class="flex items-center justify-between p-6 border-b border-gray-200">
         <div class="flex items-center gap-3">
-          <span class="material-icons" style="color: #38ada9; font-size: 42px; line-height: 1;">share</span>
+          <span class="material-icons" style="color: #d557a6; font-size: 42px; line-height: 1;">share</span>
           <div>
-            <h2 class="text-2xl font-bold" style="color: #363e45;">Partager le document</h2>
-            <p class="text-sm" style="color: #363e45;">Ajoutez les destinataires pour l'envoi par email</p>
+            <h2 class="text-2xl font-bold" style="color: #181a1c;">Partager le document</h2>
+            <p class="text-sm" style="color: #181a1c;">Ajoutez les destinataires pour l'envoi par email</p>
           </div>
         </div>
         <button id="closeShareModal" class="modal-close-button md3-button p-2 rounded-full" style="background: white !important;">
@@ -866,13 +869,13 @@
       <div class="p-6 space-y-4">
         <!-- Destinataires -->
         <div>
-          <label class="block text-base font-semibold mb-3" style="color: #363e45;">
-            Adresses email des destinataires <span style="color: #363e45;">*</span>
+          <label class="block text-base font-semibold mb-3" style="color: #181a1c;">
+            Adresses email des destinataires <span style="color: #181a1c;">*</span>
           </label>
           <div id="shareEmailContainer" class="md3-input w-full p-3 bg-white flex flex-wrap gap-2 items-center min-h-[52px] cursor-text rounded-xl border-2 border-[#E8DEF8] focus-within:border-[#0072ff] transition-all">
-            <input id="shareEmailInput" type="text" placeholder="Tapez une adresse email et appuyez sur virgule ou espace..." class="flex-1 outline-none min-w-[200px] text-base" style="color: #363e45;">
+            <input id="shareEmailInput" type="text" placeholder="Tapez une adresse email et appuyez sur virgule ou espace..." class="flex-1 outline-none min-w-[200px] text-base" style="color: #181a1c;">
           </div>
-          <p class="text-sm mt-2" style="color: #363e45;">
+          <p class="text-sm mt-2" style="color: #181a1c;">
             <span class="material-icons text-base align-middle mr-1">info</span>
             Séparez les adresses par des virgules, espaces ou point-virgules
           </p>
@@ -880,17 +883,17 @@
 
         <!-- Message d'email -->
         <div>
-          <label for="shareEmailMessage" class="block text-base font-semibold mb-3" style="color: #363e45;">
+          <label for="shareEmailMessage" class="block text-base font-semibold mb-3" style="color: #181a1c;">
             Message de l'email
           </label>
           <textarea
             id="shareEmailMessage"
             rows="6"
             class="w-full p-4 border-2 rounded-xl focus:outline-none transition-all resize-none focus:border-[#0072ff]"
-            style="border-color: #E8DEF8; font-family: 'Roboto', sans-serif; color: #363e45;"
+            style="border-color: #E8DEF8; font-family: 'Roboto', sans-serif; color: #181a1c;"
             placeholder="Votre message ici..."
           ></textarea>
-          <p class="text-sm mt-2" style="color: #363e45;">
+          <p class="text-sm mt-2" style="color: #181a1c;">
             <span class="material-icons text-base align-middle mr-1">edit</span>
             Personnalisez le message qui accompagnera le document
           </p>
@@ -899,7 +902,7 @@
 
       <!-- Footer avec actions -->
       <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50" style="justify-content: flex-end;">
-        <button id="confirmShareBtn" class="md3-button px-6 py-2.5 text-white elevation-2 flex items-center gap-2 rounded-lg" style="background: #38ada9;">
+        <button id="confirmShareBtn" class="md3-button px-6 py-2.5 text-white elevation-2 flex items-center gap-2 rounded-lg" style="background: #d557a6;">
           <span class="material-icons">send</span>
           Générer et envoyer
         </button>
@@ -926,7 +929,7 @@
           </nav>
         </div>
          <div class="divider-gradient mt-10" style="margin-top: 1.5rem;"></div>
-        <div class="flex flex-col items-center gap-4 mt-10" style="position: relative;bottom: 6px; margin-top: 1.5rem;">
+        <div class="flex flex-col items-center gap-4 mt-10" style="position: relative;bottom: 6px; margin-top: 1.3rem;">
           <p class="text-xs text-white">Site réalisé par FO Métaux © <span id="currentYear">2025</span> FO Métaux. Tous droits réservés.<span class="ml-2 text-white">Version <span id="appVersion">1.2.0</span></span></p>
         </div>
       </div>
@@ -939,8 +942,8 @@
       <!-- Bouton toggle pour mobile - Affiche "Templates" uniquement en mobile -->
       <button type="button" class="templates-toggle-btn md:hidden" id="templatesToggleBtn" aria-label="Afficher/masquer les templates">
         <div class="flex items-center gap-1 md:gap-2">
-          <span class="material-icons text-xl" style="color: #363e45;">dashboard</span>
-          <span class="text-base font-bold" style="color: #363e45;">Templates</span>
+          <span class="material-icons text-xl" style="color: #181a1c;">dashboard</span>
+          <span class="text-base font-bold" style="color: #181a1c;">Templates</span>
         </div>
         <span class="material-icons text-xl">expand_more</span>
       </button>
@@ -949,8 +952,8 @@
       <div class="templates-sidebar-content">
         <!-- Header du volet templates - Visible uniquement en desktop -->
         <div class="templates-sidebar-header mb-4 md:mb-6 pb-3 md:pb-4 border-b border-gray-200 hidden md:block">
-          <h2 class="text-base md:text-2xl font-bold mb-0.5 md:mb-2 flex items-center gap-1 md:gap-2" style="color: #363e45;">
-            <span class="material-icons text-xl md:text-3xl" style="color: #363e45;">dashboard</span>
+          <h2 class="text-base md:text-2xl font-bold mb-0.5 md:mb-2 flex items-center gap-1 md:gap-2" style="color: #181a1c;">
+            <span class="material-icons text-xl md:text-3xl" style="color: #181a1c;">dashboard</span>
             Templates
           </h2>
           <p class="text-xs md:text-sm text-gray-600 hidden md:block">Sélectionnez un modèle de document</p>

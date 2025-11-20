@@ -572,13 +572,13 @@ function openShareModal() {
           // Hover effect
           chip.addEventListener('mouseenter', () => {
             chip.style.backgroundColor = '#f8c29154';
-            chip.style.color = '#363e45';
+            chip.style.color = '#181a1c';
             chip.querySelectorAll('span, button').forEach(el => {
               if (el.classList.contains('material-icons') || el.tagName === 'SPAN') {
-                el.style.color = '#363e45';
+                el.style.color = '#181a1c';
               }
             });
-            chip.querySelector('button').style.color = '#363e45';
+            chip.querySelector('button').style.color = '#181a1c';
           });
           chip.addEventListener('mouseleave', () => {
             chip.style.backgroundColor = '#eb2f06';
@@ -636,13 +636,13 @@ function initShareModal() {
     // Hover effect
     chip.addEventListener('mouseenter', () => {
       chip.style.backgroundColor = '#f8c29154';
-      chip.style.color = '#363e45';
+      chip.style.color = '#181a1c';
       chip.querySelectorAll('span, button').forEach(el => {
         if (el.classList.contains('material-icons') || el.tagName === 'SPAN') {
-          el.style.color = '#363e45';
+          el.style.color = '#181a1c';
         }
       });
-      chip.querySelector('button').style.color = '#363e45';
+      chip.querySelector('button').style.color = '#181a1c';
     });
     chip.addEventListener('mouseleave', () => {
       chip.style.backgroundColor = '#eb2f06';

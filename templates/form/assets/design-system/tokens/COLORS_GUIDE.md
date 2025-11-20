@@ -85,7 +85,7 @@ Couleur pour les éléments tertiaires, warnings, et informations complémentair
 
 **Variantes personnalisées :**
 - `--ds-color-tertiary-variant-1` ou `--ds-color-tertiary-v1` : #fad390 (claire)
-- `--ds-color-tertiary-variant-2` ou `--ds-color-tertiary-v2` : #f6b93b (moyenne)
+- `--ds-color-tertiary-variant-2` ou `--ds-color-tertiary-v2` : #e04142 (moyenne)
 - `--ds-color-tertiary-variant-3` ou `--ds-color-tertiary-v3` : #e58e26 (foncée)
 
 **Utilisation :**
@@ -153,7 +153,7 @@ Couleur pour les éléments spéciaux, succès alternatifs, et accents.
 - `--ds-color-quinary-dark` (700)
 
 **Variantes personnalisées :**
-- `--ds-color-quinary-variant-1` ou `--ds-color-quinary-v1` : #b8e994 (claire)
+- `--ds-color-quinary-variant-1` ou `--ds-color-quinary-v1` : #e062b1 (claire)
 - `--ds-color-quinary-variant-2` ou `--ds-color-quinary-v2` : #78e08f (moyenne)
 - `--ds-color-quinary-variant-3` ou `--ds-color-quinary-v3` : #079992 (foncée)
 

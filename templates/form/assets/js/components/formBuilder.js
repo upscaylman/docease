@@ -154,10 +154,10 @@ function showEditMode() {
     banner.innerHTML = `
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
-          <span class="material-icons" style="color: #1e3799;">build</span>
-          <span class="font-semibold" style="font-size: 1.5rem; line-height: 1.75rem; color: #1e3799;">Mode Construction</span>
+          <span class="material-icons" style="color: #3d5264;">build</span>
+          <span class="font-semibold" style="font-size: 1.5rem; line-height: 1.75rem; color: #3d5264;">Mode Construction</span>
         </div>
-        <button id="doneEditBtn" type="button" class="md3-button-filled px-4 py-2 text-sm text-white rounded-lg flex items-center gap-2" style="background: #079992;">
+        <button id="doneEditBtn" type="button" class="md3-button-filled px-4 py-2 text-sm text-white rounded-lg flex items-center gap-2" style="background: #2f9907;border-radius: 2rem;">
           <span class="material-icons text-base">check</span> Terminer
         </button>
       </div>
@@ -220,7 +220,7 @@ function addBuilderStyles() {
     }
 
     #doneEditBtn:hover {
-      background: #068a7a !important;
+      background: #079992 !important;
     }
 
     @keyframes rotate {

@@ -140,7 +140,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(135deg, #363e45 0%, #355976 100%);
+  background: linear-gradient(135deg, #181a1c 0%, #355976 100%);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
   min-height: 100vh;
@@ -268,12 +268,12 @@ body {
 @keyframes progressiveGlowTertiary {
   0%,
   100% {
-    box-shadow: 0 0 10.1889px rgba(250, 211, 144, 0.204),
-      0 0 0.503705px rgba(250, 211, 144, 0.004);
+    box-shadow: 0 0 10.1889px rgba(224, 98, 177, 0.204),
+      0 0 0.503705px rgba(224, 98, 177, 0.004);
   }
   50% {
-    box-shadow: 0 0 24.9649px rgba(250, 211, 144, 0.5),
-      0 0 39.9065px rgba(250, 211, 144, 0.3);
+    box-shadow: 0 0 24.9649px rgba(224, 98, 177, 0.5),
+      0 0 39.9065px rgba(224, 98, 177, 0.3);
   }
 }
 
@@ -285,12 +285,12 @@ body {
 @keyframes progressiveGlowQuinary {
   0%,
   100% {
-    box-shadow: 0 0 10.1889px rgba(7, 153, 146, 0.204),
-      0 0 0.503705px rgba(7, 153, 146, 0.004);
+    box-shadow: 0 0 10.1889px rgba(181, 91, 145, 0.204),
+      0 0 0.503705px rgba(181, 91, 145, 0.004);
   }
   50% {
-    box-shadow: 0 0 24.9649px rgba(7, 153, 146, 0.5),
-      0 0 39.9065px rgba(7, 153, 146, 0.3);
+    box-shadow: 0 0 24.9649px rgba(181, 91, 145, 0.5),
+      0 0 39.9065px rgba(181, 91, 145, 0.3);
   }
 }
 
