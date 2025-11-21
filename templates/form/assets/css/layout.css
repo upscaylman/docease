@@ -52,7 +52,6 @@
 
 .tab-section {
   display: none;
-  animation: fadeInUp 0.5s var(--transition-normal);
 }
 
 .tab-section.active {

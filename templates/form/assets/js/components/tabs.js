@@ -85,6 +85,14 @@ export function switchTab(tabName) {
   
   // Mettre à jour les indicateurs d'étapes complétées
   updateStepIndicators();
+  
+  // Mettre à jour les boutons du stepper
+  // We need to call updateStepperButtons from app.js
+  // This is a bit hacky but it works for now
+  setTimeout(() => {
+    const event = new CustomEvent('tabChanged');
+    document.dispatchEvent(event);
+  }, 0);
 }
 
 /**

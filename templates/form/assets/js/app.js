@@ -44,6 +44,10 @@ async function initApp() {
     initTemplatesGallery(config);
     initFloatingActionBar();
     initShareModal();
+    await initStepper();
+      
+    // Écouter les changements d'onglet pour mettre à jour le stepper
+    document.addEventListener('tabChanged', updateStepperButtons);
 
     // Restaurer le template sélectionné si on revient du builder
     restoreLastTemplate();
@@ -521,7 +525,10 @@ function generateDefaultEmailMessage() {
 
   const message = `Bonjour ${destinataire},
 
-Veuillez trouver ci-joint le document généré concernant votre demande.
+Veuillez trouver ci-joint le courrier de notre Fédération FO,
+Fait pour valoir ce que de droit,
+
+Bonne réception,
 
 Cordialement,
 FO METAUX`;
@@ -558,38 +565,16 @@ function openShareModal() {
         if (email && email.includes('@')) {
           // Créer le chip manuellement pour le modal de partage
           const chip = document.createElement('div');
-          chip.className = 'email-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium elevation-1';
-          chip.style.backgroundColor = '#eb2f06';
+          chip.className = 'email-chip share-email-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium elevation-1';
+          chip.style.backgroundColor = '#e04142';
           chip.style.color = 'white';
           chip.innerHTML = `
             <span class="material-icons text-base">email</span>
             <span>${email}</span>
-            <button type="button" class="ml-1 text-white transition-colors">
+            <button type="button" class="ml-1 text-white">
               <span class="material-icons text-base">close</span>
             </button>
           `;
-          
-          // Hover effect
-          chip.addEventListener('mouseenter', () => {
-            chip.style.backgroundColor = '#f8c29154';
-            chip.style.color = '#181a1c';
-            chip.querySelectorAll('span, button').forEach(el => {
-              if (el.classList.contains('material-icons') || el.tagName === 'SPAN') {
-                el.style.color = '#181a1c';
-              }
-            });
-            chip.querySelector('button').style.color = '#181a1c';
-          });
-          chip.addEventListener('mouseleave', () => {
-            chip.style.backgroundColor = '#eb2f06';
-            chip.style.color = 'white';
-            chip.querySelectorAll('span, button').forEach(el => {
-              if (el.classList.contains('material-icons') || el.tagName === 'SPAN') {
-                el.style.color = 'white';
-              }
-            });
-            chip.querySelector('button').style.color = 'white';
-          });
 
           chip.querySelector('button').addEventListener('click', () => {
             chip.remove();
@@ -622,38 +607,16 @@ function initShareModal() {
   // Créer un chip d'email pour le modal de partage
   function createShareChip(email) {
     const chip = document.createElement('div');
-    chip.className = 'email-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium elevation-1';
-    chip.style.backgroundColor = '#eb2f06';
+    chip.className = 'email-chip share-email-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium elevation-1';
+    chip.style.backgroundColor = '#e04142';
     chip.style.color = 'white';
     chip.innerHTML = `
       <span class="material-icons text-base">email</span>
       <span>${email}</span>
-      <button type="button" class="ml-1 text-white transition-colors">
+      <button type="button" class="ml-1 text-white">
         <span class="material-icons text-base">close</span>
       </button>
     `;
-    
-    // Hover effect
-    chip.addEventListener('mouseenter', () => {
-      chip.style.backgroundColor = '#f8c29154';
-      chip.style.color = '#181a1c';
-      chip.querySelectorAll('span, button').forEach(el => {
-        if (el.classList.contains('material-icons') || el.tagName === 'SPAN') {
-          el.style.color = '#181a1c';
-        }
-      });
-      chip.querySelector('button').style.color = '#181a1c';
-    });
-    chip.addEventListener('mouseleave', () => {
-      chip.style.backgroundColor = '#eb2f06';
-      chip.style.color = 'white';
-      chip.querySelectorAll('span, button').forEach(el => {
-        if (el.classList.contains('material-icons') || el.tagName === 'SPAN') {
-          el.style.color = 'white';
-        }
-      });
-      chip.querySelector('button').style.color = 'white';
-    });
 
     chip.querySelector('button').addEventListener('click', () => {
       const index = shareEmails.indexOf(email);
@@ -795,6 +758,168 @@ function restoreLastTemplate() {
     // Nettoyer le sessionStorage
     sessionStorage.removeItem('lastSelectedTemplate');
   }
+}
+
+/**
+ * Initialiser le stepper de navigation
+ */
+async function initStepper() {
+  const prevBtn = document.getElementById('prevStepBtn');
+  const nextBtn = document.getElementById('nextStepBtn');
+  const previewBtn = document.getElementById('previewStepBtn');
+  const actionPrevBtn = document.getElementById('actionPrevBtn');
+  const actionNextBtn = document.getElementById('actionNextBtn');
+  
+  if (!prevBtn || !nextBtn || !previewBtn) return;
+  
+  // Navigation entre les étapes
+  nextBtn.addEventListener('click', async () => {
+    const { nextTab } = await import('./components/tabs.js');
+    nextTab();
+    await updateStepperButtons();
+  });
+  
+  prevBtn.addEventListener('click', async () => {
+    const { previousTab } = await import('./components/tabs.js');
+    previousTab();
+    await updateStepperButtons();
+  });
+  
+  // Navigation depuis la barre d'action
+  if (actionNextBtn) {
+    actionNextBtn.addEventListener('click', async () => {
+      const { nextTab } = await import('./components/tabs.js');
+      nextTab();
+      await updateStepperButtons();
+    });
+  }
+  
+  if (actionPrevBtn) {
+    actionPrevBtn.addEventListener('click', async () => {
+      const { previousTab } = await import('./components/tabs.js');
+      previousTab();
+      await updateStepperButtons();
+    });
+  }
+  
+  // Écouter les changements d'onglet pour mettre à jour les boutons
+  document.addEventListener('tabChanged', async () => {
+    await updateStepperButtons();
+  });
+  
+  // Bouton de prévisualisation
+  previewBtn.addEventListener('click', async () => {
+    const { generateLocalPreview } = await import('./utils/validation.js');
+    generateLocalPreview();
+  });
+  
+  // Synchroniser l'état disabled avec le bouton principal
+  const previewBtnObserver = new MutationObserver(() => {
+    const mainPreviewBtn = getElement(CONFIG.SELECTORS.previewBtn);
+    if (mainPreviewBtn) {
+      const isDisabled = mainPreviewBtn.disabled;
+      previewBtn.disabled = isDisabled;
+    }
+  });
+  
+  const mainPreviewBtn = getElement(CONFIG.SELECTORS.previewBtn);
+  if (mainPreviewBtn) {
+    previewBtnObserver.observe(mainPreviewBtn, { attributes: true, attributeFilter: ['disabled'] });
+  }
+  
+  // Mettre à jour l'état initial des boutons
+  await updateStepperButtons();
+}
+
+/**
+ * Mettre à jour l'état des boutons du stepper
+ */
+async function updateStepperButtons() {
+  const prevBtn = document.getElementById('prevStepBtn');
+  const nextBtn = document.getElementById('nextStepBtn');
+  const previewBtn = document.getElementById('previewStepBtn');
+  const downloadBtn = document.getElementById('downloadStepBtn');
+  const actionPrevBtn = document.getElementById('actionPrevBtn');
+  const actionNextBtn = document.getElementById('actionNextBtn');
+  
+  const { getActiveTab } = await import('./core/state.js');
+  const activeTab = getActiveTab();
+  
+  const tabs = ['coordonnees', 'contenu', 'expediteur'];
+  const currentIndex = tabs.indexOf(activeTab);
+  
+  // Mettre à jour la visibilité des boutons
+  if (currentIndex > 0) {
+    // Afficher le bouton précédent si on n'est pas sur la page 1
+    if (prevBtn) {
+      prevBtn.classList.remove('hidden');
+      prevBtn.style.display = '';
+    }
+    if (actionPrevBtn) {
+      actionPrevBtn.style.display = 'flex';
+    }
+  } else {
+    // Masquer le bouton précédent sur la page 1 (index 0)
+    if (prevBtn) {
+      prevBtn.classList.add('hidden');
+      prevBtn.style.display = 'none';
+    }
+    if (actionPrevBtn) {
+      actionPrevBtn.style.display = 'none';
+    }
+  }
+  
+  if (currentIndex < tabs.length - 1) {
+    if (nextBtn) nextBtn.classList.remove('hidden');
+    if (actionNextBtn) actionNextBtn.classList.remove('hidden');
+    // Cacher le bouton de prévisualisation
+    if (previewBtn) previewBtn.style.display = 'none';
+    // Cacher le conteneur des boutons
+    const formActionButtons = document.getElementById('formActionButtons');
+    if (formActionButtons) formActionButtons.style.display = 'none';
+  } else {
+    if (nextBtn) nextBtn.classList.add('hidden');
+    if (actionNextBtn) actionNextBtn.classList.add('hidden');
+    // Afficher le bouton de prévisualisation
+    if (previewBtn) previewBtn.style.display = 'flex';
+    // Afficher le conteneur des boutons
+    const formActionButtons = document.getElementById('formActionButtons');
+    if (formActionButtons) formActionButtons.style.display = 'flex';
+  }
+  
+  // Mettre à jour les indicateurs d'étape du stepper
+  const stepIndicators = document.querySelectorAll('.w-8.h-8.rounded-full');
+  stepIndicators.forEach((indicator, index) => {
+    if (index < currentIndex) {
+      // Étape complétée
+      indicator.classList.remove('bg-gray-300', 'text-gray-600');
+      indicator.classList.add('bg-[#a84383]', 'text-white');
+    } else if (index === currentIndex) {
+      // Étape actuelle
+      indicator.classList.remove('bg-gray-300', 'text-gray-600');
+      indicator.classList.add('bg-[#a84383]', 'text-white');
+    } else {
+      // Étapes futures
+      indicator.classList.remove('bg-[#a84383]', 'text-white');
+      indicator.classList.add('bg-gray-300', 'text-gray-600');
+    }
+  });
+  
+  // Mettre à jour les textes des étapes
+  const stepTexts = document.querySelectorAll('.text-sm.font-medium');
+  stepTexts.forEach((text, index) => {
+    if (index < currentIndex) {
+      text.classList.remove('text-gray-500');
+      text.classList.add('text-gray-700');
+    } else if (index === currentIndex) {
+      text.classList.remove('text-gray-500');
+      text.classList.add('text-gray-700');
+    }
+  });
+  
+  // Mettre à jour les indicateurs d'étape
+  const { updateStepIndicators } = await import('./components/tabs.js');
+  updateStepIndicators();
 }
 
 /**

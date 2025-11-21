@@ -240,6 +240,10 @@
         display: block !important;
       }
     }
+    /* Tooltip d'aide pour les templates */
+    .templates-help-icon {
+      position: relative;
+    }
     @media (min-width: 768px) {
       .templates-sidebar {
         width: 240px;
@@ -331,8 +335,8 @@
       }
     }
     .template-thumbnail {
-      width: 90px;
-      height: 125px;
+      width: 50%;
+      /* height: 125px; */
       border-radius: 8px;
       margin: 0 auto 0.25rem;
       object-fit: cover;
@@ -346,8 +350,8 @@
     }
     @media (min-width: 768px) {
       .template-thumbnail {
-        width: 100%;
-        height: 225px;
+        width: 80%;
+        height: 80%;
         border-radius: 3px;
       }
     }
@@ -361,10 +365,10 @@
       transform: scale(1.05) translateY(-2px);
     }
     .template-card.selected .template-thumbnail {
-      border-color: #1e3799;
-      box-shadow: 0 0 0 2px #1e3799, 
-                  0 8px 16px rgba(30, 55, 153, 0.3),
-                  0 4px 8px rgba(30, 55, 153, 0.2);
+      border-color: #e04142;
+      box-shadow: 0 0 0 1px #e04142, 
+                  0 4px 8px rgba(183, 28, 28, 0.2), 
+                  0 2px 4px rgba(183, 28, 28, 0.2);
       transform: translateY(-2px);
     }
     .template-card.selected .template-thumbnail .material-icons {
@@ -405,51 +409,108 @@
       color: #a9a9a9;
       border: none;
       cursor: pointer;
-      transition: background-color var(--transition-fast), color var(--transition-fast);
+      position: relative;
+      transition: all 300ms cubic-bezier(0.2, 0, 0, 1);
+      overflow: hidden;
+      height: auto;
+      align-self: stretch;
+      display: flex;
+      align-items: center;
     }
     .tab-button-floating:hover {
       background: #f3f4f6;
     }
     .tab-button-floating.active {
       background: #ffecf8;
-      color: #181a1c;
+      color: #2a2a2a;
+      border-radius: 2rem;
+      height: 100%;
+      align-self: stretch;
+    }
+    /* Conteneur des boutons flottants - alignement à gauche */
+    .tab-buttons-container {
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+    }
+    .tab-label-floating {
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-width 400ms cubic-bezier(0.2, 0, 0, 1),
+                  opacity 300ms cubic-bezier(0.2, 0, 0, 1) 100ms,
+                  margin-left 300ms cubic-bezier(0.2, 0, 0, 1);
+      white-space: nowrap;
+      display: inline-block;
+      font-weight: 800;
+    }
+    .tab-button-floating.active .tab-label-floating {
+      max-width: 150px;
+      opacity: 1;
+      margin-left: 0.5rem;
+      transition: max-width 400ms cubic-bezier(0.2, 0, 0, 1),
+                  opacity 300ms cubic-bezier(0.2, 0, 0, 1) 100ms,
+                  margin-left 300ms cubic-bezier(0.2, 0, 0, 1);
+    }
+    .tab-button-floating:not(.active) .tab-label-floating {
+      max-width: 0;
+      opacity: 0;
+      margin-left: 0;
+      transition: max-width 300ms cubic-bezier(0.2, 0, 0, 1),
+                  opacity 200ms cubic-bezier(0.2, 0, 0, 1),
+                  margin-left 300ms cubic-bezier(0.2, 0, 0, 1);
     }
     .step-indicator-floating {
       background: #a9a9a9;
       color: white;
-      transition: background-color var(--transition-fast), color var(--transition-fast);
+      transition: all 300ms cubic-bezier(0.2, 0, 0, 1);
+      flex-shrink: 0;
     }
     .step-indicator-floating.active {
       background: #2f2f2f;
       color: white;
+      transform: scale(1.1);
+      width: 2.5rem;
     }
     /* Override Design System pour les boutons spécifiques */
-    #clearAllDataBtn.md3-button {
+    #clearAllDataBtn {
       color: #eb2f06 !important;
       background: transparent !important;
-      background-color: transparent !important;
       box-shadow: none !important;
-      border: 2px solid #eb2f06;
-      border-radius: 2rem;
-      height: 3rem;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
     }
-    #clearAllDataBtn.md3-button:hover {
+    #clearAllDataBtn:hover {
       background-color: #f8c29154 !important;
       color: #eb2f06 !important;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+      border-radius: 1rem !important;
     }
-    #fillTestDataFloating.md3-button {
+    #fillTestDataFloating {
       color: #181a1c !important;
-      background: #f3f4f6 !important;
-      background-color: #f3f4f6 !important;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
     }
-    #fillTestDataFloating.md3-button:hover {
+    #fillTestDataFloating:hover {
       background-color: #e5e7eb !important;
-      background: #e5e7eb !important;
       color: #181a1c !important;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+      border-radius: 1rem !important;
     }
+    #customizeFieldsBtn:hover {
+      background: #5e6b7b !important;
+    }
+
     #headerPreviewBtn:disabled,
     #headerDownloadBtn:disabled {
       opacity: 0.5 !important;
@@ -515,7 +576,7 @@
     }
     /* Alignement du début du carré du logo avec le début du container du formulaire */
     header .container {
-      max-width: 1280px !important;
+      max-width: 1450px !important;
       margin-left: auto !important;
       margin-right: auto !important;
       padding-left: 2rem !important;
@@ -528,6 +589,10 @@
       margin-right: auto;
       padding-left: 1rem; /* même que form-container mobile */
       padding-right: 1rem;
+    }
+    .main-footer .container p {
+      max-width: 100%;
+      width: 100%;
     }
     @media (min-width: 768px) {
       .main-footer .container {
@@ -546,6 +611,16 @@
         padding-left: 5rem; /* même que form-container xl: 3rem 5rem */
         padding-right: 5rem;
       }
+    }
+    /* Chips d'email du modal de partage - pas de hover */
+    .share-email-chip {
+      background-color: #e04142 !important;
+    }
+    .share-email-chip:hover {
+      background-color: #e04142 !important;
+    }
+    .share-email-chip button:hover {
+      color: white !important;
     }
   </style>
 </head>
@@ -576,7 +651,7 @@
             id="headerPreviewBtn" 
             disabled 
             class="flex items-center justify-center min-h-[44px] px-4 py-2 rounded-full text-sm font-medium text-white elevation-1 state-layer state-layer-blue disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 press-effect gap-2"
-            style="background: #4a69bd;"
+            style="background: #a84383;"
           >
             <span class="material-icons" style="font-size: 20px; line-height: 1;">visibility</span>
             <span class="hidden sm:inline">Prévisualiser</span>
@@ -588,7 +663,7 @@
             id="headerDownloadBtn" 
             disabled 
             class="flex items-center justify-center min-h-[44px] px-4 py-2 rounded-full text-sm font-medium text-white elevation-1 state-layer state-layer-blue disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 press-effect gap-2"
-            style="background: #e04142;"
+            style="background: #dd60b0;"
           >
             <span class="material-icons" style="font-size: 20px; line-height: 1;">download</span>
             <span class="hidden md:inline">Télécharger</span>
@@ -599,8 +674,8 @@
             type="button" 
             id="headerSendBtn" 
             disabled 
-            class="flex items-center justify-center min-h-[44px] px-4 py-2 rounded-full text-sm font-medium text-white elevation-1 state-layer state-layer-blue disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 press-effect gap-2"
-            style="background: #d557a6;"
+            class="flex items-center justify-center min-h-[44px] px-4 py-2 rounded-full text-sm font-medium elevation-1 state-layer state-layer-blue disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 press-effect gap-2"
+            style="background: #FFF; color: #a64182; border: 2px solid #2f2f2f;"
           >
             <span class="material-icons" style="font-size: 20px; line-height: 1;">share</span>
             <span class="hidden sm:inline">Partager</span>
@@ -634,44 +709,63 @@
         </div>
       </div>
 
-      <!-- Barre d'action flottante -->
+      <!-- Barre d'action unique avec colonnes flexibles -->
       <div class="w-full max-w-6xl mb-4 md:mb-6">
-        <div class="bg-white border border-gray-200 p-2 md:p-4 flex items-center justify-between gap-2 md:gap-4 flex-wrap" style="border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.52), 0 4px 6px -4px rgba(0, 0, 0, 0.32);">
-          <!-- Navigation par étapes -->
-          <div class="flex items-center gap-1 md:gap-2 overflow-x-auto flex-1">
-            <button type="button" class="tab-button-floating active px-2 md:px-4 py-1.5 md:py-2 rounded-lg flex items-center gap-1 md:gap-2 text-xs md:text-sm font-medium whitespace-nowrap" data-tab="coordonnees">
-              <span class="step-indicator-floating active w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-              <span class="hidden sm:inline">Coordonnées</span>
-            </button>
-            <button type="button" class="tab-button-floating px-2 md:px-4 py-1.5 md:py-2 rounded-lg flex items-center gap-1 md:gap-2 text-xs md:text-sm font-medium whitespace-nowrap" data-tab="contenu">
-              <span class="step-indicator-floating w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-              <span class="hidden sm:inline">Contenu</span>
-            </button>
-            <button type="button" class="tab-button-floating px-2 md:px-4 py-1.5 md:py-2 rounded-lg flex items-center gap-1 md:gap-2 text-xs md:text-sm font-medium whitespace-nowrap" data-tab="expediteur">
-              <span class="step-indicator-floating w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-xs font-bold">3</span>
-              <span class="hidden sm:inline">Signataire</span>
-            </button>
+        <div class="flex items-stretch gap-2 md:gap-3 min-w-0" style="max-width: 100%;">
+          <!-- Colonne 1: Barre d'action principale (élastique) -->
+          <div class="bg-white border border-gray-200 p-2 md:p-4 flex items-center justify-between gap-2 md:gap-4 min-w-0" style="border-radius: 3rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.52), 0 4px 6px -4px rgba(0, 0, 0, 0.32); flex: 1 1 auto;">
+            <!-- Navigation par étapes -->
+            <div class="flex items-center gap-1 md:gap-2 overflow-x-auto flex-1 relative tab-buttons-container min-w-0">
+              <button type="button" class="tab-button-floating active px-2 md:px-4 py-1.5 md:py-2 rounded-lg flex items-center gap-1 md:gap-2 text-xs md:text-sm font-medium whitespace-nowrap" data-tab="coordonnees">
+                <span class="step-indicator-floating active w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                <span class="tab-label-floating hidden sm:inline">Coordonnées</span>
+              </button>
+              <button type="button" class="tab-button-floating px-2 md:px-4 py-1.5 md:py-2 rounded-lg flex items-center gap-1 md:gap-2 text-xs md:text-sm font-medium whitespace-nowrap" data-tab="contenu">
+                <span class="step-indicator-floating w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                <span class="tab-label-floating hidden sm:inline">Contenu</span>
+              </button>
+              <button type="button" class="tab-button-floating px-2 md:px-4 py-1.5 md:py-2 rounded-lg flex items-center gap-1 md:gap-2 text-xs md:text-sm font-medium whitespace-nowrap" data-tab="expediteur">
+                <span class="step-indicator-floating w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                <span class="tab-label-floating hidden sm:inline">Signataire</span>
+              </button>
+            </div>
+
+            <!-- Navigation arrows - Tout à droite -->
+            <div class="flex items-center gap-1 flex-shrink-0">
+              <button type="button" id="actionPrevBtn" class="md3-button p-2 text-gray-700 elevation-1 flex items-center justify-center" style="border-radius: 2rem; min-width: 40px; display: none;">
+                <span class="material-icons">arrow_back</span>
+              </button>
+              <button type="button" id="actionNextBtn" class="md3-button p-2 text-white elevation-1 flex items-center justify-center" style="background: #a84383; border-radius: 2rem; min-width: 40px;">
+                <span class="material-icons">arrow_forward</span>
+              </button>
+            </div>
           </div>
 
-          <!-- Boutons d'action -->
-          <div class="flex items-center gap-2">
-            <button type="button" id="customizeFieldsBtn" class="md3-button px-3 md:px-4 py-1.5 md:py-2 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap" style="display: none; background: #FFF; color: #3d5264 !important; border: 2px solid #3d5264; border-radius: 2rem; height: 3rem;">
+          <!-- Colonne 2: Bouton personnaliser (conditionnel) -->
+          <div class="bg-white border border-gray-200 p-2 md:p-4 flex items-center justify-center flex-shrink-0" id="customizeFieldsBtnContainer" style="border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.52), 0 4px 6px -4px rgba(0, 0, 0, 0.32); display: none; width: auto;">
+            <button type="button" id="customizeFieldsBtn" class="md3-button px-2 md:px-3 py-1.5 md:py-2 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap h-full" style="background: #3b5265; color: #ffffff !important; border-radius: 3.5rem;">
               <span class="material-icons text-base md:text-lg">build</span>
               <span class="hidden sm:inline">Personnaliser</span>
             </button>
-            <button type="button" id="clearAllDataBtn" class="md3-button px-3 md:px-4 py-1.5 md:py-2 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap">
-              <span class="material-icons text-base md:text-lg">delete_sweep</span>
-              <span class="hidden sm:inline">Effacer tout</span>
+          </div>
+
+          <!-- Colonne 3: Bouton effacer tout -->
+          <div class="bg-white border border-gray-200 p-2 md:p-4 flex items-center justify-center flex-shrink-0" style="border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.52), 0 4px 6px -4px rgba(0, 0, 0, 0.32); width: auto;">
+            <button type="button" id="clearAllDataBtn" class="flex items-center justify-center p-3 text-gray-600 hover:text-red-600 transition-colors hover:bg-red-50 rounded-full h-full" title="Effacer tout">
+              <span class="material-icons" style="font-size: 28px;">delete_sweep</span>
             </button>
-            <button type="button" id="fillTestDataFloating" class="md3-button px-3 md:px-4 py-1.5 md:py-2 elevation-1 flex items-center gap-1 md:gap-2 rounded-lg font-semibold transition-all text-xs md:text-sm whitespace-nowrap">
-              <span class="material-icons text-base md:text-lg">casino</span>
-              <span class="hidden sm:inline">Données de test</span>
+          </div>
+
+          <!-- Colonne 4: Bouton données de test -->
+          <div class="bg-white border border-gray-200 p-2 md:p-4 flex items-center justify-center flex-shrink-0" style="border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.52), 0 4px 6px -4px rgba(0, 0, 0, 0.32); width: auto;">
+            <button type="button" id="fillTestDataFloating" class="flex items-center justify-center p-3 text-gray-600 hover:text-blue-600 transition-colors hover:bg-blue-50 rounded-full h-full" title="Données de test">
+              <span class="material-icons" style="font-size: 28px;">casino</span>
             </button>
           </div>
         </div>
       </div>
 
-      <form id="docForm" class="bg-white md3-card w-full max-w-6xl space-y-8" style="padding: 1.5rem; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.52), 0 4px 6px -4px rgba(0, 0, 0, 0.32);">
+      <form id="docForm" class="bg-white md3-card w-full max-w-6xl space-y-8" style="padding: 1.5rem; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.52), 0 4px 6px -4px rgba(0, 0, 0, 0.32);">
 
     <!-- Bouton données de test (caché, utilisé en interne) -->
     <button type="button" id="fillTestData" style="display: none;"></button>
@@ -768,6 +862,48 @@
     <button type="button" id="previewBtn" disabled style="display: none;"></button>
 
     <p id="message" class="text-center text-[#49454F] text-sm"></p>
+    
+    <!-- Stepper Navigation -->
+    <div class="w-full max-w-6xl mt-6" style="display: none;">
+      <div class="bg-white border border-gray-200 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4" style="box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+        <!-- Stepper Progress -->
+        <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-center" style="display: none;">
+          <div class="flex items-center">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-[#a84383] text-white">1</div>
+            <div class="ml-2 hidden text-sm font-medium text-gray-700 md:hidden">Coordonnées</div>
+          </div>
+          <div class="h-px w-6 md:w-12 bg-gray-300"></div>
+          <div class="flex items-center">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-gray-300 text-gray-600">2</div>
+            <div class="ml-2 hidden text-sm font-medium text-gray-500 md:hidden">Contenu</div>
+          </div>
+          <div class="h-px w-6 md:w-12 bg-gray-300"></div>
+          <div class="flex items-center">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-gray-300 text-gray-600">3</div>
+            <div class="ml-2 hidden text-sm font-medium text-gray-500 md:hidden">Signataire</div>
+          </div>
+        </div>
+        
+        <!-- Navigation Buttons -->
+        <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+          <button type="button" id="prevStepBtn" class="md3-button px-4 py-2 text-gray-700 elevation-1 flex items-center gap-2 hidden" style="border-radius: 2rem; display: none;">
+            <span class="material-icons">arrow_back</span>
+            <span class="hidden sm:inline">Précédent</span>
+          </button>
+          <button type="button" id="nextStepBtn" class="md3-button px-4 py-2 text-white elevation-1 flex items-center gap-2" style="background: #a84383; border-radius: 2rem; display: none;">
+            <span class="hidden sm:inline">Suivant</span>
+            <span class="material-icons">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Bouton de prévisualisation (uniquement sur la dernière page) -->
+    <div id="formActionButtons" class="flex justify-end gap-3 mt-6" style="display: none;">
+      <button type="button" id="previewStepBtn" class="md3-button px-4 py-2 text-white elevation-1 flex items-center gap-2" style="background: #a84383; border-radius: 2rem;">
+        <span class="material-icons">visibility</span>
+        <span class="hidden sm:inline">Prévisualiser</span>
+      </button>
+    </div>
   </form>
 
   <!-- Modal de prévisualisation -->
@@ -776,13 +912,13 @@
       <!-- Header du modal -->
       <div class="flex items-center justify-between p-6 border-b border-gray-200">
         <div class="flex items-center gap-3">
-          <span class="material-icons" style="color: #4a69bd; font-size: 42px; line-height: 1;">visibility</span>
+          <span class="material-icons" style="color: #a13f7e; font-size: 42px; line-height: 1;">visibility</span>
           <div>
             <h2 class="text-2xl font-bold" style="color: #181a1c;">Prévisualisation du document</h2>
             <p class="text-sm" id="previewSubtitle" style="color: #181a1c;">Vérifiez les informations avant génération</p>
           </div>
         </div>
-        <button id="closeModal" class="modal-close-button md3-button p-2 rounded-full" style="background: white !important;">
+        <button id="closeModal" class="modal-close-button md3-button p-2 rounded-full state-layer state-layer-blue transition-all hover:scale-105 press-effect" style="background: white !important;">
           <span class="material-icons text-3xl" style="color: #36434e !important;">close</span>
         </button>
       </div>
@@ -795,11 +931,11 @@
       <!-- Footer avec actions -->
       <div class="flex items-center p-6 border-t border-gray-200 bg-gray-50" style="justify-content: flex-end;">
         <div class="flex gap-3">
-          <button id="downloadWordBtn" class="md3-button px-6 py-2.5 text-white elevation-1 flex items-center gap-2" style="background: #e04142; border-radius: 2rem;">
+          <button id="downloadWordBtn" class="md3-button px-6 py-2.5 text-white elevation-1 flex items-center gap-2 state-layer state-layer-blue transition-all hover:scale-105 press-effect" style="background: #dd60b0; border-radius: 2rem;">
             <span class="material-icons">download</span>
             Télécharger le document
           </button>
-          <button id="sendEmailBtn" class="md3-button px-6 py-2.5 text-white elevation-2 flex items-center gap-2" style="background: #d557a6;">
+          <button id="sendEmailBtn" class="md3-button px-6 py-2.5 elevation-2 flex items-center gap-2 state-layer state-layer-blue transition-all hover:scale-105 press-effect" style="background: #FFF; color: #a64182; border: 2px solid #2f2f2f; border-radius: 2rem;">
             <span class="material-icons">share</span>
             Partager
           </button>
@@ -820,7 +956,7 @@
             <p class="text-sm text-white opacity-90" id="wordViewerSubtitle">Génération en cours...</p>
           </div>
         </div>
-        <button id="closeWordViewer" class="text-white hover:bg-white hover:bg-opacity-20 transition-colors md3-button p-2 rounded-full">
+        <button id="closeWordViewer" class="text-white md3-button p-2 rounded-full state-layer state-layer-blue transition-all hover:scale-105 press-effect">
           <span class="material-icons text-2xl">close</span>
         </button>
       </div>
@@ -844,7 +980,7 @@
           Le document est généré par n8n et affiché via Google Docs Viewer
         </div>
         <div class="flex gap-3">
-          <button id="closeWordViewerBtn" class="md3-button px-6 py-2.5 bg-gray-200 text-[#1C1B1F] hover:bg-gray-300 elevation-1 flex items-center gap-2">
+          <button id="closeWordViewerBtn" class="md3-button px-6 py-2.5 bg-gray-200 text-[#1C1B1F] elevation-1 flex items-center gap-2 state-layer state-layer-blue transition-all hover:scale-105 press-effect">
             <span class="material-icons">close</span>
             Fermer
           </button>
@@ -865,7 +1001,7 @@
             <p class="text-sm" style="color: #181a1c;">Ajoutez les destinataires pour l'envoi par email</p>
           </div>
         </div>
-        <button id="closeShareModal" class="modal-close-button md3-button p-2 rounded-full" style="background: white !important;">
+        <button id="closeShareModal" class="modal-close-button md3-button p-2 rounded-full state-layer state-layer-blue transition-all hover:scale-105 press-effect" style="background: white !important;">
           <span class="material-icons text-3xl" style="color: #36434e !important;">close</span>
         </button>
       </div>
@@ -907,7 +1043,7 @@
 
       <!-- Footer avec actions -->
       <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50" style="justify-content: flex-end;">
-        <button id="confirmShareBtn" class="md3-button px-6 py-2.5 text-white elevation-2 flex items-center gap-2 rounded-lg" style="background: #d557a6;">
+        <button id="confirmShareBtn" class="md3-button px-6 py-2.5 elevation-2 flex items-center gap-2 state-layer state-layer-blue transition-all hover:scale-105 press-effect" style="background: #FFF; color: #a64182; border: 2px solid #2f2f2f; border-radius: 2rem;">
           <span class="material-icons">send</span>
           Générer et envoyer
         </button>
@@ -919,24 +1055,9 @@
 
     <!-- Footer principal -->
     <footer class="main-footer">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10" style="padding-top: 1rem;padding-bottom: 1rem;">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div class="text-center md:text-left w-full md:w-auto md:pl-0">
-            <h3 class="text-lg font-bold text-white">DocEase by FO Metaux</h3>
-            <p class="text-sm text-white" style="font-weight: 200;">Votre solution pour créer vos documents.</p>
-          </div>
-          <nav class="flex flex-row flex-wrap justify-center md:justify-end items-center gap-x-8 gap-y-3 w-full md:w-auto">
-            <a href="https://www.fo-metaux.org/pages/organisation-fo-metaux" class="text-sm text-white underline px-3" style="font-weight: 200;" target="_blank" rel="noopener noreferrer">A propos de nous</a>
-            <a href="https://www.fo-metaux.fr/nous-contacter" class="text-sm text-white underline px-3" style="font-weight: 200;" target="_blank" rel="noopener noreferrer">Contact</a>
-            <a href="https://www.fo-metaux.org/mentions-legales" class="text-sm text-white underline px-3" style="font-weight: 200;" target="_blank" rel="noopener noreferrer">Mentions Légales</a>
-            <a href="https://www.fo-metaux.org/politique-de-confidentialite" class="text-sm text-white underline px-3" style="font-weight: 200;" target="_blank" rel="noopener noreferrer">Politique de confidentialité</a>
-            <a href="https://www.fo-metaux.fr/" class="text-sm text-white underline px-3" style="font-weight: 200;" target="_blank" rel="noopener noreferrer">fo-metaux.fr</a>
-          </nav>
-        </div>
-         <div class="divider-gradient mt-10" style="margin-top: 1.5rem;"></div>
-        <div class="flex flex-col items-center gap-4 mt-10" style="position: relative;bottom: 6px; margin-top: 1.3rem;">
-          <p class="text-xs text-white">Site réalisé par FO Métaux © <span id="currentYear">2025</span> FO Métaux. Tous droits réservés.<span class="ml-2 text-white">Version <span id="appVersion">1.2.0</span></span></p>
-        </div>
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10" style="padding-bottom: 1rem;">
+        <div class="divider-gradient" style="margin-bottom: 1rem;"></div>
+        <p class="text-xs text-white text-center" style="margin-top: 0;">Site réalisé par FO Métaux © <span id="currentYear">2025</span> FO Métaux. Tous droits réservés.Version <span id="appVersion">1.2.0</span></p>
       </div>
     </footer>
     </div>
@@ -960,8 +1081,10 @@
           <h2 class="text-base md:text-2xl font-bold mb-0.5 md:mb-2 flex items-center gap-1 md:gap-2" style="color: #181a1c;">
             <span class="material-icons text-xl md:text-3xl" style="color: #181a1c;">dashboard</span>
             Templates
+            <button type="button" class="templates-help-icon flex items-center justify-center rounded-full bg-transparent hover:bg-gray-200 transition-colors cursor-help ml-2" title="Sélectionnez un modèle de document" aria-label="Aide">
+              <span class="material-icons" style="color: #a9a9a9; font-size: 18px;">help</span>
+            </button>
           </h2>
-          <p class="text-xs md:text-sm text-gray-600 hidden md:block">Sélectionnez un modèle de document</p>
         </div>
 
         <div id="templatesGallery">
@@ -1022,8 +1145,8 @@
           // Vérifier si on est sur mobile
           if (window.innerWidth >= 768) return;
           
-          // Obtenir la hauteur de la fenêtre
-          const viewportHeight = window.innerHeight;
+          // Utiliser visualViewport si disponible (meilleur pour mobile avec barres d'adresse)
+          const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
           
           // Obtenir la hauteur du header
           const header = document.querySelector('header');
@@ -1040,11 +1163,15 @@
           // Hauteur minimale pour le bouton toggle (environ 48px + padding)
           const minHeight = 60;
           
-          // Hauteur maximale pour le volet plié (ne pas dépasser 20% de l'écran)
+          // Hauteur maximale pour le volet plié (ne pas dépasser 20% de la fenêtre visible)
           const maxHeight = Math.min(availableSpace * 0.2, 80);
           
+          // S'assurer que le volet ne dépasse jamais la hauteur visible
+          const maxAllowedHeight = viewportHeight - headerHeight - 10; // 10px de marge
+          const finalMaxHeight = Math.min(maxHeight, maxAllowedHeight);
+          
           // Utiliser la hauteur calculée ou la hauteur minimale
-          const calculatedHeight = Math.max(minHeight, maxHeight);
+          const calculatedHeight = Math.max(minHeight, finalMaxHeight);
           
           return calculatedHeight;
         }
@@ -1068,9 +1195,11 @@
             const header = document.querySelector('header');
             const formContainer = document.querySelector('.form-container');
             if (header && formContainer) {
+              // Utiliser visualViewport si disponible
+              const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
               const headerHeight = header.offsetHeight;
               const sidebarHeight = sidebar.classList.contains('collapsed') ? 60 : sidebar.offsetHeight;
-              const availableHeight = window.innerHeight - headerHeight - sidebarHeight;
+              const availableHeight = viewportHeight - headerHeight - sidebarHeight;
               formContainer.style.height = availableHeight + 'px';
               formContainer.style.minHeight = availableHeight + 'px';
             }
@@ -1086,15 +1215,21 @@
         // Mettre à jour au chargement
         updateFormContainerHeight();
         
-        // Mettre à jour lors du redimensionnement
+        // Mettre à jour lors du redimensionnement et des changements de viewport
         let resizeTimeout;
-        window.addEventListener('resize', function() {
+        function handleViewportChange() {
           clearTimeout(resizeTimeout);
           resizeTimeout = setTimeout(function() {
             updateCollapsedHeight();
             updateFormContainerHeight();
           }, 100);
-        });
+        }
+        window.addEventListener('resize', handleViewportChange);
+        // Écouter les changements de visualViewport (important pour mobile avec barres d'adresse)
+        if (window.visualViewport) {
+          window.visualViewport.addEventListener('resize', handleViewportChange);
+          window.visualViewport.addEventListener('scroll', handleViewportChange);
+        }
         
         toggleBtn.addEventListener('click', function() {
           sidebar.classList.toggle('collapsed');

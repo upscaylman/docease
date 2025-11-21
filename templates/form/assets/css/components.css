@@ -133,7 +133,6 @@ textarea ~ .material-icons {
 #closeShareModal {
   background-color: white !important;
   background: white !important;
-  transition: all var(--transition-fast);
 }
 
 .modal-close-button:hover,

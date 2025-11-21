@@ -97,13 +97,14 @@ function addCustomizeButton() {
   console.log('addCustomizeButton appelé');
 
   const customizeBtn = document.getElementById('customizeFieldsBtn');
-  if (!customizeBtn) {
-    console.error('Bouton customizeFieldsBtn non trouvé dans le HTML');
+  const customizeContainer = document.getElementById('customizeFieldsBtnContainer');
+  if (!customizeBtn || !customizeContainer) {
+    console.error('Bouton customizeFieldsBtn ou conteneur non trouvé dans le HTML');
     return;
   }
 
-  // Afficher le bouton (il est caché par défaut)
-  customizeBtn.style.display = 'flex';
+  // Afficher le conteneur (il est caché par défaut)
+  customizeContainer.style.display = 'flex';
 
   // Retirer les anciens listeners en clonant le bouton
   const newBtn = customizeBtn.cloneNode(true);
@@ -411,9 +412,9 @@ function hideEditMode() {
  * Cacher le bouton personnaliser
  */
 export function hideCustomizeButton() {
-  const customizeBtn = document.getElementById('customizeFieldsBtn');
-  if (customizeBtn) {
-    customizeBtn.style.display = 'none';
+  const customizeContainer = document.getElementById('customizeFieldsBtnContainer');
+  if (customizeContainer) {
+    customizeContainer.style.display = 'none';
   }
 }
 
