@@ -545,11 +545,14 @@ export async function generateLocalPreview() {
         // Header modal ~80px, Footer modal ~80px, Marges ~40px = 200px
         const availableHeight = Math.max(400, viewportHeight - 250);
         
+        const isMobile = window.innerWidth < 768;
+        const iframeOverflow = isMobile ? 'overflow: scroll; -webkit-overflow-scrolling: touch;' : 'overflow-y: auto; overflow-x: hidden;';
+        
         previewContent.innerHTML = `
-          <div style="width: 100%; height: ${availableHeight}px; display: flex; flex-direction: column;">
+          <div style="width: 100%; height: ${availableHeight}px; display: flex; flex-direction: column; background-color: #e5e7eb; border-radius: 0.75rem; padding: 1rem;">
             <iframe 
               id="previewIframe" 
-              style="width: 100%; height: 100%; border: none; min-height: 0;"
+              style="width: 100%; height: 100%; border: none; min-height: 0; ${iframeOverflow} ${isMobile ? 'zoom: 0.50;' : ''}"
             ></iframe>
           </div>
         `;
@@ -563,8 +566,28 @@ export async function generateLocalPreview() {
             fullHtml = `<!DOCTYPE html>\n${fullHtml}`;
           }
 
-          // Ajouter un zoom de 85% dans le body et un fond gris
-          fullHtml = fullHtml.replace(/<body/i, '<body style="zoom: 0.85; transform-origin: top left; background-color: #e5e7eb; padding: 1rem; overflow: auto; display: flex; justify-content: center;"');
+          // Calculer le zoom dynamique pour mobile
+          let zoomValue = 0.85; // Valeur par défaut pour desktop
+          const viewportWidth = window.innerWidth;
+          
+          if (viewportWidth < 768) {
+            // Mode mobile : zoom progressif selon la largeur
+            // 320px → 0.50, 430px → 0.58, 767px → 0.65
+            const minWidth = 320;
+            const maxWidth = 767;
+            const minZoom = 0.50;
+            const maxZoom = 0.65;
+            
+            // Calcul linéaire du zoom selon la largeur d'écran
+            const widthRatio = (viewportWidth - minWidth) / (maxWidth - minWidth);
+            zoomValue = minZoom + (widthRatio * (maxZoom - minZoom));
+            zoomValue = Math.max(minZoom, Math.min(maxZoom, zoomValue)); // Limiter entre min et max
+          }
+          
+          // Ajouter un zoom dynamique dans le body et un fond gris
+          // En mobile : scroll omnidirectionnel, en desktop : scroll vertical uniquement
+          const overflowStyle = viewportWidth < 768 ? 'overflow: scroll; overflow-x: scroll; overflow-y: scroll;' : 'overflow-y: auto; overflow-x: hidden;';
+          fullHtml = fullHtml.replace(/<body/i, `<body style="zoom: ${zoomValue}; transform-origin: top left; background-color: #e5e7eb; padding: 1rem; ${overflowStyle} -webkit-overflow-scrolling: touch; display: flex; justify-content: center;"`);
           
           // Ajouter un conteneur blanc autour du document
           fullHtml = fullHtml.replace(/<body([^>]*)>([\s\S]*)<\/body>/i, function(match, attrs, content) {

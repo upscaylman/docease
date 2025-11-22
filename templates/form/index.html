@@ -959,7 +959,7 @@
     <!-- Formulaire principal -->
     <div class="form-container">
       <!-- Titre de section -->
-      <div class="w-full max-w-6xl mb-4 md:mb-6">
+      <div id="sectionTitle" class="w-full max-w-6xl mb-4 md:mb-6">
         <div class="flex items-center gap-4">
           <div class="inline-block p-4 rounded-full progressive-glow-tertiary" style="background: #e062b1;">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12" style="color: #2f2f2f;" aria-hidden="true">
@@ -1516,6 +1516,30 @@
           
           // La rotation de la flèche est gérée par CSS
         });
+      }
+    });
+  </script>
+  
+  <!-- Script pour masquer le titre de section après 3s (mobile uniquement) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Activer uniquement sur mobile
+      if (window.innerWidth < 768) {
+        const sectionTitle = document.getElementById('sectionTitle');
+        
+        if (sectionTitle) {
+          // Attendre 3 secondes puis masquer avec animation
+          setTimeout(function() {
+            // Ajouter les styles de transition plus fluides
+            sectionTitle.style.transition = 'opacity 1s ease-in-out';
+            sectionTitle.style.opacity = '0';
+            
+            // Appliquer display: none après l'animation (1s)
+            setTimeout(function() {
+              sectionTitle.style.display = 'none';
+            }, 1000);
+          }, 3000);
+        }
       }
     });
   </script>
