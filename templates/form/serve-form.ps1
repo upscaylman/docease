@@ -105,6 +105,27 @@ function Handle-Request {
             $Response.StatusCode = 404
         }
     }
+    # Servir preview.html
+    elseif ($Path -eq "/html/preview.html" -or $Path -eq "/../html/preview.html" -or $Path -match "^/html/preview\.html$") {
+        $PreviewPath = Join-Path $ScriptDir "..\html\preview.html"
+        $PreviewPath = [System.IO.Path]::GetFullPath($PreviewPath)
+        Write-Host "[REQUEST] Preview.html requested: $Path -> $PreviewPath" -ForegroundColor Cyan
+        
+        if (Test-Path $PreviewPath) {
+            $Content = Get-Content $PreviewPath -Raw -Encoding UTF8
+            $Buffer = [System.Text.Encoding]::UTF8.GetBytes($Content)
+
+            $Response.ContentType = "text/html; charset=utf-8"
+            $Response.ContentLength64 = $Buffer.Length
+            $Response.StatusCode = 200
+
+            $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+            Write-Host "[SUCCESS] Preview.html sent ($($Buffer.Length) bytes)" -ForegroundColor Green
+        } else {
+            Write-Host "[ERROR] Preview.html non trouve: $PreviewPath" -ForegroundColor Red
+            $Response.StatusCode = 404
+        }
+    }
     # Servir les fichiers images (PNG, JPG, JPEG, GIF, SVG)
     elseif ($Path -match "^/assets/img/(.+\.(png|jpg|jpeg|gif|svg))$") {
         $imgFile = Join-Path $ScriptDir "assets\img\$($Matches[1])"

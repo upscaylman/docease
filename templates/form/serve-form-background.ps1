@@ -337,6 +337,104 @@ function Handle-Request {
             $Response.OutputStream.Write($errorBuffer, 0, $errorBuffer.Length)
         }
     }
+    # Serve preview.html
+    elseif ($Path -eq "/html/preview.html" -or $Path -eq "/../html/preview.html" -or $Path -match "^/html/preview\.html$") {
+        $PreviewPath = Join-Path $ScriptDir "..\html\preview.html"
+        $PreviewPath = [System.IO.Path]::GetFullPath($PreviewPath)
+        Write-Host "[REQUEST] Preview.html requested: $Path -> $PreviewPath" -ForegroundColor Cyan
+        
+        if (Test-Path $PreviewPath) {
+            $Content = Get-Content $PreviewPath -Raw -Encoding UTF8
+            $Buffer = [System.Text.Encoding]::UTF8.GetBytes($Content)
+
+            $Response.ContentType = "text/html; charset=utf-8"
+            $Response.ContentLength64 = $Buffer.Length
+            $Response.StatusCode = 200
+
+            $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+            Write-Host "[SUCCESS] Sent preview.html ($($Buffer.Length) bytes)" -ForegroundColor Green
+        } else {
+            Write-Host "[ERROR] preview.html not found at: $PreviewPath" -ForegroundColor Red
+            $Response.StatusCode = 404
+        }
+    }
+    # Serve template-custom.html
+    elseif ($Path -eq "/html/template-custom/template-custom.html" -or $Path -match "^/html/template-custom/template-custom\.html$") {
+        $TemplatePath = Join-Path $ScriptDir "..\html\template-custom\template-custom.html"
+        $TemplatePath = [System.IO.Path]::GetFullPath($TemplatePath)
+        Write-Host "[REQUEST] template-custom.html requested: $Path -> $TemplatePath" -ForegroundColor Cyan
+        
+        if (Test-Path $TemplatePath) {
+            $Content = Get-Content $TemplatePath -Raw -Encoding UTF8
+            $Buffer = [System.Text.Encoding]::UTF8.GetBytes($Content)
+
+            $Response.ContentType = "text/html; charset=utf-8"
+            $Response.ContentLength64 = $Buffer.Length
+            $Response.StatusCode = 200
+
+            $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+            Write-Host "[SUCCESS] Sent template-custom.html ($($Buffer.Length) bytes)" -ForegroundColor Green
+        } else {
+            Write-Host "[ERROR] template-custom.html not found at: $TemplatePath" -ForegroundColor Red
+            $Response.StatusCode = 404
+        }
+    }
+    # Serve template-custom CSS files
+    elseif ($Path -match "^/html/template-custom/(.+\.css)$") {
+        $cssRelativePath = $Matches[1]
+        $cssFile = Join-Path $ScriptDir "..\html\template-custom\$cssRelativePath"
+        $cssFile = [System.IO.Path]::GetFullPath($cssFile)
+        Write-Host "[REQUEST] template-custom CSS requested: $Path -> $cssFile" -ForegroundColor Cyan
+
+        if (Test-Path $cssFile) {
+            $Content = Get-Content $cssFile -Raw -Encoding UTF8
+            $Buffer = [System.Text.Encoding]::UTF8.GetBytes($Content)
+
+            $Response.ContentType = "text/css; charset=utf-8"
+            $Response.ContentLength64 = $Buffer.Length
+            $Response.StatusCode = 200
+
+            $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+            Write-Host "[SUCCESS] Sent template-custom CSS: $($Buffer.Length) bytes" -ForegroundColor Green
+        } else {
+            Write-Host "[ERROR] template-custom CSS not found: $cssFile" -ForegroundColor Red
+            $Response.StatusCode = 404
+        }
+    }
+    # Serve template-custom SVG and images
+    elseif ($Path -match "^/html/template-custom/(.+\.(svg|png|jpg|jpeg|gif|woff|woff2))$") {
+        $fileRelativePath = $Matches[1]
+        $filePath = Join-Path $ScriptDir "..\html\template-custom\$fileRelativePath"
+        $filePath = [System.IO.Path]::GetFullPath($filePath)
+        Write-Host "[REQUEST] template-custom resource requested: $Path -> $filePath" -ForegroundColor Cyan
+
+        if (Test-Path $filePath) {
+            $Buffer = [System.IO.File]::ReadAllBytes($filePath)
+
+            # Determine Content-Type based on extension
+            $extension = $Matches[2].ToLower()
+            $contentType = switch ($extension) {
+                "svg"  { "image/svg+xml" }
+                "png"  { "image/png" }
+                "jpg"  { "image/jpeg" }
+                "jpeg" { "image/jpeg" }
+                "gif"  { "image/gif" }
+                "woff" { "font/woff" }
+                "woff2" { "font/woff2" }
+                default { "application/octet-stream" }
+            }
+
+            $Response.ContentType = $contentType
+            $Response.ContentLength64 = $Buffer.Length
+            $Response.StatusCode = 200
+
+            $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+            Write-Host "[SUCCESS] Sent template-custom resource: $($Buffer.Length) bytes" -ForegroundColor Green
+        } else {
+            Write-Host "[ERROR] template-custom resource not found: $filePath" -ForegroundColor Red
+            $Response.StatusCode = 404
+        }
+    }
     # Serve image files (PNG, JPG, JPEG, GIF, SVG)
     elseif ($Path -match "^/assets/img/(.+\.(png|jpg|jpeg|gif|svg))$") {
         $imgFile = Join-Path $ScriptDir "assets\img\$($Matches[1])"
