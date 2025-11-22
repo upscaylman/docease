@@ -169,7 +169,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      z-index: 100;
+      z-index: 40;
     }
     @media (min-width: 768px) {
       .templates-sidebar {
@@ -708,6 +708,11 @@
     
     /* Modale de partage - Adaptation mobile */
     @media (max-width: 767px) {
+      /* Margin bottom sur le form en mobile */
+      #docForm {
+        margin-bottom: 1rem !important;
+      }
+      
       #shareModal {
         padding: 0.5rem !important;
       }
