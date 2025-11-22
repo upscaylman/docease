@@ -563,6 +563,9 @@ export async function generateLocalPreview() {
             fullHtml = `<!DOCTYPE html>\n${fullHtml}`;
           }
 
+          // Ajouter un zoom de 85% dans le body
+          fullHtml = fullHtml.replace(/<body/i, '<body style="zoom: 0.85; transform-origin: top left;"');
+
           const blob = new Blob([fullHtml], {
             type: "text/html; charset=utf-8",
           });

@@ -78,6 +78,9 @@ templates/form/send-button-fix.js
 templates/samples/
 templates/word/template_designation.docx
 templates/word/template_negociation.docx
+templates/word/*.exe
+templates/word/*.docx
+templates/word/*.zip
 
 # MCP server (si c'est du dev local)
 mcp-server/
