@@ -563,8 +563,13 @@ export async function generateLocalPreview() {
             fullHtml = `<!DOCTYPE html>\n${fullHtml}`;
           }
 
-          // Ajouter un zoom de 85% dans le body
-          fullHtml = fullHtml.replace(/<body/i, '<body style="zoom: 0.85; transform-origin: top left;"');
+          // Ajouter un zoom de 85% dans le body et un fond gris
+          fullHtml = fullHtml.replace(/<body/i, '<body style="zoom: 0.85; transform-origin: top left; background-color: #e5e7eb; padding: 1rem; overflow: auto; display: flex; justify-content: center;"');
+          
+          // Ajouter un conteneur blanc autour du document
+          fullHtml = fullHtml.replace(/<body([^>]*)>([\s\S]*)<\/body>/i, function(match, attrs, content) {
+            return `<body${attrs}><div style="width: 21cm; min-height: 29.7cm; box-sizing: border-box; font-family: 'Calibri', 'Arial', sans-serif; font-size: 11pt; line-height: 1.5; color: #000000; display: flex; flex-direction: column; background-color: white; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">${content}</div></body>`;
+          });
 
           const blob = new Blob([fullHtml], {
             type: "text/html; charset=utf-8",
