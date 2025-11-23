@@ -27,15 +27,22 @@
   <link rel="stylesheet" href="assets/css/animations.css?v=1.0.1">
   <link rel="stylesheet" href="assets/css/components.css?v=1.0.1">
   <link rel="stylesheet" href="assets/css/layout.css?v=1.0.1">
+  <link rel="stylesheet" href="assets/css/custom-styles.css?v=1.0.1">
   
   <!-- Design System - Chargé en dernier pour permettre les overrides -->
   <!-- SUPPRIMÉ POUR UTILISER UNIQUEMENT TAILWIND -->
   
   <style>
+    /* Viewport-based automatic scaling */
+    :root {
+      --base-scale: 1;
+    }
+    
     html {
       overflow: hidden;
       height: 100vh;
       width: 100vw;
+      zoom: var(--base-scale);
     }
     
     body {
@@ -1390,6 +1397,9 @@
       }
     });
   </script>
+   
+  <!-- Script pour l'adaptation automatique au viewport (auto-scaling) -->
+  <script src="assets/js/viewport-scale.js"></script>
 
   <!-- Script pour le collapse des templates sur mobile -->
   <script>
