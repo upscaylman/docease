@@ -1,0 +1,144 @@
+<!-- Modal de prévisualisation -->
+<div id="previewModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50 backdrop-blur-sm p-4">
+  <div class="bg-white md3-card elevation-3 w-full max-w-[95vw] h-[95vh] overflow-hidden relative flex flex-col" style="max-width: min(90vw, 860px);max-height: 150vw;">
+    <!-- Header du modal -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+      <div class="flex items-center gap-3">
+        <span class="material-icons" style="color: #a13f7e; font-size: 42px; line-height: 1;">visibility</span>
+        <div>
+          <h2 class="text-2xl font-bold" style="color: #181a1c;">Prévisualisation du document</h2>
+          <p class="text-sm" id="previewSubtitle" style="color: #181a1c;">Vérifiez les informations avant génération</p>
+        </div>
+      </div>
+      <button id="closeModal" class="modal-close-button md3-button p-2 rounded-full state-layer state-layer-blue transition-all hover:scale-105 press-effect" style="background: white !important;">
+        <span class="material-icons text-3xl" style="color: #36434e !important;">close</span>
+      </button>
+    </div>
+
+    <!-- Contenu scrollable -->
+    <div class="flex-1 overflow-hidden p-6">
+      <div id="previewContent"></div>
+    </div>
+
+    <!-- Footer avec actions -->
+    <div class="flex items-center p-6 border-t border-gray-200 bg-gray-50" style="justify-content: flex-end;">
+      <div class="flex gap-3">
+        <button id="downloadWordBtn" class="md3-button px-6 py-2.5 text-white elevation-1 flex items-center gap-2 state-layer state-layer-blue transition-all hover:scale-105 press-effect" style="background: #dd60b0; border-radius: 2rem;">
+          <span class="material-icons">download</span>
+          <span class="hidden md:inline">Télécharger le document</span>
+        </button>
+        <button id="sendEmailBtn" class="md3-button px-6 py-2.5 elevation-2 flex items-center gap-2 state-layer state-layer-blue transition-all hover:scale-105 press-effect" style="background: #FFF; color: #a64182; border: 2px solid #2f2f2f; border-radius: 2rem;">
+          <span class="material-icons">share</span>
+          <span class="hidden md:inline">Partager</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour afficher le document Word -->
+<div id="wordViewerModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-[60] backdrop-blur-sm">
+  <div class="bg-white md3-card elevation-3 w-full max-w-7xl h-[95vh] overflow-hidden relative m-4 flex flex-col">
+    <!-- Header du modal Word -->
+    <div class="flex items-center justify-between p-4 border-b border-gray-200 bg-[#0072ff]">
+      <div class="flex items-center gap-3">
+        <span class="material-icons text-white text-2xl">description</span>
+        <div>
+          <h2 class="text-xl font-bold text-white">Aperçu du document Word</h2>
+          <p class="text-sm text-white opacity-90" id="wordViewerSubtitle">Génération en cours...</p>
+        </div>
+      </div>
+      <button id="closeWordViewer" class="text-white md3-button p-2 rounded-full state-layer state-layer-blue transition-all hover:scale-105 press-effect">
+        <span class="material-icons text-2xl">close</span>
+      </button>
+    </div>
+
+    <!-- Contenu iframe -->
+    <div class="flex-1 overflow-hidden relative bg-gray-100">
+      <div id="wordViewerLoading" class="absolute inset-0 flex items-center justify-center bg-white z-10">
+        <div class="text-center">
+          <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-[#0072ff] border-t-transparent mb-4"></div>
+          <p class="text-[#49454F] text-lg font-medium">Génération du document Word...</p>
+          <p class="text-[#49454F] text-sm mt-2">Cela peut prendre quelques secondes</p>
+        </div>
+      </div>
+      <iframe id="wordViewerFrame" class="w-full h-full border-0" style="display:none;"></iframe>
+    </div>
+
+    <!-- Footer avec actions -->
+    <div class="flex items-center justify-between gap-3 p-4 border-t border-gray-200 bg-gray-50">
+      <div class="text-sm text-[#49454F] hidden md:block">
+        <span class="material-icons text-base align-middle mr-1">info</span>
+        Le document est généré par n8n et affiché via Google Docs Viewer
+      </div>
+      <div class="flex gap-3">
+        <button id="closeWordViewerBtn" class="md3-button px-6 py-2.5 bg-gray-200 text-[#1C1B1F] elevation-1 flex items-center gap-2 state-layer state-layer-blue transition-all hover:scale-105 press-effect">
+          <span class="material-icons">close</span>
+          <span class="hidden md:inline">Fermer</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de partage (ajout de destinataires) -->
+<div id="shareModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50 backdrop-blur-sm">
+  <div class="bg-white md3-card elevation-3 w-full max-w-2xl overflow-hidden relative m-4 flex flex-col">
+    <!-- Header du modal -->
+    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+      <div class="flex items-center gap-3">
+        <span class="material-icons" style="color: #d557a6; font-size: 42px; line-height: 1;">share</span>
+        <div>
+          <h2 class="text-2xl font-bold" style="color: #181a1c;">Partager le document</h2>
+          <p class="text-sm" style="color: #181a1c;">Ajoutez les destinataires pour l'envoi par email</p>
+        </div>
+      </div>
+      <button id="closeShareModal" class="modal-close-button md3-button p-2 rounded-full state-layer state-layer-blue transition-all hover:scale-105 press-effect" style="background: white !important;">
+        <span class="material-icons text-3xl" style="color: #36434e !important;">close</span>
+      </button>
+    </div>
+
+    <!-- Contenu -->
+    <div class="p-6 space-y-4">
+      <!-- Destinataires -->
+      <div>
+        <label class="block text-base font-semibold mb-3" style="color: #181a1c;">
+          Adresses email des destinataires <span style="color: #181a1c;">*</span>
+        </label>
+        <div id="shareEmailContainer" class="md3-input w-full p-3 bg-white flex flex-wrap gap-2 items-center min-h-[52px] cursor-text rounded-xl border-2 border-[#E8DEF8] focus-within:border-[#0072ff] transition-all">
+          <input id="shareEmailInput" type="text" placeholder="Tapez une adresse email et appuyez sur virgule ou espace..." class="flex-1 outline-none min-w-[200px] text-base" style="color: #181a1c;">
+        </div>
+        <p class="text-sm mt-2 hidden md:block" style="color: #181a1c;">
+          <span class="material-icons text-base align-middle mr-1">info</span>
+          Séparez les adresses par des virgules, espaces ou point-virgules
+        </p>
+      </div>
+
+      <!-- Message d'email -->
+      <div>
+        <label for="shareEmailMessage" class="block text-base font-semibold mb-3" style="color: #181a1c;">
+          Message de l'email
+        </label>
+        <textarea
+          id="shareEmailMessage"
+          rows="6"
+          class="w-full p-4 border-2 rounded-xl focus:outline-none transition-all resize-none focus:border-[#0072ff]"
+          style="border-color: #E8DEF8; font-family: 'Roboto', sans-serif; color: #181a1c;"
+          placeholder="Votre message ici..."
+        ></textarea>
+        <p class="text-sm mt-2 hidden md:block" style="color: #181a1c;">
+          <span class="material-icons text-base align-middle mr-1">edit</span>
+          Personnalisez le message qui accompagnera le document
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer avec actions -->
+    <div class="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50" style="justify-content: flex-end;">
+      <button id="confirmShareBtn" class="md3-button px-6 py-2.5 elevation-2 flex items-center gap-2 state-layer state-layer-blue transition-all hover:scale-105 press-effect" style="background: #FFF; color: #a64182; border: 2px solid #2f2f2f; border-radius: 2rem;">
+        <span class="material-icons">send</span>
+        <span class="hidden md:inline">Générer et envoyer</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="description" content="FO Métaux - DocEase - Générateur de documents">
+  <meta name="keywords" content="FO Métaux, syndicat, métallurgie, désignation">
+  
+  <title>DocEase - FO Métaux</title>
+  
+  <!-- External Libraries -->
+  <!-- Tailwind CSS compilé localement (pour éviter Tracking Prevention) -->
+  <link rel="stylesheet" href="assets/css/tailwind.css?v=1.0.1">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="shortcut icon" type="image/x-icon" href="https://www.fo-metaux.org/images/favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <!-- Mammoth.js pour prévisualisation Word (local pour éviter Tracking Prevention) -->
+  <script src="assets/js/lib/mammoth.browser.min.js"></script>
+
+  <!-- SortableJS pour drag & drop (local pour éviter Tracking Prevention) -->
+  <script src="assets/js/lib/Sortable.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/base.css?v=1.0.1">
+  <link rel="stylesheet" href="assets/css/animations.css?v=1.0.1">
+  <link rel="stylesheet" href="assets/css/components.css?v=1.0.1">
+  <link rel="stylesheet" href="assets/css/layout.css?v=1.0.1">
+  <link rel="stylesheet" href="assets/css/custom-styles.css?v=1.0.1">
+</head>
+<body>
+
+  <!-- Header Component -->
+  <div id="header-component"></div>
+
+  <div class="main-content">
+    <!-- Conteneur pour formulaire et footer -->
+    <div class="form-wrapper">
+      <!-- Formulaire principal -->
+      <div class="form-container">
+        <!-- Action Bar Component -->
+        <div id="action-bar-component"></div>
+
+        <form id="docForm" class="bg-white md3-card w-full max-w-6xl space-y-8" style="padding: 1.5rem; border-radius: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.52), 0 4px 6px -4px rgba(0, 0, 0, 0.32);">
+          <!-- Bouton données de test (caché, utilisé en interne) -->
+          <button type="button" id="fillTestData" style="display: none;"></button>
+
+          <!-- Sélecteur de template (caché, utilisé en interne) -->
+          <select id="template" style="display: none;" required>
+            <option value="">Choisir un type de document...</option>
+          </select>
+
+          <!-- Form Sections Component -->
+          <div id="form-sections-component"></div>
+        </form>
+      </div>
+
+      <!-- Footer Component -->
+      <div id="footer-component"></div>
+    </div>
+
+    <!-- Templates Sidebar Component -->
+    <div id="templates-sidebar-component"></div>
+  </div>
+
+  <!-- Modals Component -->
+  <div id="modals-component"></div>
+
+  <!-- Environment Configuration -->
+  <script src="assets/js/scripts/env-config.js"></script>
+
+  <!-- JavaScript Modules -->
+  <script type="module" src="assets/js/app.js?v=1.0.0"></script>
+  
+  <!-- Utility Scripts -->
+  <script src="assets/js/scripts/version-manager.js"></script>
+  <script src="assets/js/viewport-scale.js"></script>
+  <script src="assets/js/scripts/templates-sidebar-mobile.js"></script>
+  <script src="assets/js/scripts/section-title-animation.js"></script>
+  <script src="assets/js/scripts/step-morphing-animation.js"></script>
+  <script src="assets/js/scripts/swipe-navigation.js"></script>
+
+  <!-- Component Loader -->
+  <script>
+    // Charger les composants HTML
+    async function loadComponent(elementId, componentPath) {
+      try {
+        const response = await fetch(componentPath);
+        const html = await response.text();
+        document.getElementById(elementId).innerHTML = html;
+      } catch (error) {
+        console.error(`Erreur lors du chargement du composant ${componentPath}:`, error);
+      }
+    }
+
+    // Charger tous les composants au chargement de la page
+    document.addEventListener('DOMContentLoaded', async function() {
+      await Promise.all([
+        loadComponent('header-component', 'components/header.html'),
+        loadComponent('action-bar-component', 'components/action-bar.html'),
+        loadComponent('form-sections-component', 'components/form-sections.html'),
+        loadComponent('footer-component', 'components/footer.html'),
+        loadComponent('templates-sidebar-component', 'components/templates-sidebar.html'),
+        loadComponent('modals-component', 'components/modals.html')
+      ]);
+    });
+  </script>
+</body>
+</html>

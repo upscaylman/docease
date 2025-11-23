@@ -39,10 +39,64 @@
     }
     
     html {
-      overflow: hidden;
-      height: 100vh;
-      width: 100vw;
       zoom: var(--base-scale);
+    }
+    
+    /* Desktop uniquement - hauteur fixe et overflow hidden */
+    @media (min-width: 768px) {
+      html {
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
+      }
+      
+      body {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+      }
+    }
+    
+    /* Mobile - hauteur flexible pour gérer le clavier virtuel */
+    @media (max-width: 767px) {
+      html {
+        overflow: hidden;
+        height: 100vh;
+        height: 100dvh; /* Dynamic Viewport Height - s'adapte au clavier */
+        width: 100vw;
+      }
+      
+      body {
+        height: 100vh;
+        height: 100dvh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .main-content {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .form-wrapper {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .form-container {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 1rem;
+      }
     }
     
     body {
@@ -53,9 +107,6 @@
       animation: gradient 15s ease infinite !important;
       display: flex;
       flex-direction: column;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
     }
     header {
       width: 100%;
@@ -75,16 +126,21 @@
       display: flex;
       flex-direction: column;
       gap: 0;
-      overflow: hidden;
       position: relative;
       min-height: 0;
+      overflow: hidden;
     }
     @media (max-width: 767px) {
-      /* Le form-container prend toute la hauteur disponible sur mobile */
+      /* Le form-container s'adapte au contenu sur mobile */
       .form-container {
         flex: 1 1 auto;
         min-height: 0;
-        padding-bottom: 0;
+        padding-bottom: 70px; /* Espace pour le sidebar collapsed */
+        max-height: none;
+      }
+      
+      .form-wrapper:has(.templates-sidebar:not(.collapsed)) .form-container {
+        padding-bottom: calc(70vh + 1rem); /* Espace pour le sidebar déplié */
       }
     }
     @media (min-width: 768px) {
@@ -98,21 +154,26 @@
     }
     @media (max-width: 767px) {
       .main-content {
-        padding-bottom: 60px; /* Espace pour le volet collapsed */
-      }
-      .main-content:has(.templates-sidebar:not(.collapsed)) {
-        padding-bottom: 0; /* Pas d'espace quand déplié car il est fixed */
+        padding-bottom: 0;
       }
     }
     .form-wrapper {
       flex: 1 !important;
-      display: grid !important;
-      grid-template-rows: 1fr auto !important;
       width: 100%;
       min-width: 0;
       min-height: 0 !important;
       position: relative;
+      display: grid !important;
+      grid-template-rows: 1fr auto !important;
       overflow: hidden !important;
+    }
+    
+    @media (max-width: 767px) {
+      .form-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+        grid-template-rows: none !important;
+      }
     }
     @media (min-width: 768px) {
       .form-wrapper {
@@ -132,13 +193,7 @@
       position: relative;
       min-height: 0;
     }
-    @media (max-width: 767px) {
-      /* Le form-container prend toute la hauteur disponible sur mobile */
-      .form-container {
-        min-height: 0;
-        padding-bottom: 0;
-      }
-    }
+
     @media (min-width: 768px) {
       .form-container {
         padding: 2rem 3rem;
@@ -165,27 +220,49 @@
       flex-shrink: 0;
       box-shadow: 0 8px 32px #00000094, inset 0 0 0 1px #fff3;
       transition: max-height 300ms cubic-bezier(0.2, 0, 0, 1);
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 40;
     }
+    
+    @media (max-width: 767px) {
+      .templates-sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 40;
+        margin: 0;
+        width: 100vw;
+        max-width: 100vw;
+        border-radius: 0;
+      }
+    }
+    
     @media (min-width: 768px) {
       .templates-sidebar {
         position: relative;
-        bottom: auto;
-        left: auto;
-        right: auto;
-        z-index: 1;
       }
     }
+
     .templates-sidebar.collapsed {
-      max-height: 60px; /* Valeur par défaut, sera calculée dynamiquement en JS */
+      max-height: 60px;
     }
+    
+    @media (max-width: 767px) {
+      .templates-sidebar.collapsed {
+        max-height: 60px;
+        min-height: 60px;
+      }
+    }
+    
     .templates-sidebar:not(.collapsed) {
       max-height: 70vh;
       overflow-y: auto;
+    }
+    
+    @media (max-width: 767px) {
+      .templates-sidebar:not(.collapsed) {
+        max-height: 70vh;
+        max-height: 70dvh; /* Dynamic Viewport Height */
+      }
     }
     .templates-sidebar-content {
       transition: opacity 200ms ease, transform 200ms ease;
@@ -1402,123 +1479,7 @@
   <script src="assets/js/viewport-scale.js"></script>
 
   <!-- Script pour le collapse des templates sur mobile -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const toggleBtn = document.getElementById('templatesToggleBtn');
-      const sidebar = document.querySelector('.templates-sidebar');
-      
-      if (toggleBtn && sidebar) {
-        // Fonction pour calculer la hauteur optimale du volet plié
-        function calculateCollapsedHeight() {
-          // Vérifier si on est sur mobile
-          if (window.innerWidth >= 768) return;
-          
-          // Utiliser visualViewport si disponible (meilleur pour mobile avec barres d'adresse)
-          const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-          
-          // Obtenir la hauteur du header
-          const header = document.querySelector('header');
-          const headerHeight = header ? header.offsetHeight : 0;
-          
-          // Obtenir la hauteur du formulaire principal
-          const formContainer = document.querySelector('.form-container');
-          const formHeight = formContainer ? formContainer.offsetHeight : 0;
-          
-          // Calculer l'espace disponible pour le volet
-          // On réserve un peu d'espace pour le padding et les marges
-          const availableSpace = viewportHeight - headerHeight - formHeight;
-          
-          // Hauteur minimale pour le bouton toggle (environ 48px + padding)
-          const minHeight = 60;
-          
-          // Hauteur maximale pour le volet plié (ne pas dépasser 20% de la fenêtre visible)
-          const maxHeight = Math.min(availableSpace * 0.2, 80);
-          
-          // S'assurer que le volet ne dépasse jamais la hauteur visible
-          const maxAllowedHeight = viewportHeight - headerHeight - 10; // 10px de marge
-          const finalMaxHeight = Math.min(maxHeight, maxAllowedHeight);
-          
-          // Utiliser la hauteur calculée ou la hauteur minimale
-          const calculatedHeight = Math.max(minHeight, finalMaxHeight);
-          
-          return calculatedHeight;
-        }
-        
-        // Appliquer la hauteur calculée au volet plié
-        function updateCollapsedHeight() {
-          if (window.innerWidth < 768 && sidebar.classList.contains('collapsed')) {
-            const height = calculateCollapsedHeight();
-            sidebar.style.maxHeight = height + 'px';
-          } else {
-            sidebar.style.maxHeight = '';
-          }
-        }
-        
-        // Mettre à jour au chargement
-        updateCollapsedHeight();
-        
-        // Mettre à jour la hauteur du form-container sur mobile
-        function updateFormContainerHeight() {
-          if (window.innerWidth < 768) {
-            const header = document.querySelector('header');
-            const formContainer = document.querySelector('.form-container');
-            if (header && formContainer) {
-              // Utiliser visualViewport si disponible
-              const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-              const headerHeight = header.offsetHeight;
-              const sidebarHeight = sidebar.classList.contains('collapsed') ? 60 : sidebar.offsetHeight;
-              const availableHeight = viewportHeight - headerHeight - sidebarHeight;
-              formContainer.style.height = availableHeight + 'px';
-              formContainer.style.minHeight = availableHeight + 'px';
-            }
-          } else {
-            const formContainer = document.querySelector('.form-container');
-            if (formContainer) {
-              formContainer.style.height = '';
-              formContainer.style.minHeight = '';
-            }
-          }
-        }
-        
-        // Mettre à jour au chargement
-        updateFormContainerHeight();
-        
-        // Mettre à jour lors du redimensionnement et des changements de viewport
-        let resizeTimeout;
-        function handleViewportChange() {
-          clearTimeout(resizeTimeout);
-          resizeTimeout = setTimeout(function() {
-            updateCollapsedHeight();
-            updateFormContainerHeight();
-          }, 100);
-        }
-        window.addEventListener('resize', handleViewportChange);
-        // Écouter les changements de visualViewport (important pour mobile avec barres d'adresse)
-        if (window.visualViewport) {
-          window.visualViewport.addEventListener('resize', handleViewportChange);
-          window.visualViewport.addEventListener('scroll', handleViewportChange);
-        }
-        
-        toggleBtn.addEventListener('click', function() {
-          sidebar.classList.toggle('collapsed');
-          
-          // Mettre à jour la hauteur après le toggle
-          setTimeout(function() {
-            updateCollapsedHeight();
-            updateFormContainerHeight();
-          }, 50);
-          
-          // Mettre à jour l'aria-label
-          const isCollapsed = sidebar.classList.contains('collapsed');
-          toggleBtn.setAttribute('aria-label', isCollapsed 
-            ? 'Afficher les templates' 
-            : 'Masquer les templates');
-          
-          // La rotation de la flèche est gérée par CSS
-        });
-      }
-    });
-  </script>
+  <script src="assets/js/scripts/templates-sidebar-mobile.js"></script>
   
   <!-- Script pour masquer le titre de section après 3s (mobile uniquement) -->
   <script>

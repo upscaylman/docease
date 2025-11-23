@@ -1,0 +1,58 @@
+<!-- Header -->
+<header class="glass-effect-strong border-b border-outlineVariant/50 sticky top-0 z-40 animate-slide-down backdrop-blur-xl">
+  <div class="container mx-auto">
+    <div class="flex items-center justify-between h-16 sm:h-18">
+      <!-- Logo et Titre -->
+      <div class="flex items-center space-x-6 cursor-pointer transition-opacity hover:opacity-80">
+        <div class="p-2 rounded-lg flex items-center justify-center h-10 w-10 elevation-2 progressive-glow-quinary transition-transform hover:scale-110" style="background: #aa4584;">
+          <span class="material-icons text-white" style="font-size: 24px;">description</span>
+        </div>
+        <!-- Logo texte -->
+        <div style="margin-left: 0.8rem;">
+          <span class="text-xl font-bold whitespace-nowrap">
+            <span style="color: #aa4584;">DocEase</span>
+            <span class="hidden sm:inline" style="color: #181a1c;"> by FO Metaux</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Bouton Prévisualiser -->
+        <button 
+          type="button" 
+          id="headerPreviewBtn" 
+          disabled 
+          class="flex items-center justify-center min-h-[44px] px-4 py-2 rounded-full text-sm font-medium text-white elevation-1 state-layer state-layer-blue disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 press-effect gap-2"
+          style="background: #a84383;"
+        >
+          <span class="material-icons" style="font-size: 20px; line-height: 1;">visibility</span>
+          <span class="hidden sm:inline">Prévisualiser</span>
+        </button>
+
+        <!-- Bouton Télécharger -->
+        <button 
+          type="button" 
+          id="headerDownloadBtn" 
+          disabled 
+          class="flex items-center justify-center min-h-[44px] px-4 py-2 rounded-full text-sm font-medium text-white elevation-1 state-layer state-layer-blue disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 press-effect gap-2"
+          style="background: #dd60b0;"
+        >
+          <span class="material-icons" style="font-size: 20px; line-height: 1;">download</span>
+          <span class="hidden md:inline">Télécharger</span>
+        </button>
+
+        <!-- Bouton Partager -->
+        <button 
+          type="button" 
+          id="headerSendBtn" 
+          disabled 
+          class="flex items-center justify-center min-h-[44px] px-4 py-2 rounded-full text-sm font-medium elevation-1 state-layer state-layer-blue disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 press-effect gap-2"
+          style="background: #FFF; color: #a64182; border: 2px solid #2f2f2f;"
+        >
+          <span class="material-icons" style="font-size: 20px; line-height: 1;">share</span>
+          <span class="hidden sm:inline">Partager</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,129 @@
+<!-- Layout avec onglets à gauche et contenu à droite -->
+<div id="tabsContainer" class="flex flex-col md:flex-row gap-6" style="display: none;">
+  <!-- Navigation par onglets (cachée, utilisée en interne) -->
+  <div class="w-full md:w-64 flex-shrink-0" style="display: none;">
+    <div class="tab-navigation md:sticky md:top-4 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-x-visible">
+      <button type="button" class="tab-button active w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 text-sm font-medium text-[#49454F]" data-tab="coordonnees">
+        <span class="step-indicator active w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-gray-200">1</span>
+        <span class="tab-button-text">Coordonnées</span>
+      </button>
+      <button type="button" class="tab-button w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 text-sm font-medium text-[#49454F]" data-tab="contenu">
+        <span class="step-indicator w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-gray-200">2</span>
+        <span class="tab-button-text">Contenu</span>
+      </button>
+      <button type="button" class="tab-button w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 text-sm font-medium text-[#49454F]" data-tab="expediteur">
+        <span class="step-indicator w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-gray-200">3</span>
+        <span class="tab-button-text">Signataire</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Contenu des onglets -->
+  <div class="flex-1 min-w-0" id="dynamicFields">
+    <!-- Section Coordonnées -->
+    <div id="tab-coordonnees" class="tab-section active section-card">
+      <!-- Nom du template sélectionné -->
+      <div id="templateNameTitleCoordonnees" class="px-6 -mx-6 mb-2" style="display: none; margin-top: -2.5rem; padding-bottom: 1rem;">
+        <h2 class="text-2xl font-bold text-gray-800" id="templateNameTextCoordonnees">-</h2>
+      </div>
+      <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #ffecf8, white);border-radius: 1rem;">
+        <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #2f2f2f;">
+          <span class="material-icons" style="font-size: 28px; color: #e062b1;">person</span>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-gray-900">Coordonnées</h3>
+          <p class="text-xs text-gray-600">Informations du destinataire</p>
+        </div>
+      </div>
+      <div id="coordonneesFields" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </div>
+
+    <!-- Section Contenu -->
+    <div id="tab-contenu" class="tab-section section-card">
+      <!-- Nom du template sélectionné -->
+      <div id="templateNameTitleContenu" class="px-6 -mx-6 mb-2" style="display: none; margin-top: -2.5rem; padding-bottom: 1rem;">
+        <h2 class="text-2xl font-bold text-gray-800" id="templateNameTextContenu">-</h2>
+      </div>
+      <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #ffecf8, white);border-radius: 1rem;">
+        <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #181a1c;">
+          <span class="material-icons" style="font-size: 28px; color: #e062b1;">article</span>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-gray-900">Contenu</h3>
+          <p class="text-xs text-gray-600">Détails de la demande</p>
+        </div>
+      </div>
+      <div id="contenuFields" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </div>
+
+    <!-- Section Signataire -->
+    <div id="tab-expediteur" class="tab-section section-card">
+      <!-- Nom du template sélectionné -->
+      <div id="templateNameTitleExpediteur" class="px-6 -mx-6 mb-2" style="display: none; margin-top: -2.5rem; padding-bottom: 1rem;">
+        <h2 class="text-2xl font-bold text-gray-800" id="templateNameTextExpediteur">-</h2>
+      </div>
+      <div class="flex items-center gap-4 px-6 py-4 border-b border-gray-200 -mx-6 mb-6" style="background: linear-gradient(to right, #ffecf8, white);border-radius: 1rem;">
+        <div class="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0" style="background: #181a1c;">
+          <span class="material-icons" style="font-size: 28px; color: #e062b1;">send</span>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-gray-900">Signataire</h3>
+          <p class="text-xs text-gray-600">Choix du Secrétaire Fédéral</p>
+        </div>
+      </div>
+      <div id="expediteurFields" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Destinataires (caché, utilisé en interne via modal de partage) -->
+<div id="destinatairesSection" style="display: none;">
+  <input id="destinataires" type="hidden">
+</div>
+
+<!-- Bouton d'action (caché, utilisé en interne) -->
+<button type="button" id="previewBtn" disabled style="display: none;"></button>
+
+<p id="message" class="text-center text-[#49454F] text-sm"></p>
+
+<!-- Stepper Navigation -->
+<div class="w-full max-w-6xl mt-6" style="display: none;">
+  <div class="bg-white border border-gray-200 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4" style="box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+    <!-- Stepper Progress -->
+    <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-center" style="display: none;">
+      <div class="flex items-center">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-[#a84383] text-white">1</div>
+        <div class="ml-2 hidden text-sm font-medium text-gray-700 md:hidden">Coordonnées</div>
+      </div>
+      <div class="h-px w-6 md:w-12 bg-gray-300"></div>
+      <div class="flex items-center">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-gray-300 text-gray-600">2</div>
+        <div class="ml-2 hidden text-sm font-medium text-gray-500 md:hidden">Contenu</div>
+      </div>
+      <div class="h-px w-6 md:w-12 bg-gray-300"></div>
+      <div class="flex items-center">
+        <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold bg-gray-300 text-gray-600">3</div>
+        <div class="ml-2 hidden text-sm font-medium text-gray-500 md:hidden">Signataire</div>
+      </div>
+    </div>
+    
+    <!-- Navigation Buttons -->
+    <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+      <button type="button" id="prevStepBtn" class="md3-button px-4 py-2 text-gray-700 elevation-1 flex items-center gap-2 hidden" style="border-radius: 2rem; display: none;">
+        <span class="material-icons">arrow_back</span>
+        <span class="hidden sm:inline">Précédent</span>
+      </button>
+      <button type="button" id="nextStepBtn" class="md3-button px-4 py-2 text-white elevation-1 flex items-center gap-2" style="background: #a84383; border-radius: 2rem; display: none;">
+        <span class="hidden sm:inline">Suivant</span>
+        <span class="material-icons">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Bouton de prévisualisation (uniquement sur la dernière page) -->
+<div id="formActionButtons" class="flex justify-end gap-3 mt-6" style="display: none;">
+  <button type="button" id="previewStepBtn" class="md3-button px-4 py-2 text-white elevation-1 flex items-center gap-2" style="background: #a84383; border-radius: 2rem;">
+    <span class="material-icons">visibility</span>
+    <span class="hidden sm:inline">Prévisualiser</span>
+  </button>
+</div>

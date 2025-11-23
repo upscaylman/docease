@@ -1,0 +1,30 @@
+<!-- Panneau latéral des templates -->
+<aside class="templates-sidebar collapsed">
+  <!-- Bouton toggle pour mobile -->
+  <!-- Bouton toggle pour mobile - Affiche "Templates" uniquement en mobile -->
+  <button type="button" class="templates-toggle-btn md:hidden" id="templatesToggleBtn" aria-label="Afficher/masquer les templates">
+    <div class="flex items-center gap-1 md:gap-2">
+      <span class="material-icons text-xl" style="color: #181a1c;">dashboard</span>
+      <span class="text-base font-bold" style="color: #181a1c;">Templates</span>
+    </div>
+    <span class="material-icons text-xl">expand_more</span>
+  </button>
+
+  <!-- Contenu pliable -->
+  <div class="templates-sidebar-content">
+    <!-- Header du volet templates - Visible uniquement en desktop -->
+    <div class="templates-sidebar-header mb-4 md:mb-6 pb-3 md:pb-4 border-b border-gray-200 hidden md:block">
+      <h2 class="text-base md:text-2xl font-bold mb-0.5 md:mb-2 flex items-center gap-1 md:gap-2" style="color: #181a1c;">
+        <span class="material-icons text-xl md:text-3xl" style="color: #181a1c;">dashboard</span>
+        Templates
+        <button type="button" class="templates-help-icon flex items-center justify-center rounded-full bg-transparent hover:bg-gray-200 transition-colors cursor-help ml-2" title="Sélectionnez un modèle de document" aria-label="Aide">
+          <span class="material-icons" style="color: #a9a9a9; font-size: 18px;">help</span>
+        </button>
+      </h2>
+    </div>
+
+    <div id="templatesGallery">
+      <!-- Les templates seront générés dynamiquement ici -->
+    </div>
+  </div>
+</aside>
