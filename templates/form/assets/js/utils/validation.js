@@ -229,22 +229,27 @@ function replaceTemplateVariables(template, data) {
   html = html.replace(/\{date\}/g, dateStr);
 
   // Convertir les chemins relatifs en chemins absolus pour que ça fonctionne dans l'iframe
-  // Remplacer href="1763822792_template-custom/styles.css" par href="http://localhost:3000/html/template-custom/1763822792_template-custom/styles.css"
+  // Détecter si on est en prod (Netlify) ou en local
+  const baseUrl = window.location.hostname.includes('netlify.app') 
+    ? window.location.origin 
+    : 'http://localhost:3000';
+  
+  // Remplacer href="1763822792_template-custom/styles.css" par le chemin absolu
   html = html.replace(
     /href="1763822792_template-custom\//g,
-    'href="http://localhost:3000/html/template-custom/1763822792_template-custom/'
+    `href="${baseUrl}/html/template-custom/1763822792_template-custom/`
   );
   
-  // Remplacer data="1763822792_template-custom/xxx.svg" par data="http://localhost:3000/html/template-custom/1763822792_template-custom/xxx.svg"
+  // Remplacer data="1763822792_template-custom/xxx.svg" par le chemin absolu
   html = html.replace(
     /data="1763822792_template-custom\//g,
-    'data="http://localhost:3000/html/template-custom/1763822792_template-custom/'
+    `data="${baseUrl}/html/template-custom/1763822792_template-custom/`
   );
   
-  // Remplacer src="1763822792_template-custom/" par src="http://localhost:3000/html/template-custom/1763822792_template-custom/"
+  // Remplacer src="1763822792_template-custom/" par le chemin absolu
   html = html.replace(
     /src="1763822792_template-custom\//g,
-    'src="http://localhost:3000/html/template-custom/1763822792_template-custom/'
+    `src="${baseUrl}/html/template-custom/1763822792_template-custom/`
   );
 
   // Remplacer les variables non définies par des chaînes vides
