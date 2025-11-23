@@ -251,6 +251,12 @@ function replaceTemplateVariables(template, data) {
     /src="1763822792_template-custom\//g,
     `src="${baseUrl}/html/template-custom/1763822792_template-custom/`
   );
+  
+  // Remplacer les chemins des images logo (en-tête et pied de page)
+  html = html.replace(
+    /src="assets\/img\//g,
+    `src="${baseUrl}/assets/img/`
+  );
 
   // Remplacer les variables non définies par des chaînes vides
   html = html.replace(/\{[^}]+\}/g, "");
