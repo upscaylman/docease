@@ -32,11 +32,6 @@
   <!-- SUPPRIMÉ POUR UTILISER UNIQUEMENT TAILWIND -->
   
   <style>
-    /* Viewport-based automatic scaling */
-    :root {
-      --base-scale: 1;
-    }
-    
     html {
       overflow: hidden;
       height: 100vh;
@@ -54,8 +49,6 @@
       height: 100vh;
       width: 100vw;
       overflow: hidden;
-      transform-origin: top left;
-      transform: scale(var(--base-scale));
     }
     header {
       width: 100%;
@@ -1397,9 +1390,6 @@
       }
     });
   </script>
-   
-  <!-- Script pour l'adaptation automatique au viewport (auto-scaling) -->
-  <script src="assets/js/viewport-scale.js"></script>
 
   <!-- Script pour le collapse des templates sur mobile -->
   <script>
