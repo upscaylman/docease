@@ -265,7 +265,7 @@ export function downloadBlob(blob, filename) {
 }
 
 /**
- * Convertir un document Word en PDF via Gotenberg
+ * Convertir un document Word en PDF
  * @param {string} wordBase64 - Document Word en base64
  * @param {string} filename - Nom du fichier (sans extension)
  * @returns {Promise<Object>} Résultat avec le PDF en base64
@@ -275,7 +275,7 @@ export async function convertWordToPdf(wordBase64, filename = 'document') {
   try {
     console.log('Conversion Word vers PDF via proxy serveur...');
 
-    // Appeler le proxy local au lieu de Gotenberg directement (évite CORS)
+    // Appeler le proxy local pour conversion Word -> PDF
     const proxyUrl = '/api/convert-pdf';
 
     const response = await fetch(proxyUrl, {

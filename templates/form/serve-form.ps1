@@ -207,7 +207,7 @@ function Handle-Request {
             $Response.StatusCode = 404
         }
     }
-    # Proxy pour Gotenberg (évite CORS)
+    # Proxy pour conversion Word -> PDF (évite CORS)
     elseif ($Path -eq "/api/convert-pdf" -and $Request.HttpMethod -eq "POST") {
         try {
             Write-Host "[INFO] Réception requête conversion PDF" -ForegroundColor Cyan
@@ -232,7 +232,7 @@ function Handle-Request {
             [System.IO.File]::WriteAllBytes($tempWordFile, $wordBytes)
             Write-Host "[INFO] Fichier temporaire créé: $tempWordFile" -ForegroundColor Cyan
             
-            # Convertir Word en PDF avec Word COM Object (meilleure qualité que Gotenberg)
+            # Convertir Word en PDF avec Word COM Object
             $tempPdfFile = [System.IO.Path]::GetTempFileName() + ".pdf"
             Write-Host "[INFO] Conversion Word -> PDF avec Microsoft Word..." -ForegroundColor Cyan
             

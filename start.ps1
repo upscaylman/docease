@@ -65,7 +65,7 @@ if (docker ps | Select-String -Pattern "n8n-local") {
     Write-Host "   - Interface n8n: http://localhost:5678"
     Write-Host "   - Formulaire: http://localhost:8080"
     Write-Host "   - PostgreSQL: localhost:5432"
-    Write-Host "   - Gotenberg: http://localhost:3001"
+    Write-Host "   - Ollama: http://localhost:11434"
     Write-Host "   - Documentation: Voir docs/INSTALLATION.md"
     Write-Host ""
     Write-Host "📊 Statut des conteneurs:" -ForegroundColor Cyan

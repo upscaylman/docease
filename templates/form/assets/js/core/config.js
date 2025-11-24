@@ -19,18 +19,10 @@ const getWebhookEmailUrl = () => {
   return 'http://localhost:5678/webhook/1ee6e745-fc31-4fd8-bc59-531bd4a69997';
 };
 
-const getGotenbergUrl = () => {
-  if (typeof window !== 'undefined' && window.ENV && window.ENV.GOTENBERG_URL) {
-    return window.ENV.GOTENBERG_URL;
-  }
-  return 'http://localhost:3001/forms/libreoffice/convert';
-};
-
 export const CONFIG = {
   // URLs des webhooks - appel direct à n8n (pas via proxy pour éviter limite de taille)
   WEBHOOK_URL: getWebhookUrl(),
   WEBHOOK_EMAIL_URL: getWebhookEmailUrl(),
-  GOTENBERG_URL: getGotenbergUrl(),
   
   // Chemins
   VARIABLES_CONFIG_PATH: '/config/variables.json',

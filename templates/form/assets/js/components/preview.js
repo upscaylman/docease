@@ -102,8 +102,8 @@ export async function downloadPdf() {
     const templateName = data.templateName || data.templateType || 'Document';
     const cleanName = templateName.replace(/\s+/g, '_');
     
-    // Convertir le Word en PDF via Gotenberg
-    console.log('Conversion du Word en PDF via Gotenberg...');
+    // Convertir le Word en PDF
+    console.log('Conversion du Word en PDF...');
     const pdfResult = await convertWordToPdf(wordBase64, cleanName);
     
     // Télécharger le PDF

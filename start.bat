@@ -81,7 +81,6 @@ echo    - n8n Interface: http://localhost:5678
 echo    - Formulaire:     http://localhost:8080
 echo    - PostgreSQL:     localhost:5432
 echo    - Ollama:         http://localhost:11434
-echo    - Gotenberg:      http://localhost:3001
 echo.
 echo 💡 Commandes utiles:
 echo    - Arrêter:        stop.bat

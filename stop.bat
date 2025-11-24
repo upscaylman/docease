@@ -34,7 +34,6 @@ echo 📦 Arrêt des conteneurs Docker...
 echo    - n8n
 echo    - PostgreSQL
 echo    - Ollama
-echo    - Gotenberg
 echo.
 docker compose down
 if errorlevel 1 (
