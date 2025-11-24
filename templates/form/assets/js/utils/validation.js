@@ -152,6 +152,18 @@ function replaceTemplateVariables(template, data) {
     }
   }
 
+  // Ajouter la variable {genre} basée sur la civilité
+  if (data.civiliteDestinataire) {
+    const civilite = data.civiliteDestinataire.toLowerCase();
+    if (civilite.includes('monsieur')) {
+      enrichedData.genre = 'M.';
+    } else if (civilite.includes('madame')) {
+      enrichedData.genre = 'Mme';
+    } else {
+      enrichedData.genre = '';
+    }
+  }
+
   // DÉTECTION DU TYPE DE TEMPLATE ET SUPPRESSION DES SECTIONS INUTILES
   const templateType = data.templateType || 'custom';
   console.log('Type de template détecté:', templateType);
@@ -205,10 +217,10 @@ function replaceTemplateVariables(template, data) {
     html = html.replace(/<!-- Formule Désignation -->[\s\S]*?Veuillez agréer, Monsieur, l'expression de nos sincères salutations\.[\s\S]*?<\/div>/g, '');
   }
 
+  // TRAITEMENT DU TEMPLATE template-custom.html
   // Remplacer toutes les variables {variable} par leurs valeurs
   Object.keys(enrichedData).forEach((key) => {
     const value = enrichedData[key] || "";
-    // Remplacer {key} et {key} avec espaces
     const regex = new RegExp(`\\{${key}\\}`, "g");
     html = html.replace(regex, value);
   });
@@ -232,7 +244,7 @@ function replaceTemplateVariables(template, data) {
   // Détecter si on est en prod (Netlify) ou en local
   const baseUrl = window.location.hostname.includes('netlify.app') 
     ? window.location.origin 
-    : 'http://localhost:3000';
+    : 'http://localhost:8080';
   
   // Remplacer href="1763822792_template-custom/styles.css" par le chemin absolu
   html = html.replace(

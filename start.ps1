@@ -52,10 +52,10 @@ if (docker ps | Select-String -Pattern "n8n-local") {
     Write-Host "✅ n8n démarré avec succès!" -ForegroundColor Green
     
     # Démarrer le serveur de formulaire en arrière-plan
-    $FormServerScript = Join-Path $ScriptDir "..\templates\form\serve-form-background.ps1"
+    $FormServerScript = Join-Path $ScriptDir "templates\form\serve-form.ps1"
     if (Test-Path $FormServerScript) {
         Write-Host "🌐 Démarrage du serveur de formulaire..." -ForegroundColor Cyan
-        Start-Process powershell.exe -ArgumentList "-ExecutionPolicy", "Bypass", "-WindowStyle", "Hidden", "-File", "`"$FormServerScript`"" -WindowStyle Hidden
+        Start-Process powershell.exe -ArgumentList "-ExecutionPolicy", "Bypass", "-NoExit", "-File", "`"$FormServerScript`"" -WindowStyle Normal
         Start-Sleep -Seconds 1
         Write-Host "✅ Serveur de formulaire démarré!" -ForegroundColor Green
     }
@@ -63,8 +63,9 @@ if (docker ps | Select-String -Pattern "n8n-local") {
     Write-Host ""
     Write-Host "📋 Informations:" -ForegroundColor Cyan
     Write-Host "   - Interface n8n: http://localhost:5678"
-    Write-Host "   - Formulaire: http://localhost:3000"
+    Write-Host "   - Formulaire: http://localhost:8080"
     Write-Host "   - PostgreSQL: localhost:5432"
+    Write-Host "   - Gotenberg: http://localhost:3001"
     Write-Host "   - Documentation: Voir docs/INSTALLATION.md"
     Write-Host ""
     Write-Host "📊 Statut des conteneurs:" -ForegroundColor Cyan

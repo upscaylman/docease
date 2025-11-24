@@ -739,11 +739,14 @@ function initShareModal() {
     const messageTextarea = document.getElementById('shareEmailMessage');
     const customMessage = messageTextarea ? messageTextarea.value.trim() : '';
 
-    // Mettre à jour le champ destinataires caché
+    // Mettre à jour le champ destinataires caché AVEC emailEnvoi pour n8n
     const destinatairesInput = document.getElementById('destinataires');
     if (destinatairesInput) {
       destinatairesInput.value = emails.join(', ');
     }
+    
+    // Stocker aussi dans emailEnvoi pour compatibilité n8n
+    document.body.setAttribute('data-email-envoi', emails.join(', '));
 
     // Stocker le message personnalisé dans un champ caché ou dans le state
     // On va le passer via un attribut data temporaire

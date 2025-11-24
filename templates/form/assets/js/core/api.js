@@ -106,6 +106,68 @@ export async function generateWordDocument(data) {
 }
 
 /**
+ * Envoyer un email avec le document PDF
+ * @param {Object} data - Données du formulaire
+ * @param {string} pdfBase64 - Document PDF en base64
+ * @param {string} customMessage - Message personnalisé pour l'email (optionnel)
+ * @returns {Promise<Object>} Résultat de l'envoi
+ * @throws {Error} Si l'envoi échoue
+ */
+export async function sendEmailWithPdf(data, pdfBase64, customMessage = null) {
+  try {
+    console.log('=== ENVOI EMAIL AVEC PDF ===' );
+    console.log('Destinataires:', data.emailEnvoi || data.destinataires || data.emailDestinataire);
+    console.log('Message personnalisé:', customMessage);
+
+    const payload = {
+      ...data,
+      pdfFile: pdfBase64  // Utiliser 'pdfFile' pour n8n (avec majuscule)
+    };
+
+    // Ajouter le message personnalisé s'il existe
+    if (customMessage) {
+      payload.customEmailMessage = customMessage;
+    }
+
+    console.log('URL Webhook:', CONFIG.WEBHOOK_EMAIL_URL);
+    console.log('Payload avec pdfFile:', {
+      ...payload,
+      pdfFile: pdfBase64 ? `[PDF PRÉSENT: ${pdfBase64.length} chars]` : '❌ ABSENT !'
+    });
+    console.log('Type de pdfFile:', typeof payload.pdfFile);
+    console.log('pdfFile existe ?', !!payload.pdfFile);
+
+    const response = await fetch(CONFIG.WEBHOOK_EMAIL_URL, {
+      method: 'POST',
+      headers: createHeaders(CONFIG.WEBHOOK_EMAIL_URL, { 'Content-Type': 'application/json' }),
+      body: JSON.stringify(payload)
+    });
+
+    console.log('Réponse HTTP:', response.status, response.statusText);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Erreur réponse:', errorText);
+      throw new Error(`Erreur ${response.status}: ${errorText}`);
+    }
+
+    let result;
+    try {
+      result = await response.json();
+    } catch (e) {
+      result = { success: true, message: 'Email envoyé avec succès' };
+    }
+
+    console.log('✅ Email avec PDF envoyé avec succès:', result);
+
+    return result;
+  } catch (error) {
+    console.error('❌ Erreur envoi email avec PDF:', error);
+    throw error;
+  }
+}
+
+/**
  * Envoyer un email avec le document Word en pièce jointe
  * @param {Object} data - Données du formulaire
  * @param {string} wordBase64 - Document Word en base64
@@ -115,6 +177,9 @@ export async function generateWordDocument(data) {
  */
 export async function sendEmailWithWord(data, wordBase64, customMessage = null) {
   try {
+    console.log('=== ENVOI EMAIL ===' );
+    console.log('Destinataires:', data.destinataires || data.emailDestinataire);
+    console.log('Message personnalisé:', customMessage);
     console.log('Envoi de l\'email avec le Word en pièce jointe');
 
     const payload = {
@@ -130,7 +195,8 @@ export async function sendEmailWithWord(data, wordBase64, customMessage = null) 
       payload.customEmailMessage = customMessage;
     }
 
-    console.log('Payload envoyé:', payload);
+    console.log('URL Webhook:', CONFIG.WEBHOOK_EMAIL_URL);
+    console.log('Payload (sans wordfile):', { ...payload, wordfile: '[WORD_DATA]' });
 
     const response = await fetch(CONFIG.WEBHOOK_EMAIL_URL, {
       method: 'POST',
@@ -138,8 +204,11 @@ export async function sendEmailWithWord(data, wordBase64, customMessage = null) 
       body: JSON.stringify(payload)
     });
 
+    console.log('Réponse HTTP:', response.status, response.statusText);
+
     if (!response.ok) {
       const errorText = await response.text();
+      console.error('Erreur réponse:', errorText);
       throw new Error(`Erreur ${response.status}: ${errorText}`);
     }
 
@@ -152,11 +221,11 @@ export async function sendEmailWithWord(data, wordBase64, customMessage = null) 
       result = { success: true, message: 'Email envoyé avec succès' };
     }
 
-    console.log('Email envoyé:', result);
+    console.log('✅ Email envoyé avec succès:', result);
 
     return result;
   } catch (error) {
-    console.error('Erreur envoi email:', error);
+    console.error('❌ Erreur envoi email:', error);
     throw error;
   }
 }
@@ -193,5 +262,50 @@ export function downloadBlob(blob, filename) {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+/**
+ * Convertir un document Word en PDF via Gotenberg
+ * @param {string} wordBase64 - Document Word en base64
+ * @param {string} filename - Nom du fichier (sans extension)
+ * @returns {Promise<Object>} Résultat avec le PDF en base64
+ * @throws {Error} Si la conversion échoue
+ */
+export async function convertWordToPdf(wordBase64, filename = 'document') {
+  try {
+    console.log('Conversion Word vers PDF via proxy serveur...');
+
+    // Appeler le proxy local au lieu de Gotenberg directement (évite CORS)
+    const proxyUrl = '/api/convert-pdf';
+
+    const response = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: createHeaders(proxyUrl, { 'Content-Type': 'application/json' }),
+      body: JSON.stringify({
+        wordBase64: wordBase64,
+        filename: filename
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Erreur serveur ${response.status}: ${errorText}`);
+    }
+
+    const result = await response.json();
+    
+    if (!result.success || !result.data) {
+      throw new Error('Erreur lors de la conversion PDF');
+    }
+
+    // Convertir le PDF base64 en blob
+    const pdfBlob = base64ToBlob(result.data, 'application/pdf');
+    console.log('PDF généré avec succès');
+
+    return { success: true, data: result.data, blob: pdfBlob };
+  } catch (error) {
+    console.error('Erreur conversion PDF:', error);
+    throw error;
+  }
 }
 

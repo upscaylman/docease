@@ -63,11 +63,12 @@ if errorlevel 1 (
 REM Démarrer le serveur de formulaire en arrière-plan
 echo.
 echo 🌐 Démarrage du serveur de formulaire...
-if exist "templates\form\serve-form-background.ps1" (
-    start /B powershell -ExecutionPolicy Bypass -WindowStyle Hidden -File "%~dp0templates\form\serve-form-background.ps1"
+if exist "templates\form\serve-form.ps1" (
+    start "Serveur Formulaire" powershell -ExecutionPolicy Bypass -NoExit -File "%~dp0templates\form\serve-form.ps1"
     timeout /t 2 /nobreak >nul
+    echo    ✅ Serveur de formulaire démarré
 ) else (
-    echo ⚠️  Script serve-form-background.ps1 introuvable, serveur formulaire non démarré
+    echo ⚠️  Script serve-form.ps1 introuvable, serveur formulaire non démarré
 )
 
 echo.
@@ -77,9 +78,10 @@ echo ========================================
 echo.
 echo 📋 Accès aux services:
 echo    - n8n Interface: http://localhost:5678
-echo    - Formulaire:     http://localhost:3000
+echo    - Formulaire:     http://localhost:8080
 echo    - PostgreSQL:     localhost:5432
 echo    - Ollama:         http://localhost:11434
+echo    - Gotenberg:      http://localhost:3001
 echo.
 echo 💡 Commandes utiles:
 echo    - Arrêter:        stop.bat

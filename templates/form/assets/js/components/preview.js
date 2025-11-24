@@ -4,7 +4,7 @@
 
 import { CONFIG, getElement } from '../core/config.js';
 import { setGeneratedWord, getGeneratedWord, setFormData } from '../core/state.js';
-import { generateWordDocument, sendEmailWithWord, base64ToBlob, downloadBlob } from '../core/api.js';
+import { generateWordDocument, sendEmailWithWord, sendEmailWithPdf, base64ToBlob, downloadBlob, convertWordToPdf } from '../core/api.js';
 import { collectFormData } from '../utils/validation.js';
 import { generateFilename } from '../utils/helpers.js';
 import { showSuccessToast, showErrorToast } from '../utils/toast.js';
@@ -71,6 +71,60 @@ export async function downloadWord() {
 }
 
 /**
+ * Télécharger le document en PDF
+ */
+export async function downloadPdf() {
+  const btn = document.getElementById('downloadPdfBtn');
+  if (!btn) return;
+  
+  const originalHTML = btn.innerHTML;
+  
+  try {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-icons animate-spin">sync</span> Conversion PDF...';
+    
+    // Vérifier si le Word a été généré
+    let wordBase64 = getGeneratedWord();
+
+    // Si pas de Word généré, le générer d'abord
+    if (!wordBase64) {
+      console.log('Génération du Word avant conversion PDF...');
+      const data = collectFormData();
+      setFormData(data);
+      
+      const result = await generateWordDocument(data);
+      wordBase64 = result.data;
+      setGeneratedWord(wordBase64);
+    }
+    
+    // Collecter les données pour le nom du fichier
+    const data = collectFormData();
+    const templateName = data.templateName || data.templateType || 'Document';
+    const cleanName = templateName.replace(/\s+/g, '_');
+    
+    // Convertir le Word en PDF via Gotenberg
+    console.log('Conversion du Word en PDF via Gotenberg...');
+    const pdfResult = await convertWordToPdf(wordBase64, cleanName);
+    
+    // Télécharger le PDF
+    const filename = generateFilename(cleanName, 'pdf');
+    downloadBlob(pdfResult.blob, filename);
+    
+    showSuccessToast('Document PDF téléchargé avec succès !');
+    
+    btn.disabled = false;
+    btn.innerHTML = originalHTML;
+  } catch (error) {
+    console.error('Erreur conversion PDF:', error);
+    
+    showErrorToast(`Erreur lors de la conversion PDF : ${error.message}`);
+    
+    btn.disabled = false;
+    btn.innerHTML = originalHTML;
+  }
+}
+
+/**
  * Envoyer l'email avec le document Word
  */
 export async function sendEmail() {
@@ -104,14 +158,41 @@ export async function sendEmail() {
 
     // Récupérer le message personnalisé s'il existe
     const customMessage = document.body.getAttribute('data-custom-email-message');
+    
+    // Récupérer emailEnvoi depuis l'attribut data et FORCER l'écrasement
+    const emailEnvoi = document.body.getAttribute('data-email-envoi');
+    if (emailEnvoi) {
+      data.emailEnvoi = emailEnvoi; // Écraser avec la bonne valeur
+      console.log('✅ emailEnvoi forcé à:', emailEnvoi);
+    } else {
+      console.warn('⚠️ data-email-envoi non trouvé, utilisation de destinataires');
+      // Fallback sur destinataires si emailEnvoi n'est pas défini
+      if (data.destinataires) {
+        data.emailEnvoi = data.destinataires;
+      }
+    }
 
-    // Envoyer l'email avec le Word
-    console.log('Envoi de l\'email avec le Word en pièce jointe');
-    await sendEmailWithWord(data, wordBase64, customMessage);
+    // Convertir le Word en PDF avant d'envoyer
+    console.log('Conversion du Word en PDF...');
+    btn.innerHTML = '<span class="material-icons animate-spin">sync</span> Conversion PDF...';
+    
+    const { convertWordToPdf } = await import('../core/api.js');
+    const pdfResult = await convertWordToPdf(wordBase64, data.templateName || 'document');
+    const pdfBase64 = pdfResult.data; // Récupérer la string base64 du PDF
+    
+    console.log('✅ PDF généré avec succès, taille:', pdfBase64.length, 'caractères');
 
-    // Nettoyer le message personnalisé après envoi
+    // Envoyer l'email avec le PDF
+    btn.innerHTML = '<span class="material-icons animate-spin">sync</span> Envoi...';
+    console.log('Envoi de l\'email avec le PDF en pièce jointe');
+    await sendEmailWithPdf(data, pdfBase64, customMessage);
+
+    // Nettoyer le message personnalisé et emailEnvoi après envoi
     if (customMessage) {
       document.body.removeAttribute('data-custom-email-message');
+    }
+    if (emailEnvoi) {
+      document.body.removeAttribute('data-email-envoi');
     }
 
     showSuccessToast(CONFIG.MESSAGES.SUCCESS_EMAIL_SENT);
@@ -141,10 +222,15 @@ export async function sendEmail() {
  */
 export function initPreviewButtons() {
   const downloadWordBtn = getElement(CONFIG.SELECTORS.downloadWordBtn);
+  const downloadPdfBtn = document.getElementById('downloadPdfBtn');
   const sendEmailBtn = getElement(CONFIG.SELECTORS.sendEmailBtn);
 
   if (downloadWordBtn) {
     downloadWordBtn.addEventListener('click', downloadWord);
+  }
+
+  if (downloadPdfBtn) {
+    downloadPdfBtn.addEventListener('click', downloadPdf);
   }
 
   if (sendEmailBtn) {

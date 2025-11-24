@@ -6,7 +6,7 @@ echo.
 
 REM Arrêter le serveur de formulaire (processus PowerShell)
 echo 🔍 Recherche du serveur de formulaire...
-powershell -ExecutionPolicy Bypass -Command "& { $procs = Get-Process powershell -ErrorAction SilentlyContinue; $found = $false; foreach ($p in $procs) { try { $cmd = (Get-WmiObject Win32_Process -Filter \"ProcessId = $($p.Id)\").CommandLine; if ($cmd -match 'serve-form-background') { Stop-Process -Id $p.Id -Force -ErrorAction SilentlyContinue; Write-Host '✅ Serveur formulaire arrêté (PID: ' $p.Id ')' -ForegroundColor Green; $found = $true } } catch { } }; if (-not $found) { Write-Host 'ℹ️  Aucun serveur de formulaire trouvé' -ForegroundColor Yellow } }"
+powershell -ExecutionPolicy Bypass -Command "Get-Process powershell -ErrorAction SilentlyContinue | Where-Object { (Get-WmiObject Win32_Process -Filter \"ProcessId = $($_.Id)\").CommandLine -match 'serve-form' } | ForEach-Object { Stop-Process -Id $_.Id -Force; Write-Host '✅ Serveur formulaire arrêté (PID:' $_.Id ')' -ForegroundColor Green }"
 if errorlevel 1 (
     echo    Aucun serveur de formulaire trouvé ou déjà arrêté
 )
@@ -34,6 +34,7 @@ echo 📦 Arrêt des conteneurs Docker...
 echo    - n8n
 echo    - PostgreSQL
 echo    - Ollama
+echo    - Gotenberg
 echo.
 docker compose down
 if errorlevel 1 (
