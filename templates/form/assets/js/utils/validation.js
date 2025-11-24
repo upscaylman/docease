@@ -549,310 +549,108 @@ export async function generateLocalPreview() {
     const data = collectFormData();
     console.log("Génération du document pour prévisualisation...");
 
-    // UTILISER LE TEMPLATE HTML template-custom.html EN PRIORITÉ
-    console.log("Tentative de chargement du template template-custom.html...");
-    const template = await loadPreviewTemplate();
-
-    if (template) {
-      console.log("✓ Template template-custom.html chargé avec succès");
-
-      // Remplacer les variables dans le template
-      const htmlPreview = replaceTemplateVariables(template, data);
-      console.log("✓ Variables remplacées dans le template");
-
-      if (previewContent) {
-        // AFFICHER LE FICHIER HTML DIRECTEMENT DANS UN IFRAME
-        // Utiliser blob URL avec le HTML déjà modifié (variables remplacées)
-        // Calculer la hauteur disponible pour l'iframe (hauteur de la fenêtre - header - footer - marges)
-        const viewportHeight = window.innerHeight;
-        // Header modal ~80px, Footer modal ~80px, Marges ~40px = 200px
-        const availableHeight = Math.max(400, viewportHeight - 250);
-        
-        const isMobile = window.innerWidth < 768;
-        const iframeOverflow = isMobile ? 'overflow: scroll; -webkit-overflow-scrolling: touch;' : 'overflow-y: auto; overflow-x: hidden;';
-        
-        previewContent.innerHTML = `
-          <div style="width: 100%; height: ${availableHeight}px; display: flex; flex-direction: column; background-color: #e5e7eb; border-radius: 0.75rem; padding: 1rem;">
-            <iframe 
-              id="previewIframe" 
-              style="width: 100%; height: 100%; border: none; min-height: 0; ${iframeOverflow} ${isMobile ? 'zoom: 0.50;' : ''}"
-            ></iframe>
-          </div>
-        `;
-
-        // Charger le HTML modifié directement dans l'iframe via blob URL
-        const iframe = document.getElementById("previewIframe");
-        if (iframe) {
-          // S'assurer que le HTML est complet
-          let fullHtml = htmlPreview;
-          if (!fullHtml.includes("<!DOCTYPE")) {
-            fullHtml = `<!DOCTYPE html>\n${fullHtml}`;
-          }
-
-          // Calculer le zoom dynamique pour mobile
-          let zoomValue = 0.85; // Valeur par défaut pour desktop
-          const viewportWidth = window.innerWidth;
-          
-          if (viewportWidth < 768) {
-            // Mode mobile : zoom progressif selon la largeur
-            // 320px → 0.50, 430px → 0.58, 767px → 0.65
-            const minWidth = 320;
-            const maxWidth = 767;
-            const minZoom = 0.50;
-            const maxZoom = 0.65;
-            
-            // Calcul linéaire du zoom selon la largeur d'écran
-            const widthRatio = (viewportWidth - minWidth) / (maxWidth - minWidth);
-            zoomValue = minZoom + (widthRatio * (maxZoom - minZoom));
-            zoomValue = Math.max(minZoom, Math.min(maxZoom, zoomValue)); // Limiter entre min et max
-          }
-          
-          // Ajouter un zoom dynamique dans le body et un fond gris
-          // En mobile : scroll omnidirectionnel, en desktop : scroll vertical uniquement
-          const overflowStyle = viewportWidth < 768 ? 'overflow: scroll; overflow-x: scroll; overflow-y: scroll;' : 'overflow-y: auto; overflow-x: hidden;';
-          fullHtml = fullHtml.replace(/<body/i, `<body style="zoom: ${zoomValue}; transform-origin: top left; background-color: #e5e7eb; padding: 1rem; ${overflowStyle} -webkit-overflow-scrolling: touch; display: flex; justify-content: center;"`);
-          
-          // Ajouter un conteneur blanc autour du document
-          fullHtml = fullHtml.replace(/<body([^>]*)>([\s\S]*)<\/body>/i, function(match, attrs, content) {
-            return `<body${attrs}><div style="width: 21cm; min-height: 29.7cm; box-sizing: border-box; font-family: 'Calibri', 'Arial', sans-serif; font-size: 11pt; line-height: 1.5; color: #000000; display: flex; flex-direction: column; background-color: white; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">${content}</div></body>`;
-          });
-
-          const blob = new Blob([fullHtml], {
-            type: "text/html; charset=utf-8",
-          });
-          const url = URL.createObjectURL(blob);
-          iframe.src = url;
-
-          iframe.onload = () => {
-            URL.revokeObjectURL(url);
-            console.log(
-              "✓ HTML chargé dans iframe - affichage exact comme dans le navigateur"
-            );
-          };
-          
-          // Ajuster la hauteur de l'iframe lors du redimensionnement de la fenêtre
-          const resizeIframe = () => {
-            const viewportHeight = window.innerHeight;
-            const availableHeight = Math.max(400, viewportHeight - 250);
-            const container = iframe.parentElement;
-            if (container) {
-              container.style.height = `${availableHeight}px`;
-            }
-          };
-          
-          // Écouter le redimensionnement de la fenêtre
-          window.addEventListener('resize', resizeIframe);
-          
-          // Nettoyer l'écouteur quand la modal se ferme
-          const modal = document.getElementById('previewModal');
-          if (modal) {
-            const observer = new MutationObserver((mutations) => {
-              mutations.forEach((mutation) => {
-                if (mutation.attributeName === 'class') {
-                  if (modal.classList.contains('hidden')) {
-                    window.removeEventListener('resize', resizeIframe);
-                    observer.disconnect();
-                  }
-                }
-              });
-            });
-            observer.observe(modal, { attributes: true });
-          }
-        }
-
-        const { showSuccessToast } = await import("./toast.js");
-        showSuccessToast("Prévisualisation HTML générée avec succès", {
-          icon: "check_circle",
-          duration: 3000,
-        });
-        
-        console.log("Prévisualisation HTML affichée avec succès");
-        return; // Sortir immédiatement, ne pas générer PDF/Word
-      }
-    } else {
-      console.warn(
-        "✗ Template template-custom.html non disponible, passage à la génération Word avec Mammoth"
-      );
+    // Générer le Word d'abord
+    const { generateWordDocument, convertWordToPdf, base64ToBlob } = await import("../core/api.js");
+    const { setGeneratedWord } = await import("../core/state.js");
+    
+    const result = await generateWordDocument(data);
+    const wordBase64 = result.data;
+    
+    // Stocker pour téléchargement ultérieur
+    setGeneratedWord(wordBase64);
+    
+    // Convertir le Word en PDF
+    const pdfResult = await convertWordToPdf(wordBase64, data.templateName || 'document');
+    const pdfBase64 = pdfResult.data;
+    
+    if (previewContent) {
+      // Afficher le PDF dans un iframe
+      const viewportHeight = window.innerHeight;
+      // Header modal ~80px, Footer modal ~80px, Marges ~40px = 200px
+      const availableHeight = Math.max(400, viewportHeight - 250);
       
-      // Fallback: Générer le Word et l'afficher avec Mammoth
-      const { generateWordDocument, base64ToBlob } = await import("../core/api.js");
-      const { setGeneratedWord } = await import("../core/state.js");
+      const isMobile = window.innerWidth < 768;
+      const iframeOverflow = isMobile ? 'overflow: scroll; -webkit-overflow-scrolling: touch;' : 'overflow-y: auto; overflow-x: hidden;';
       
-      const result = await generateWordDocument(data);
-      const wordBase64 = result.data;
-      
-      // Stocker pour téléchargement ultérieur
-      setGeneratedWord(wordBase64);
-      
-      if (previewContent && window.mammoth && wordBase64) {
-        const blob = base64ToBlob(wordBase64);
-        const arrayBuffer = await blob.arrayBuffer();
+      previewContent.innerHTML = `
+        <div style="width: 100%; height: ${availableHeight}px; display: flex; flex-direction: column; background-color: #e5e7eb; border-radius: 0.75rem; padding: 1rem;">
+          <iframe 
+            id="previewIframe" 
+            style="width: 100%; height: 100%; border: none; min-height: 0; ${iframeOverflow} ${isMobile ? 'zoom: 0.50;' : ''}"
+          ></iframe>
+        </div>
+      `;
 
-        // Options de conversion pour un meilleur rendu avec en-têtes et pieds de page
-        const options = {
-          includeDefaultStyleMap: true,
-          includeEmbeddedStyleMap: true,
-          styleMap: [
-            "p[style-name='Heading 1'] => h1:fresh",
-            "p[style-name='Heading 2'] => h2:fresh",
-            "p[style-name='Heading 3'] => h3:fresh",
-            "p[style-name='Title'] => h1.title:fresh",
-            "r[style-name='Strong'] => strong",
-            "r[style-name='Emphasis'] => em",
-          ],
+      // Charger le PDF dans l'iframe
+      const iframe = document.getElementById("previewIframe");
+      if (iframe) {
+        const blob = base64ToBlob(pdfBase64, 'application/pdf');
+        const url = URL.createObjectURL(blob);
+        iframe.src = url;
+
+        iframe.onload = () => {
+          URL.revokeObjectURL(url);
+          console.log(
+            "✓ PDF chargé dans iframe pour prévisualisation"
+          );
         };
-
-        // Extraire le contenu principal + en-têtes/pieds de page
-        Promise.all([
-          mammoth.convertToHtml({ arrayBuffer: arrayBuffer }, options),
-          mammoth.extractRawText({ arrayBuffer: arrayBuffer }),
-        ])
-          .then(async ([htmlResult, textResult]) => {
-            const htmlContent = htmlResult.value;
-
-            // Vérifier s'il y a des messages d'avertissement
-            if (htmlResult.messages.length > 0) {
-              console.log("Messages Mammoth:", htmlResult.messages);
-            }
-
-            // Afficher un toast de succès
-            const { showSuccessToast } = await import("./toast.js");
-            const variablesConfig = getVariablesConfig();
-            const templateConfig = variablesConfig?.templates[data.templateType];
-            const typeDocumentLabel = templateConfig
-              ? templateConfig.nom
-              : "Document";
-            const fileSizeKB = (blob.size / 1024).toFixed(2);
-            const toastMessage = `<div><div style="font-weight: 600; margin-bottom: 4px;">Document généré avec succès !</div><div style="font-size: 13px; opacity: 0.8;">${typeDocumentLabel} • ${fileSizeKB} KB</div></div>`;
-            showSuccessToast(toastMessage, {
-              icon: "check_circle",
-              duration: 5000,
-              html: true,
+        
+        // Ajuster la hauteur de l'iframe lors du redimensionnement de la fenêtre
+        const resizeIframe = () => {
+          const viewportHeight = window.innerHeight;
+          const availableHeight = Math.max(400, viewportHeight - 250);
+          const container = iframe.parentElement;
+          if (container) {
+            container.style.height = `${availableHeight}px`;
+          }
+        };
+        
+        // Écouter le redimensionnement de la fenêtre
+        window.addEventListener('resize', resizeIframe);
+        
+        // Nettoyer l'écouteur quand la modal se ferme
+        const modal = document.getElementById('previewModal');
+        if (modal) {
+          const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              if (mutation.attributeName === 'class') {
+                if (modal.classList.contains('hidden')) {
+                  window.removeEventListener('resize', resizeIframe);
+                  observer.disconnect();
+                }
+              }
             });
-
-            previewContent.innerHTML = `
-              <div class="w-full h-full flex flex-col">
-                <!-- Prévisualisation du document avec style Word -->
-                <div class="bg-gray-200 rounded-xl p-4 overflow-auto" style="max-height: 600px;">
-                  <!-- Page A4 simulée -->
-                  <div class="word-document-preview bg-white shadow-2xl mx-auto" style="
-                    width: 21cm;
-                    min-height: 29.7cm;
-                    box-sizing: border-box;
-                    font-family: 'Calibri', 'Arial', sans-serif;
-                    font-size: 11pt;
-                    line-height: 1.5;
-                    color: #000000;
-                    display: flex;
-                    flex-direction: column;
-                  ">
-                    <!-- En-tête avec logo -->
-                    <div style="padding: 1.27cm 2.54cm 0.5cm 2.54cm;">
-                      <img src="./assets/img/logo_entete.png" alt="En-tête FO METAUX" style="width: 25%; height: auto; display: block;">
-                    </div>
-
-                    <!-- Contenu principal -->
-                    <div style="flex: 1; padding: 0 2.54cm;">
-                      ${htmlContent}
-                    </div>
-
-                    <!-- Pied de page -->
-                    <div style="padding: 0.5cm 2.54cm 1.27cm 2.54cm; margin-top: auto;">
-                      <img src="./assets/img/logo_piedpage.png" alt="Pied de page FO METAUX" style="width: 100%; height: auto; display: block;">
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mt-4 text-center text-sm text-gray-500 flex items-center justify-center gap-2">
-                  <span class="material-icons text-base">lightbulb</span>
-                  <p>Prévisualisation au format A4 • Utilisez les boutons en bas pour télécharger ou envoyer</p>
-                </div>
-              </div>
-            `;
-
-            // Ajouter des styles CSS pour le contenu Word
-            const style = document.createElement("style");
-            style.textContent = `
-              .word-document-preview h1 {
-                font-size: 16pt;
-                font-weight: bold;
-                margin: 12pt 0 6pt 0;
-                color: #000000;
-              }
-              .word-document-preview h2 {
-                font-size: 14pt;
-                font-weight: bold;
-                margin: 10pt 0 5pt 0;
-                color: #000000;
-              }
-              .word-document-preview h3 {
-                font-size: 12pt;
-                font-weight: bold;
-                margin: 8pt 0 4pt 0;
-                color: #000000;
-              }
-              .word-document-preview p {
-                margin: 0 0 10pt 0;
-                text-align: justify;
-              }
-              .word-document-preview strong {
-                font-weight: bold;
-              }
-              .word-document-preview em {
-                font-style: italic;
-              }
-              .word-document-preview ul, .word-document-preview ol {
-                margin: 0 0 10pt 0;
-                padding-left: 40px;
-              }
-              .word-document-preview li {
-                margin-bottom: 5pt;
-              }
-              .word-document-preview table {
-                border-collapse: collapse;
-                width: 100%;
-                margin: 10pt 0;
-              }
-              .word-document-preview td, .word-document-preview th {
-                border: 1px solid #000000;
-                padding: 5pt;
-              }
-              .word-document-preview th {
-                background-color: #f0f0f0;
-                font-weight: bold;
-              }
-            `;
-            previewContent.appendChild(style);
-          })
-          .catch((err) => {
-            console.error("Erreur Mammoth:", err);
-            previewContent.innerHTML = `
-              <div class="flex flex-col items-center justify-center py-12">
-                <span class="material-icons text-6xl text-orange-500 mb-4">warning</span>
-                <p class="text-lg text-gray-700 font-semibold">Prévisualisation non disponible</p>
-                <p class="text-sm text-gray-600 mt-2">Le document a été généré mais la prévisualisation a échoué.</p>
-                <p class="text-sm text-gray-500 mt-4">Vous pouvez télécharger le document avec les boutons en bas.</p>
-              </div>
-            `;
           });
+          observer.observe(modal, { attributes: true });
+        }
       }
+
+      const { showSuccessToast } = await import("./toast.js");
+      showSuccessToast("Prévisualisation PDF générée avec succès", {
+        icon: "check_circle",
+        duration: 3000,
+      });
+      
+      console.log("Prévisualisation PDF affichée avec succès");
+      return;
     }
-
-    console.log("Document généré et prêt pour prévisualisation");
   } catch (error) {
-    console.error("Erreur lors de la génération:", error);
-
+    console.error("Erreur lors de la génération de la prévisualisation:", error);
+    
     if (previewContent) {
       previewContent.innerHTML = `
-        <div class="flex flex-col items-center justify-center py-12">
-          <span class="material-icons text-6xl text-red-500 mb-4">error</span>
-          <p class="text-lg text-red-600 font-semibold">Erreur lors de la génération</p>
-          <p class="text-sm text-gray-600 mt-2">${error.message}</p>
-          <button onclick="this.closest('#previewModal').classList.add('hidden')" class="mt-6 px-6 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg">
-            Fermer
+        <div class="flex flex-col items-center justify-center py-12 text-red-600">
+          <span class="material-icons text-6xl mb-4">error</span>
+          <p class="text-lg font-semibold">Erreur de génération</p>
+          <p class="text-sm mt-2">${error.message}</p>
+          <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+            Réessayer
           </button>
         </div>
       `;
     }
+    
+    const { showErrorToast } = await import("./toast.js");
+    showErrorToast(`Erreur: ${error.message}`);
   }
 }

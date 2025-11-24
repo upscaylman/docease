@@ -105,10 +105,14 @@ export async function downloadPdf() {
     // Convertir le Word en PDF
     console.log('Conversion du Word en PDF...');
     const pdfResult = await convertWordToPdf(wordBase64, cleanName);
+    const pdfBase64 = pdfResult.data; // Récupérer la string base64 du PDF
+    
+    // Convertir base64 en blob pour le téléchargement
+    const pdfBlob = base64ToBlob(pdfBase64, 'application/pdf');
     
     // Télécharger le PDF
     const filename = generateFilename(cleanName, 'pdf');
-    downloadBlob(pdfResult.blob, filename);
+    downloadBlob(pdfBlob, filename);
     
     showSuccessToast('Document PDF téléchargé avec succès !');
     
