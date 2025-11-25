@@ -1,6 +1,7 @@
 [build]
-  publish = "templates/form"
-  command = "cd templates/form && npm run build"
+  base = "templates/form"
+  publish = "."
+  command = "npm run build"
 
 # Redirections pour les routes SPA
 [[redirects]]
