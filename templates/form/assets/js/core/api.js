@@ -273,8 +273,9 @@ export function downloadBlob(blob, filename) {
  */
 export async function convertWordToPdf(wordBase64, filename = 'document') {
   try {
-    console.log('Conversion Word vers PDF...');
+    console.log('🔄 Envoi requête conversion PDF...');
     console.log('URL de conversion:', CONFIG.WEBHOOK_PDF_CONVERT_URL);
+    console.log('Taille wordBase64:', wordBase64.length, 'caractères');
 
     const response = await fetch(CONFIG.WEBHOOK_PDF_CONVERT_URL, {
       method: 'POST',
@@ -285,24 +286,51 @@ export async function convertWordToPdf(wordBase64, filename = 'document') {
       })
     });
 
+    console.log('📥 Réponse reçue, status:', response.status);
+    console.log('📥 Headers:', [...response.headers.entries()]);
+
+    // Lire la réponse en texte brut
+    const responseText = await response.text();
+    console.log('📥 Réponse brute (500 premiers car):', responseText.substring(0, 500));
+    console.log('📥 Longueur totale réponse:', responseText.length);
+
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Erreur serveur ${response.status}: ${errorText}`);
+      console.error('❌ Erreur HTTP:', response.status);
+      throw new Error(`Erreur serveur ${response.status}: ${responseText}`);
     }
 
-    const result = await response.json();
-    
-    if (!result.success || !result.data) {
-      throw new Error('Erreur lors de la conversion PDF');
+    // Parser le JSON
+    let result;
+    try {
+      result = JSON.parse(responseText);
+      console.log('✅ JSON parsé avec succès');
+      console.log('Clés présentes:', Object.keys(result));
+      if (result.pdfBase64) {
+        console.log('✅ pdfBase64 présent, taille:', result.pdfBase64.length, 'caractères');
+      }
+    } catch (parseError) {
+      console.error('❌ Erreur parse JSON:', parseError);
+      console.log('Réponse complète:', responseText);
+      throw new Error('Réponse invalide du serveur (JSON mal formé)');
+    }
+
+    if (result.error) {
+      console.error('❌ Erreur retournée par le serveur:', result.error);
+      throw new Error(result.error);
+    }
+
+    if (!result.pdfBase64) {
+      console.error('❌ pdfBase64 manquant dans la réponse');
+      throw new Error('Erreur lors de la conversion PDF: pdfBase64 manquant');
     }
 
     // Convertir le PDF base64 en blob
-    const pdfBlob = base64ToBlob(result.data, 'application/pdf');
-    console.log('PDF généré avec succès');
+    const pdfBlob = base64ToBlob(result.pdfBase64, 'application/pdf');
+    console.log('✅ PDF généré avec succès, taille blob:', pdfBlob.size, 'bytes');
 
-    return { success: true, data: result.data, blob: pdfBlob };
+    return { success: true, data: result.pdfBase64, blob: pdfBlob };
   } catch (error) {
-    console.error('Erreur conversion PDF:', error);
+    console.error('❌ Erreur conversion PDF:', error);
     throw error;
   }
 }

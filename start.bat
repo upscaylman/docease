@@ -64,7 +64,7 @@ REM Démarrer le serveur de formulaire en arrière-plan
 echo.
 echo 🌐 Démarrage du serveur de formulaire...
 if exist "templates\form\serve-form.ps1" (
-    start "Serveur Formulaire" powershell -ExecutionPolicy Bypass -NoExit -File "%~dp0templates\form\serve-form.ps1"
+    start "Serveur Formulaire" powershell -ExecutionPolicy Bypass -NoExit -Command "cd '%~dp0templates\form'; .\serve-form.ps1"
     timeout /t 2 /nobreak >nul
     echo    ✅ Serveur de formulaire démarré
 ) else (
@@ -92,4 +92,5 @@ echo.
 echo 📝 Mode: DÉVELOPPEMENT (docker-compose.yml)
 echo    Pour la production: cd docker ^&^& docker compose -f docker-compose.prod.yml up -d
 echo.
-pause
+echo Appuyez sur une touche pour fermer cette fenêtre...
+pause >nul

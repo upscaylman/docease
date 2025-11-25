@@ -3,6 +3,18 @@
 
 Write-Host "Demarrage du serveur de formulaire..." -ForegroundColor Cyan
 
+# Vérifier si on a les droits administrateur
+$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+if (-not $isAdmin) {
+    Write-Host "ATTENTION: Le serveur n'est pas lance en tant qu'administrateur" -ForegroundColor Yellow
+    Write-Host "Pour accepter les connexions depuis Docker/n8n, vous devez:" -ForegroundColor Yellow
+    Write-Host "1. Executer cette commande UNE FOIS en tant qu'admin:" -ForegroundColor Cyan
+    Write-Host "   netsh http add urlacl url=http://+:8080/ user=EVERYONE" -ForegroundColor White
+    Write-Host "2. OU relancer ce script en tant qu'administrateur" -ForegroundColor Cyan
+    Write-Host ""
+}
+
 $Port = 8080
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $FormPath = Join-Path $ScriptDir "index.html"
@@ -244,9 +256,9 @@ function Handle-Request {
                 
                 Write-Host "[INFO] Ouverture du document Word..." -ForegroundColor Cyan
                 $Doc = $Word.Documents.Open($tempWordFile)
-                
+
                 # Délai pour les documents longs
-                Start-Sleep -Seconds 2
+                Start-Sleep -Seconds 5
                 
                 Write-Host "[INFO] Export en PDF..." -ForegroundColor Cyan
                 # ExportAsFixedFormat: (OutputFileName, ExportFormat, OpenAfterExport, OptimizeFor, Range, From, To, Item, IncludeDocProps)
@@ -287,18 +299,23 @@ function Handle-Request {
                 
                 # Convertir PDF en base64
                 $pdfBase64 = [System.Convert]::ToBase64String($pdfBytes)
-                
+
                 # Retourner le résultat JSON
                 $result = @{
-                    success = $true
-                    data = $pdfBase64
+                    pdfBase64 = $pdfBase64
                 } | ConvertTo-Json
-                
+
                 $Buffer = [System.Text.Encoding]::UTF8.GetBytes($result)
                 $Response.ContentType = "application/json; charset=utf-8"
                 $Response.ContentLength64 = $Buffer.Length
                 $Response.StatusCode = 200
+
+                Write-Host "[DEBUG] Envoi de la réponse, taille: $($Buffer.Length) bytes" -ForegroundColor Cyan
+                Write-Host "[DEBUG] Status code: $($Response.StatusCode)" -ForegroundColor Cyan
+
                 $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+                $Response.OutputStream.Flush()
+                Write-Host "[DEBUG] Réponse envoyée et flushée" -ForegroundColor Green
             } else {
                 throw "Fichier PDF non généré"
             }
@@ -306,17 +323,21 @@ function Handle-Request {
         catch {
             Write-Host "[ERROR] Erreur conversion PDF: $_" -ForegroundColor Red
             Write-Host "[ERROR] Exception: $($_.Exception.Message)" -ForegroundColor Red
-            
+
             $errorResult = @{
-                success = $false
                 error = $_.Exception.Message
             } | ConvertTo-Json
-            
+
             $Buffer = [System.Text.Encoding]::UTF8.GetBytes($errorResult)
             $Response.ContentType = "application/json; charset=utf-8"
             $Response.ContentLength64 = $Buffer.Length
             $Response.StatusCode = 500
+
+            Write-Host "[DEBUG] Envoi erreur, taille: $($Buffer.Length) bytes" -ForegroundColor Yellow
+
             $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+            $Response.OutputStream.Flush()
+            Write-Host "[DEBUG] Erreur envoyée et flushée" -ForegroundColor Yellow
         }
     }
     else {
@@ -328,12 +349,36 @@ function Handle-Request {
 
 # Créer le listener HTTP
 $Listener = New-Object System.Net.HttpListener
-$Listener.Prefixes.Add("http://localhost:$Port/")
+
+# Écouter sur toutes les interfaces pour permettre l'accès depuis Docker/n8n
+try {
+    # Essayer d'écouter sur toutes les interfaces (nécessite admin ou urlacl)
+    $Listener.Prefixes.Add("http://+:$Port/")
+    Write-Host "Configuration: Ecoute sur toutes les interfaces (http://+:$Port/)" -ForegroundColor Cyan
+} catch {
+    # Fallback sur localhost uniquement si pas les droits
+    Write-Host "Impossible d'ecouter sur toutes les interfaces, fallback sur localhost" -ForegroundColor Yellow
+    $Listener.Prefixes.Clear()
+    $Listener.Prefixes.Add("http://localhost:$Port/")
+}
 
 try {
     $Listener.Start()
-    Write-Host "Serveur demarre sur http://localhost:$Port" -ForegroundColor Green
-    Write-Host "Formulaire accessible sur: http://localhost:$Port/" -ForegroundColor Cyan
+
+    # Afficher les adresses d'écoute
+    Write-Host "Serveur demarre avec succes!" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "Adresses d'acces:" -ForegroundColor Cyan
+    Write-Host "  - Local:        http://localhost:$Port/" -ForegroundColor White
+
+    # Obtenir l'IP locale
+    $localIP = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -notlike "*Loopback*" -and $_.IPAddress -notlike "169.254.*" } | Select-Object -First 1).IPAddress
+    if ($localIP) {
+        Write-Host "  - Reseau local: http://${localIP}:$Port/" -ForegroundColor White
+        Write-Host "  - Docker/n8n:   http://host.docker.internal:$Port/" -ForegroundColor White
+    }
+
+    Write-Host ""
     Write-Host "Appuyez sur Ctrl+C pour arreter le serveur" -ForegroundColor Yellow
     Write-Host ""
     
