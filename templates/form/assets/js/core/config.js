@@ -19,10 +19,29 @@ const getWebhookEmailUrl = () => {
   return 'http://localhost:5678/webhook/1ee6e745-fc31-4fd8-bc59-531bd4a69997';
 };
 
+const getWebhookPdfConvertUrl = () => {
+  // En local (localhost ou 127.0.0.1), toujours utiliser le proxy local
+  if (typeof window !== 'undefined' &&
+      (window.location.hostname === 'localhost' ||
+       window.location.hostname === '127.0.0.1' ||
+       window.location.hostname.startsWith('192.168.'))) {
+    return '/api/convert-pdf';
+  }
+
+  // En production, utiliser l'URL ngrok depuis window.ENV
+  if (typeof window !== 'undefined' && window.ENV && window.ENV.WEBHOOK_PDF_CONVERT_URL) {
+    return window.ENV.WEBHOOK_PDF_CONVERT_URL;
+  }
+
+  // Fallback
+  return '/api/convert-pdf';
+};
+
 export const CONFIG = {
   // URLs des webhooks - appel direct à n8n (pas via proxy pour éviter limite de taille)
   WEBHOOK_URL: getWebhookUrl(),
   WEBHOOK_EMAIL_URL: getWebhookEmailUrl(),
+  WEBHOOK_PDF_CONVERT_URL: getWebhookPdfConvertUrl(),
   
   // Chemins
   VARIABLES_CONFIG_PATH: '/config/variables.json',

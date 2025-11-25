@@ -1,8 +1,5 @@
 [build]
-  # Dossier à publier (le formulaire HTML)
   publish = "templates/form"
-  # Commande de build pour injecter les variables d'environnement
-  # Les variables WEBHOOK_URL et WEBHOOK_EMAIL_URL seront injectées dans index.html
   command = "cd templates/form && npm run build"
 
 # Redirections pour les routes SPA

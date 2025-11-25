@@ -273,14 +273,12 @@ export function downloadBlob(blob, filename) {
  */
 export async function convertWordToPdf(wordBase64, filename = 'document') {
   try {
-    console.log('Conversion Word vers PDF via proxy serveur...');
+    console.log('Conversion Word vers PDF...');
+    console.log('URL de conversion:', CONFIG.WEBHOOK_PDF_CONVERT_URL);
 
-    // Appeler le proxy local pour conversion Word -> PDF
-    const proxyUrl = '/api/convert-pdf';
-
-    const response = await fetch(proxyUrl, {
+    const response = await fetch(CONFIG.WEBHOOK_PDF_CONVERT_URL, {
       method: 'POST',
-      headers: createHeaders(proxyUrl, { 'Content-Type': 'application/json' }),
+      headers: createHeaders(CONFIG.WEBHOOK_PDF_CONVERT_URL, { 'Content-Type': 'application/json' }),
       body: JSON.stringify({
         wordBase64: wordBase64,
         filename: filename
