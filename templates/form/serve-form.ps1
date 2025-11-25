@@ -222,18 +222,25 @@ function Handle-Request {
     # Proxy pour conversion Word -> PDF (évite CORS)
     elseif ($Path -eq "/api/convert-pdf" -and $Request.HttpMethod -eq "POST") {
         try {
+            Write-Host "" -ForegroundColor White
+            Write-Host "========================================" -ForegroundColor Cyan
             Write-Host "[INFO] Réception requête conversion PDF" -ForegroundColor Cyan
-            
+            Write-Host "[INFO] Client: $($Request.RemoteEndPoint)" -ForegroundColor Cyan
+            Write-Host "========================================" -ForegroundColor Cyan
+
             # Lire le body de la requête
             $reader = New-Object System.IO.StreamReader($Request.InputStream)
             $jsonBody = $reader.ReadToEnd()
             $reader.Close()
-            
+
+            Write-Host "[DEBUG] Body reçu, taille: $($jsonBody.Length) caractères" -ForegroundColor Yellow
+
             $data = $jsonBody | ConvertFrom-Json
             $wordBase64 = $data.wordBase64
             $filename = if ($data.filename) { $data.filename } else { "document" }
-            
-            Write-Host "[INFO] Fichier: $filename.docx, Taille base64: $($wordBase64.Length) bytes" -ForegroundColor Cyan
+
+            Write-Host "[INFO] Fichier: $filename.docx" -ForegroundColor Cyan
+            Write-Host "[INFO] Taille wordBase64: $($wordBase64.Length) caractères" -ForegroundColor Cyan
             
             # Convertir base64 en bytes
             $wordBytes = [System.Convert]::FromBase64String($wordBase64)
@@ -299,30 +306,48 @@ function Handle-Request {
                 
                 # Convertir PDF en base64
                 $pdfBase64 = [System.Convert]::ToBase64String($pdfBytes)
+                Write-Host "[DEBUG] Taille pdfBase64: $($pdfBase64.Length) caractères" -ForegroundColor Magenta
 
-                # Retourner le résultat JSON
+                # Créer le JSON
                 $result = @{
                     pdfBase64 = $pdfBase64
                 } | ConvertTo-Json
 
+                Write-Host "[DEBUG] JSON créé, taille: $($result.Length) caractères" -ForegroundColor Magenta
+                Write-Host "[DEBUG] Début JSON (100 car): $($result.Substring(0, [Math]::Min(100, $result.Length)))" -ForegroundColor Magenta
+
+                # Encoder en UTF8
                 $Buffer = [System.Text.Encoding]::UTF8.GetBytes($result)
+                Write-Host "[DEBUG] Buffer créé, taille: $($Buffer.Length) bytes" -ForegroundColor Magenta
+
+                # Définir les headers
                 $Response.ContentType = "application/json; charset=utf-8"
                 $Response.ContentLength64 = $Buffer.Length
                 $Response.StatusCode = 200
 
-                Write-Host "[DEBUG] Envoi de la réponse, taille: $($Buffer.Length) bytes" -ForegroundColor Cyan
+                Write-Host "[DEBUG] Headers définis - ContentType: $($Response.ContentType)" -ForegroundColor Cyan
+                Write-Host "[DEBUG] ContentLength64: $($Response.ContentLength64)" -ForegroundColor Cyan
                 Write-Host "[DEBUG] Status code: $($Response.StatusCode)" -ForegroundColor Cyan
+                Write-Host "[DEBUG] Envoi de la réponse..." -ForegroundColor Cyan
 
+                # Envoyer
                 $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
                 $Response.OutputStream.Flush()
-                Write-Host "[DEBUG] Réponse envoyée et flushée" -ForegroundColor Green
+
+                Write-Host "[SUCCESS] Réponse envoyée avec succès" -ForegroundColor Green
+                Write-Host "========================================" -ForegroundColor Green
+                Write-Host "" -ForegroundColor White
             } else {
                 throw "Fichier PDF non généré"
             }
         }
         catch {
+            Write-Host "" -ForegroundColor White
+            Write-Host "========================================" -ForegroundColor Red
             Write-Host "[ERROR] Erreur conversion PDF: $_" -ForegroundColor Red
             Write-Host "[ERROR] Exception: $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host "[ERROR] Stack trace: $($_.ScriptStackTrace)" -ForegroundColor Red
+            Write-Host "========================================" -ForegroundColor Red
 
             $errorResult = @{
                 error = $_.Exception.Message
@@ -338,6 +363,7 @@ function Handle-Request {
             $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
             $Response.OutputStream.Flush()
             Write-Host "[DEBUG] Erreur envoyée et flushée" -ForegroundColor Yellow
+            Write-Host "" -ForegroundColor White
         }
     }
     else {
