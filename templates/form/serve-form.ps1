@@ -16,6 +16,7 @@ if (-not $isAdmin) {
 }
 
 $Port = 8080
+$N8nUrl = "http://localhost:5678"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $FormPath = Join-Path $ScriptDir "index.html"
 
@@ -40,7 +41,7 @@ function Handle-Request {
     # Headers CORS
     $Response.Headers.Add("Access-Control-Allow-Origin", "*")
     $Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-    $Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+    $Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization, ngrok-skip-browser-warning")
     
     # Gérer les requêtes OPTIONS (preflight)
     if ($Request.HttpMethod -eq "OPTIONS") {
@@ -219,7 +220,79 @@ function Handle-Request {
             $Response.StatusCode = 404
         }
     }
-    # Proxy pour conversion Word -> PDF (évite CORS)
+    # ============================================
+    # PROXY VERS N8N (tous les /webhook/*)
+    # ============================================
+    elseif ($Path -like "/webhook/*") {
+        Write-Host "" -ForegroundColor White
+        Write-Host "========================================" -ForegroundColor Magenta
+        Write-Host "[PROXY] Redirection vers n8n: $Path" -ForegroundColor Magenta
+        Write-Host "[PROXY] Client: $($Request.RemoteEndPoint)" -ForegroundColor Gray
+        Write-Host "========================================" -ForegroundColor Magenta
+
+        try {
+            # Lire le body de la requête
+            $reader = New-Object System.IO.StreamReader($Request.InputStream, $Request.ContentEncoding)
+            $RequestBody = $reader.ReadToEnd()
+            $reader.Close()
+
+            Write-Host "[PROXY] Taille body: $($RequestBody.Length) caractères" -ForegroundColor Gray
+
+            # Construire l'URL n8n
+            $proxyUrl = "$N8nUrl$Path"
+            Write-Host "[PROXY] Appel n8n: $proxyUrl" -ForegroundColor Gray
+
+            # Préparer les headers
+            $headers = @{
+                "Content-Type" = "application/json"
+            }
+
+            # Appeler n8n
+            $proxyResponse = Invoke-RestMethod -Uri $proxyUrl `
+                -Method POST `
+                -Body $RequestBody `
+                -Headers $headers `
+                -TimeoutSec 120
+
+            # Renvoyer la réponse de n8n
+            $result = $proxyResponse | ConvertTo-Json -Depth 10 -Compress
+            $Buffer = [System.Text.Encoding]::UTF8.GetBytes($result)
+
+            $Response.ContentType = "application/json; charset=utf-8"
+            $Response.ContentLength64 = $Buffer.Length
+            $Response.StatusCode = 200
+            $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+            $Response.OutputStream.Flush()
+
+            Write-Host "[PROXY] Réponse envoyée ($($Buffer.Length) bytes)" -ForegroundColor Green
+            Write-Host "========================================" -ForegroundColor Green
+            Write-Host "" -ForegroundColor White
+
+        } catch {
+            Write-Host "" -ForegroundColor White
+            Write-Host "========================================" -ForegroundColor Red
+            Write-Host "[ERROR] Erreur proxy n8n: $_" -ForegroundColor Red
+            Write-Host "[ERROR] Exception: $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host "========================================" -ForegroundColor Red
+
+            $errorJson = @{
+                error = "Erreur proxy n8n: $($_.Exception.Message)"
+                success = $false
+            } | ConvertTo-Json
+
+            $Buffer = [System.Text.Encoding]::UTF8.GetBytes($errorJson)
+            $Response.ContentType = "application/json; charset=utf-8"
+            $Response.ContentLength64 = $Buffer.Length
+            $Response.StatusCode = 500
+            $Response.OutputStream.Write($Buffer, 0, $Buffer.Length)
+            $Response.OutputStream.Flush()
+
+            Write-Host "" -ForegroundColor White
+        }
+    }
+    # ============================================
+    # CONVERSION PDF (route directe)
+    # ============================================
     elseif ($Path -eq "/api/convert-pdf" -and $Request.HttpMethod -eq "POST") {
         try {
             Write-Host "" -ForegroundColor White
@@ -392,7 +465,9 @@ try {
     $Listener.Start()
 
     # Afficher les adresses d'écoute
-    Write-Host "Serveur demarre avec succes!" -ForegroundColor Green
+    Write-Host "============================================" -ForegroundColor Green
+    Write-Host "  SERVEUR POWERSHELL MULTI-SERVICES" -ForegroundColor Green
+    Write-Host "============================================" -ForegroundColor Green
     Write-Host ""
     Write-Host "Adresses d'acces:" -ForegroundColor Cyan
     Write-Host "  - Local:        http://localhost:$Port/" -ForegroundColor White
@@ -404,6 +479,10 @@ try {
         Write-Host "  - Docker/n8n:   http://host.docker.internal:$Port/" -ForegroundColor White
     }
 
+    Write-Host ""
+    Write-Host "Services disponibles:" -ForegroundColor Cyan
+    Write-Host "  - /api/convert-pdf     -> Conversion Word -> PDF" -ForegroundColor White
+    Write-Host "  - /webhook/*           -> Proxy vers n8n ($N8nUrl)" -ForegroundColor White
     Write-Host ""
     Write-Host "Appuyez sur Ctrl+C pour arreter le serveur" -ForegroundColor Yellow
     Write-Host ""
