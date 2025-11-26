@@ -1,0 +1,555 @@
+{
+  "name": "worklow_doc",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "7f72ac69-35b7-4771-a5c6-7acb18947254",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "5635880d-7cf1-4c70-bb22-20a540f905ee",
+      "name": "Formulaire (Webhook)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -2208,
+        96
+      ],
+      "webhookId": "7f72ac69-35b7-4771-a5c6-7acb18947254"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.texteIa && $json.texteIa.length > 10 }}"
+            }
+          ]
+        }
+      },
+      "id": "3ba7319e-371a-4562-a93f-3e6b7c790e44",
+      "name": "Condition IA",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1728,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://ollama:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"gemma2:2b\",\n  \"prompt\": \"Tu es un assistant professionnel. Écris un texte complet et professionnel pour un document administratif.\\n\\nObjet du document : {{ $json.objet }}\\n\\nInformations à utiliser : {{ $json.texteIa }}\\n\\nInstructions :\\n- Écris un texte complet et structuré (pas de suggestions ni de listes)\\n- Le texte doit être en lien direct avec l'objet du document\\n- Utilise un style formel et professionnel\\n- Le texte doit être prêt à être utilisé tel quel dans le document\\n\\nTexte du document :\",\n  \"stream\": false,\n  \"options\": {\n    \"num_predict\": 1000,\n    \"temperature\": 0.5\n  }\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "ee25bae6-4363-4198-bcd4-1c28c82ea69f",
+      "name": "Appel IA Gemma",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1472,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "texte_ia_genere",
+              "name": "texteIa",
+              "value": "={{ $json.response || $('Preparer Donnees').item.json.texteIa }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "77fe1498-3c94-4d59-a1a3-87581c011994",
+      "name": "Extraire Texte IA",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -1232,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "filePath": "={{ '/templates/word/template_' + $('Preparer Donnees').item.json.typeDocument + '.docx' }}"
+      },
+      "id": "90cccee3-84b6-4309-83cd-c561c41cfb82",
+      "name": "Lire Template Word",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        -1920,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "context": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-docxtemplater.docxTemplater",
+      "typeVersion": 1,
+      "position": [
+        -1296,
+        96
+      ],
+      "id": "d2757f05-c84d-4007-b6ca-3bbea859f962",
+      "name": "Remplir Template Docx"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "1ee6e745-fc31-4fd8-bc59-531bd4a69997",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "ab0e6b0f-5079-4f7c-9d6f-f776549d8ae9",
+      "name": "Validation (Webhook)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -1920,
+        400
+      ],
+      "webhookId": "1ee6e745-fc31-4fd8-bc59-531bd4a69997"
+    },
+    {
+      "parameters": {
+        "fromEmail": "contact@fo-metaux.fr",
+        "toEmail": "={{ $json.emailEnvoi }}",
+        "subject": "={{ ($json.templateName || $json.templateType || 'Fo-Métaux - Vos Documents') + ' - ' + ($json.nomDestinataire || 'Destinataire') }}",
+        "text": "={{ $json.customEmailMessage || ('Bonjour ' + ($json.nomDestinataire || 'Madame, Monsieur') + ',\\n\\nVeuillez trouver ci-joint le courrier de notre Fédération FO,\\nFait pour valoir ce que de droit.\\n\\nCordialement,\\nFO METAUX') }}",
+        "attachments": "data",
+        "options": {}
+      },
+      "id": "2b651d1c-b948-447c-a896-34a3e5278c1e",
+      "name": "Envoi Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        -944,
+        400
+      ],
+      "credentials": {
+        "smtp": {
+          "id": "tL5ueqlQGrsm63hL",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const civiliteDestinataire = $json.body?.civiliteDestinataire || $json.civiliteDestinataire;\nconst nomDestinataire = $json.body?.nomDestinataire || $json.nomDestinataire;\nconst statutDestinataire = $json.body?.statutDestinataire || $json.statutDestinataire;\nconst batiment = $json.body?.batiment || $json.batiment;\nconst adresse = $json.body?.adresse || $json.adresse;\nconst cpVille = $json.body?.cpVille || $json.cpVille;\nconst objet = $json.body?.objet || $json.objet;\nconst numeroCourrier = $json.body?.numeroCourrier || $json.numeroCourrier;\nconst civiliteRemplace = $json.body?.civiliteRemplace || $json.civiliteRemplace;\nconst nomRemplace = $json.body?.nomRemplace || $json.nomRemplace;\nconst codeDocument = $json.body?.codeDocument || $json.codeDocument;\nconst civiliteDelegue = $json.body?.civiliteDelegue || $json.civiliteDelegue;\nconst nomDelegue = $json.body?.nomDelegue || $json.nomDelegue;\nconst emailDelegue = $json.body?.emailDelegue || $json.emailDelegue;\nconst emailDestinataire = $json.body?.emailDestinataire || $json.emailDestinataire;\nconst emailEnvoi = $json.body?.emailEnvoi || $json.emailEnvoi;\nconst signatureExp = $json.body?.signatureExp || $json.signatureExp;\nconst customEmailMessage = $json.body?.customEmailMessage || $json.customEmailMessage;\n\n// ← NOUVEAU : Récupérer le PDF en base64 du frontend\nconst pdfBase64 = $json.body?.pdfFile || $json.pdfFile;\n\nif (!emailEnvoi) {\n  throw new Error('Aucun destinataire fourni !');\n}\n\nif (!pdfBase64) {\n  throw new Error('Fichier PDF manquant ! Le frontend doit envoyer pdfFile en base64.');\n}\n\nconst emailList = emailEnvoi.split(',').map(email => email.trim()).filter(email => email.length > 0).join(', ');\n\nreturn {\n  json: {\n    civiliteDestinataire,\n    nomDestinataire,\n    statutDestinataire,\n    batiment,\n    adresse,\n    cpVille,\n    objet,\n    numeroCourrier,\n    civiliteRemplace,\n    nomRemplace,\n    codeDocument,\n    civiliteDelegue,\n    nomDelegue,\n    emailDelegue,\n    emailDestinataire,\n    emailEnvoi: emailList,\n    customEmailMessage,\n    signatureExp\n  },\n  binary: {\n    data: {\n      data: pdfBase64,  // ← CHANGÉ : PDF au lieu de Word\n      mimeType: 'application/pdf',  // ← CHANGÉ : type PDF\n      fileName: `Document_${objet}_${Date.now()}.pdf`  // ← CHANGÉ : extension .pdf\n    }\n  }\n};\n"
+      },
+      "id": "d4c75097-6b00-4d67-8317-4da5f8304e04",
+      "name": "Generer Word Final",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1552,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68bdcad8-b639-4963-8a10-6dc4a2e16a36",
+              "name": "entreprise",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.entreprise }}",
+              "type": "string"
+            },
+            {
+              "id": "civiliteDestinataire",
+              "name": "civiliteDestinataire",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.civiliteDestinataire }}",
+              "type": "string"
+            },
+            {
+              "id": "genre",
+              "name": "genre",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.civiliteDestinataire === 'Madame' ? 'la' : 'le' }}",
+              "type": "string"
+            },
+            {
+              "id": "nomDestinataire",
+              "name": "nomDestinataire",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.nomDestinataire }}",
+              "type": "string"
+            },
+            {
+              "id": "statutDestinataire",
+              "name": "statutDestinataire",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.statutDestinataire }}",
+              "type": "string"
+            },
+            {
+              "id": "batiment",
+              "name": "batiment",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.batiment || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "adresse",
+              "name": "adresse",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.adresse }}",
+              "type": "string"
+            },
+            {
+              "id": "cpVille",
+              "name": "cpVille",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.cpVille }}",
+              "type": "string"
+            },
+            {
+              "id": "typeDocument",
+              "name": "typeDocument",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.templateType }}",
+              "type": "string"
+            },
+            {
+              "id": "texteIa",
+              "name": "texteIa",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.texteIa || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "objet",
+              "name": "objet",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.objet || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "numeroCourrier",
+              "name": "numeroCourrier",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.numeroCourrier }}",
+              "type": "string"
+            },
+            {
+              "id": "civiliteRemplace",
+              "name": "civiliteRemplace",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.civiliteRemplace }}",
+              "type": "string"
+            },
+            {
+              "id": "nomRemplace",
+              "name": "nomRemplace",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.nomRemplace }}",
+              "type": "string"
+            },
+            {
+              "id": "codeDocument",
+              "name": "codeDocument",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.codeDocument }}",
+              "type": "string"
+            },
+            {
+              "id": "civiliteDelegue",
+              "name": "civiliteDelegue",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.civiliteDelegue }}",
+              "type": "string"
+            },
+            {
+              "id": "nomDelegue",
+              "name": "nomDelegue",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.nomDelegue }}",
+              "type": "string"
+            },
+            {
+              "id": "emailDelegue",
+              "name": "emailDelegue",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.emailDelegue }}",
+              "type": "string"
+            },
+            {
+              "id": "emailDestinataire",
+              "name": "emailDestinataire",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.emailDestinataire }}",
+              "type": "string"
+            },
+            {
+              "id": "signatureExp",
+              "name": "signatureExp",
+              "value": "={{ $('Formulaire (Webhook)').item.json.body.signatureExp || 'FO METAUX' }}",
+              "type": "string"
+            },
+            {
+              "id": "date",
+              "name": "date",
+              "value": "={{ $now.toFormat('dd/MM/yyyy') }}",
+              "type": "string"
+            },
+            {
+              "id": "dateComplete",
+              "name": "dateComplete",
+              "value": "={{ $now.toFormat('cccc d MMMM yyyy', { locale: 'fr' }) }}",
+              "type": "string"
+            },
+            {
+              "id": "heure",
+              "name": "heure",
+              "value": "={{ $now.toFormat('HH:mm') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "22aefee1-d2fc-4a77-9679-69b63650dba0",
+      "name": "Preparer Donnees",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -2048,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"Document généré et envoyé par email avec succès\", \"destinataire\": $json.emailEnvoi, \"objet\": $json.objet } }}",
+        "options": {}
+      },
+      "id": "8d72b68f-c110-4962-8f15-b42d4edf633c",
+      "name": "Reponse Finale",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Récupérer le premier binaire disponible\nconst binaryKeys = Object.keys($input.item.binary || {});\n\nif (binaryKeys.length === 0) {\n  throw new Error('Aucun fichier binaire trouvé');\n}\n\nconst binaryKey = binaryKeys[0];\nconst binary = $input.item.binary[binaryKey];\n\nif (!binary || !binary.data) {\n  throw new Error('Données binaires manquantes');\n}\n\nconsole.log('Binaire trouvé:', binaryKey, 'Taille:', binary.data.length);\n\nreturn {\n  json: {\n    success: true,\n    data: binary.data,\n    fileName: binary.fileName || 'document.docx',\n    mimeType: binary.mimeType || 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'\n  }\n};"
+      },
+      "id": "convert-binary-to-json",
+      "name": "Convert Binary to JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1144,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "4d3a6757-de0b-41d6-8061-09ef745d3ba9",
+      "name": "Reponse avec Word",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        -992,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Récupérer les données JSON depuis \"Generer Word Final\" (avec emailEnvoi, etc.)\nconst jsonData = $('Generer Word Final').item.json;\n\n// Récupérer le binaire PDF du nœud précédent\nconst pdfBinary = $input.item.binary.data;\n\n// Vérifications\nif (!pdfBinary || !pdfBinary.data) {\n  throw new Error('PDF manquant ou vide !');\n}\n\nif (!jsonData.emailEnvoi) {\n  throw new Error('Email destinataire manquant !');\n}\n\n// Debug\nconsole.log('Email destinataire:', jsonData.emailEnvoi);\nconsole.log('Taille PDF:', pdfBinary.data.length, 'caractères');\n\n// Créer le nom de fichier\nconst templateName = jsonData.templateName || jsonData.objet || 'Document';\nconst cleanName = templateName\n  .replace(/\\s+/g, '_')\n  .replace(/[àâäéèêëïîôùûüÿç]/g, (match) => {\n    const accents = { 'à': 'a', 'â': 'a', 'ä': 'a', 'é': 'e', 'è': 'e', 'ê': 'e', 'ë': 'e', 'ï': 'i', 'î': 'i', 'ô': 'o', 'ù': 'u', 'û': 'u', 'ü': 'u', 'ÿ': 'y', 'ç': 'c' };\n    return accents[match] || match;\n  })\n  .replace(/[^a-zA-Z0-9_-]/g, '');\n\nconst timestamp = Date.now();\nconst newFileName = `${cleanName}_${timestamp}.pdf`; // ← .pdf pas .docx\n\n// Retourner JSON + Binary fusionnés\nreturn {\n  json: jsonData,  // ← Les infos pour l'email (emailEnvoi, nomDestinataire, etc.)\n  binary: {\n    data: {\n      data: pdfBinary.data,\n      mimeType: 'application/pdf',  // ← PDF pas Word\n      fileName: newFileName,\n      fileExtension: 'pdf'\n    }\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1168,
+        400
+      ],
+      "id": "76e8ac08-4aab-47b2-ae5c-8b0f9adc6ab4",
+      "name": "Renommer Fichier"
+    },
+    {
+      "parameters": {
+        "jsCode": "const baseData = {...$('Preparer Donnees').item.json};\n\ntry {\n  const iaNode = $('Extraire Texte IA');\n  if (iaNode && iaNode.item && iaNode.item.json && iaNode.item.json.texteIa) {\n    baseData.texteIa = iaNode.item.json.texteIa;\n  }\n} catch (e) {\n  console.log('Pas d\\'IA');\n}\n\nreturn {\n  json: baseData,\n  binary: items[0].binary\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1552,
+        96
+      ],
+      "id": "9309ea18-4b7c-446f-8f45-c508939f3edc",
+      "name": "Fusionner Donnees"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Formulaire (Webhook)": {
+      "main": [
+        [
+          {
+            "node": "Preparer Donnees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Condition IA": {
+      "main": [
+        [
+          {
+            "node": "Appel IA Gemma",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Lire Template Word",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Appel IA Gemma": {
+      "main": [
+        [
+          {
+            "node": "Extraire Texte IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire Texte IA": {
+      "main": [
+        [
+          {
+            "node": "Lire Template Word",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lire Template Word": {
+      "main": [
+        [
+          {
+            "node": "Fusionner Donnees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remplir Template Docx": {
+      "main": [
+        [
+          {
+            "node": "Convert Binary to JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Binary to JSON": {
+      "main": [
+        [
+          {
+            "node": "Reponse avec Word",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation (Webhook)": {
+      "main": [
+        [
+          {
+            "node": "Generer Word Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generer Word Final": {
+      "main": [
+        [
+          {
+            "node": "Renommer Fichier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoi Email": {
+      "main": [
+        [
+          {
+            "node": "Reponse Finale",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparer Donnees": {
+      "main": [
+        [
+          {
+            "node": "Condition IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Renommer Fichier": {
+      "main": [
+        [
+          {
+            "node": "Envoi Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fusionner Donnees": {
+      "main": [
+        [
+          {
+            "node": "Remplir Template Docx",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "784131d0-b7b1-4a59-874d-8b4bafd07fea",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "89f5c6309230092070201e7d25cd8df96ab5733f35c20be21a63fa5493c50487"
+  },
+  "id": "A7CP4XK1xvxr4y4W",
+  "tags": []
+}
