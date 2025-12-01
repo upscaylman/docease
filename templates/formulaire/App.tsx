@@ -79,6 +79,18 @@ const App: React.FC = () => {
     }));
   };
 
+  // Gérer le changement de template (sauvegarder avant de changer)
+  const handleTemplateChange = useCallback((newTemplateId: string) => {
+    // Sauvegarder les données du template actuel avant de changer
+    if (selectedTemplate && Object.keys(formData).length > 0) {
+      console.log('💾 Sauvegarde automatique avant changement de template');
+      saveCurrentTemplateData(selectedTemplate, formData);
+    }
+
+    // Changer de template
+    setSelectedTemplate(newTemplateId);
+  }, [selectedTemplate, formData]);
+
   // Mettre à jour les champs du formulaire quand le template change
   useEffect(() => {
     if (selectedTemplate && TEMPLATE_SPECIFIC_FIELDS[selectedTemplate]) {
@@ -97,12 +109,14 @@ const App: React.FC = () => {
 
       setCurrentStepIdx(0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTemplate]);
 
   // Optimisation: mémoriser handleStepChange pour éviter les re-renders
   const handleStepChange = useCallback((idx: number) => {
     // Si on avance (idx > currentStepIdx), vérifier que l'étape actuelle est valide
-    if (idx > currentStepIdx) {
+    // SAUF si on est en mode personnalisation (builder) où on doit pouvoir naviguer librement
+    if (idx > currentStepIdx && !isCustomizing) {
       const currentStepValid = isStepValid(currentStep.id as StepType);
       if (!currentStepValid) {
         showError('Veuillez remplir tous les champs obligatoires avant de continuer');
@@ -112,7 +126,7 @@ const App: React.FC = () => {
 
     setCurrentStepIdx(idx);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [currentStepIdx, currentStep, isStepValid, showError]);
+  }, [currentStepIdx, currentStep, isStepValid, showError, isCustomizing]);
 
   // Optimisation: mémoriser handleInputChange
   const handleInputChange = useCallback((key: string, value: string) => {
@@ -168,8 +182,21 @@ const App: React.FC = () => {
   }, [selectedTemplate]);
 
   const toggleCustomization = useCallback(() => {
-    setIsCustomizing(prev => !prev);
-  }, []);
+    setIsCustomizing(prev => {
+      const newValue = !prev;
+
+      // Si on désactive le mode personnalisation, vérifier si on doit revenir à la page 1
+      if (prev && !newValue) {
+        // Si on n'est pas sur la page 1 et que l'étape actuelle n'est pas valide, revenir à la page 1
+        if (currentStepIdx > 0 && !isStepValid(currentStep.id as StepType)) {
+          setCurrentStepIdx(0);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      return newValue;
+    });
+  }, [currentStepIdx, currentStep, isStepValid]);
 
   const handleFieldsReorder = (stepId: string, newFields: FormField[]) => {
     console.log('🔄 Réorganisation des champs pour', stepId, newFields);
@@ -411,7 +438,16 @@ const App: React.FC = () => {
       } else {
         const pdfResult = await convertWordToPdf(wordBase64, `document_${selectedTemplate}`);
         setPdfBlob(pdfResult.blob);
-        pdfBase64 = pdfResult.data;
+        // Convertir le blob en base64
+        pdfBase64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64 = (reader.result as string).split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(pdfResult.blob);
+        });
       }
 
       // Envoyer l'email avec les destinataires multiples
@@ -436,10 +472,10 @@ const App: React.FC = () => {
   return (
     <div className="flex h-screen overflow-hidden bg-[#2f2f2f] text-[#1c1b1f]">
       {/* Sidebar */}
-      <Sidebar 
+      <Sidebar
         templates={TEMPLATES}
         selectedTemplate={selectedTemplate}
-        onSelect={setSelectedTemplate}
+        onSelect={handleTemplateChange}
         isOpenMobile={isSidebarOpen}
         setIsOpenMobile={setIsSidebarOpen}
       />
@@ -482,7 +518,7 @@ const App: React.FC = () => {
                <div className="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/40 p-2.5 flex flex-col md:flex-row items-center justify-between gap-3 transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:scale-[1.005] ring-1 ring-black/5 transform-gpu will-change-transform">
                   
                   {/* Step Indicators */}
-                  <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto px-1 no-scrollbar md:mask-none py-1">
+                  <div className="flex items-center gap-2 w-full md:w-auto px-1 py-1 overflow-x-auto scrollbar-thin">
                     {STEPS.map((step, idx) => {
                       const isActive = currentStepIdx === idx;
                       const isCompleted = currentStepIdx > idx;
@@ -581,14 +617,14 @@ const App: React.FC = () => {
 
                        <button
                          onClick={() => handleStepChange(currentStepIdx + 1)}
-                         disabled={isLastStep || !isStepValid(currentStep.id as StepType)}
+                         disabled={isLastStep || (!isCustomizing && !isStepValid(currentStep.id as StepType))}
                          className={`
                            h-12 px-6 rounded-full flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:shadow-[#a84383]/30 transition-all duration-300
-                           ${isLastStep || !isStepValid(currentStep.id as StepType)
+                           ${isLastStep || (!isCustomizing && !isStepValid(currentStep.id as StepType))
                              ? 'bg-gray-100 text-gray-300 cursor-not-allowed shadow-none'
                              : 'bg-[#a84383] text-white active:scale-95'}
                          `}
-                         title={!isStepValid(currentStep.id as StepType) ? 'Veuillez remplir tous les champs obligatoires' : ''}
+                         title={!isCustomizing && !isStepValid(currentStep.id as StepType) ? 'Veuillez remplir tous les champs obligatoires' : ''}
                        >
                           <span className="font-bold text-sm hidden sm:inline">Suivant</span>
                           <span className="material-icons text-sm">arrow_forward</span>

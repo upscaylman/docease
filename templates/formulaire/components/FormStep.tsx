@@ -1,7 +1,8 @@
-import React, { useState, memo } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { StepType, FormField, FormData } from '../types';
 import { FORM_FIELDS } from '../constants';
 import { Input } from './Input';
+import { AITextarea } from './AITextarea';
 
 interface FormStepProps {
   step: StepType;
@@ -19,12 +20,13 @@ const FormStepComponent: React.FC<FormStepProps> = ({ step, data, onChange, isCu
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const [removedFields, setRemovedFields] = useState<{ field: FormField; originalIndex: number }[]>([]);
 
-  // Mettre à jour les champs quand customFields change
-  useState(() => {
-    if (customFields) {
-      setFields(customFields);
-    }
-  });
+  // Mettre à jour les champs quand step ou customFields changent
+  useEffect(() => {
+    const newFields = customFields || FORM_FIELDS[step];
+    setFields(newFields);
+    // Réinitialiser les champs supprimés quand on change d'étape
+    setRemovedFields([]);
+  }, [step, customFields]);
 
   // SECTION: LOGIQUE SUPPRESSION & RESTAURATION
   const removeField = (index: number) => {
@@ -209,18 +211,31 @@ const FormStepComponent: React.FC<FormStepProps> = ({ step, data, onChange, isCu
               </div>
             )}
 
-            <Input
-              label={field.label}
-              type={field.type}
-              placeholder={field.placeholder}
-              options={field.options}
-              icon={field.icon}
-              required={field.required}
-              rows={field.rows}
-              value={data[field.id] || ''}
-              onChange={(e) => onChange(field.id, e.target.value)}
-              fieldId={field.id}
-            />
+            {/* Utiliser AITextarea pour le champ texteIa */}
+            {field.id === 'texteIa' ? (
+              <AITextarea
+                label={field.label}
+                value={data[field.id] || ''}
+                onChange={(value) => onChange(field.id, value)}
+                objetValue={data['objet'] || ''}
+                placeholder={field.placeholder}
+                required={field.required}
+                rows={field.rows}
+              />
+            ) : (
+              <Input
+                label={field.label}
+                type={field.type}
+                placeholder={field.placeholder}
+                options={field.options}
+                icon={field.icon}
+                required={field.required}
+                rows={field.rows}
+                value={data[field.id] || ''}
+                onChange={(e) => onChange(field.id, e.target.value)}
+                fieldId={field.id}
+              />
+            )}
           </div>
         ))}
       </div>

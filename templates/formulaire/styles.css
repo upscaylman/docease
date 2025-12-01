@@ -33,6 +33,49 @@ body {
   background: rgba(255, 255, 255, 0.4);
 }
 
+/* Scrollbar MD3 Expressive - Style mobile discret */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling iOS */
+}
+
+/* Scrollbar visible uniquement au hover/scroll - Style MD3 */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+  transition: background 0.3s ease;
+}
+
+/* Afficher la scrollbar au hover ou pendant le scroll */
+.scrollbar-thin:hover::-webkit-scrollbar-thumb,
+.scrollbar-thin:active::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.scrollbar-thin:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Firefox - scrollbar discrète */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.scrollbar-thin:hover {
+  scrollbar-color: rgba(0, 0, 0, 0.12) transparent;
+}
+
 /* Custom classes for sidebar scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
