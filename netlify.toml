@@ -1,15 +1,9 @@
 [build]
-  base = "templates/form"
-  publish = "."
-  command = "npm run build"
+  base = "templates/formulaire"
+  publish = "dist"
+  command = "npm install && npm run build"
 
-# Redirections pour la version React (v2) - SPA
-[[redirects]]
-  from = "/v2/*"
-  to = "/v2/index.html"
-  status = 200
-
-# Redirections pour la version classique (v1) - SPA
+# Redirections pour le SPA React
 [[redirects]]
   from = "/*"
   to = "/index.html"

@@ -5,9 +5,9 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
-      base: '/v2/',
+      base: '/',
       build: {
-        outDir: '../form/v2',
+        outDir: 'dist',
         emptyOutDir: true,
       },
       server: {
