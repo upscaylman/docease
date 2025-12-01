@@ -1,4 +1,6 @@
 # Redirections Netlify
-# Toutes les routes pointent vers index.html pour le SPA
-/*    /index.html   200
+# Version React (v2) - SPA
+/v2/*    /v2/index.html   200
 
+# Version classique (v1) - SPA
+/*    /index.html   200
