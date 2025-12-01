@@ -31,7 +31,7 @@ export const Input: React.FC<InputProps> = ({
 
   const wrapperClass = "relative group";
   const labelClass = "block text-sm font-medium text-gray-700 mb-1 ml-1";
-  const baseInputClass = "w-full bg-[#fdfbff] border-2 text-[#1c1b1f] text-base rounded-2xl px-4 py-3 outline-none transition-all duration-200 placeholder:text-gray-400";
+  const baseInputClass = `w-full bg-[#fdfbff] border-2 text-[#1c1b1f] text-base rounded-2xl py-3 outline-none transition-all duration-200 placeholder:text-gray-400 ${icon ? 'pl-12 pr-4' : 'px-4'}`;
   const inputClass = `${baseInputClass} ${
     showError
       ? 'border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
@@ -67,16 +67,18 @@ export const Input: React.FC<InputProps> = ({
           {label}
           {required && <span style={{ color: 'rgb(196, 35, 45)' }}> *</span>}
         </label>
-        <textarea
-          className={`${inputClass} min-h-[120px] resize-y`}
-          placeholder={props.placeholder || " "}
-          required={required}
-          onBlur={handleBlur}
-          aria-invalid={showError ? 'true' : 'false'}
-          aria-describedby={showError ? `${fieldId}-error` : undefined}
-          {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
-        />
-        {icon && <span className="material-icons absolute right-4 top-10 text-gray-400">{icon}</span>}
+        <div className="relative">
+          <textarea
+            className={`${inputClass} min-h-[120px] resize-y`}
+            placeholder={props.placeholder || " "}
+            required={required}
+            onBlur={handleBlur}
+            aria-invalid={showError ? 'true' : 'false'}
+            aria-describedby={showError ? `${fieldId}-error` : undefined}
+            {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+          />
+          {icon && <span className="material-icons absolute left-4 top-4 text-gray-400 pointer-events-none">{icon}</span>}
+        </div>
         {showError && (
           <div id={`${fieldId}-error`} className="flex items-center gap-1 mt-1 ml-1 text-sm text-red-600 animate-[fadeIn_0.2s]" role="alert">
             <span className="material-icons text-sm">error</span>
@@ -108,6 +110,7 @@ export const Input: React.FC<InputProps> = ({
               <option key={opt} value={opt}>{opt}</option>
             ))}
           </select>
+          {icon && <span className="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">{icon}</span>}
           <span className="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
         </div>
         {showError && (
@@ -129,7 +132,7 @@ export const Input: React.FC<InputProps> = ({
       <div className="relative">
         <input
           type={type}
-          className={`${inputClass} pl-4`}
+          className={inputClass}
           placeholder={props.placeholder || " "}
           required={required}
           onBlur={handleBlur}
@@ -137,7 +140,7 @@ export const Input: React.FC<InputProps> = ({
           aria-describedby={showError ? `${fieldId}-error` : undefined}
           {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
         />
-        {icon && <span className="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">{icon}</span>}
+        {icon && <span className="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">{icon}</span>}
       </div>
       {showError && (
         <div id={`${fieldId}-error`} className="flex items-center gap-1 mt-1 ml-1 text-sm text-red-600 animate-[fadeIn_0.2s]" role="alert">
