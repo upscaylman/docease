@@ -1,0 +1,14 @@
+# Build output de la version React
+v2/
+
+# Node modules
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+

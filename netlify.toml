@@ -3,7 +3,13 @@
   publish = "."
   command = "npm run build"
 
-# Redirections pour les routes SPA
+# Redirections pour la version React (v2) - SPA
+[[redirects]]
+  from = "/v2/*"
+  to = "/v2/index.html"
+  status = 200
+
+# Redirections pour la version classique (v1) - SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
