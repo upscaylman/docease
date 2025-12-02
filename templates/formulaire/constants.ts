@@ -8,19 +8,19 @@ export const TEMPLATES: Template[] = [
     id: 'designation',
     title: 'Lettre de Désignation',
     description: 'Désignation de délégué syndical',
-    image: '/v2/assets/img/designation_template.png'
+    image: '/assets/img/designation_template.png'
   },
   {
     id: 'negociation',
     title: 'Mandat de Négociation',
     description: 'Mandat de négociation collective',
-    image: '/v2/assets/img/nego_template.png'
+    image: '/assets/img/nego_template.png'
   },
   {
     id: 'custom',
     title: 'Document Personnalisé',
     description: 'Document personnalisé avec contenu IA',
-    image: '/v2/assets/img/custom_template.png'
+    image: '/assets/img/custom_template.png'
   },
 ];
 

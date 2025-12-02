@@ -37,7 +37,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ templates, selectedTemplate,
       {/* Sidebar Container */}
       <aside
         className={`
-          fixed md:static inset-y-0 left-0 z-40 md:z-0
+          fixed md:static inset-y-0 left-0 z-[60] md:z-0
           w-[280px] bg-white border-r border-gray-100 shadow-2xl md:shadow-none
           transform transition-transform duration-300 ease-in-out
           ${isOpenMobile ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
@@ -115,7 +115,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ templates, selectedTemplate,
       {!isOpenMobile && (
         <button
           onClick={() => setIsOpenMobile(true)}
-          className="md:hidden fixed bottom-6 left-6 z-40 bg-[#2f2f2f] text-white p-4 rounded-full shadow-xl flex items-center gap-2 hover:scale-105 transition-transform"
+          className="md:hidden fixed bottom-6 left-6 z-40 bg-[#aa4584] text-white p-4 rounded-full shadow-xl flex items-center gap-2 hover:scale-105 transition-transform"
           aria-label="Ouvrir le menu des modèles"
         >
            <span className="material-icons" aria-hidden="true">dashboard</span>

@@ -128,10 +128,36 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentStepIdx, currentStep, isStepValid, showError, isCustomizing]);
 
+  // Fonction pour extraire les initiales d'un nom
+  const getInitials = (fullName: string): string => {
+    if (!fullName) return '';
+    const normalized = fullName.replace(/-/g, ' ').trim();
+    const initials = normalized
+      .split(/\s+/)
+      .map(word => word.charAt(0).toUpperCase())
+      .join('');
+    return initials;
+  };
+
   // Optimisation: mémoriser handleInputChange
   const handleInputChange = useCallback((key: string, value: string) => {
     setFormData(prev => {
       const newData = { ...prev, [key]: value };
+
+      // Auto-génération du code document depuis signatureExp
+      if (key === 'signatureExp' && value) {
+        const initials = getInitials(value);
+        if (initials) {
+          const year = new Date().getFullYear();
+          const randomNum = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+          newData.codeDocument = `${initials}-${year}-${randomNum}`;
+          // Auto-génération du numéro de recommandé pour le template designation
+          if (selectedTemplate === 'designation') {
+            newData.numeroCourrier = `${initials}-${year}-${randomNum}`;
+          }
+        }
+      }
+
       // Sauvegarder automatiquement les données du template actuel
       if (selectedTemplate) {
         saveCurrentTemplateData(selectedTemplate, newData);
@@ -515,10 +541,10 @@ const App: React.FC = () => {
 
             {/* Floating Navigation Bar - IMPROVED MD3 Expressive */}
             <div className="sticky top-6 z-30 mb-10 mx-auto max-w-6xl px-1">
-               <div className="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/40 p-2.5 flex flex-col md:flex-row items-center justify-between gap-3 transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:scale-[1.005] ring-1 ring-black/5 transform-gpu will-change-transform">
-                  
+               <div className="bg-white/90 dark:bg-[#2f2f2f]/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/40 dark:border-white/10 p-2.5 flex flex-col md:flex-row items-center justify-between gap-3 transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:scale-[1.005] ring-1 ring-black/5 dark:ring-white/5 transform-gpu will-change-transform">
+
                   {/* Step Indicators */}
-                  <div className="flex items-center gap-2 w-full md:w-auto px-1 py-1 overflow-x-auto scrollbar-thin">
+                  <div className="flex items-center gap-2 w-full md:w-auto px-1 py-1">
                     {STEPS.map((step, idx) => {
                       const isActive = currentStepIdx === idx;
                       const isCompleted = currentStepIdx > idx;
@@ -529,27 +555,27 @@ const App: React.FC = () => {
                           onClick={() => handleStepChange(idx)}
                           className={`
                             relative group flex items-center gap-3 px-2 py-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)] select-none
-                            ${isActive 
-                               ? 'bg-[#ffecf8] pr-6 flex-grow md:flex-grow-0 ring-1 ring-[#ffd8ec]' 
+                            ${isActive
+                               ? 'bg-[#ffecf8] dark:bg-[#4a1a36] pr-6 flex-grow md:flex-grow-0 ring-1 ring-[#ffd8ec] dark:ring-[#a84383]'
                                : 'flex-shrink-0'}
                           `}
                         >
                            <div className={`
                              w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 shadow-sm z-10
-                             ${isActive 
-                               ? 'bg-[#2f2f2f] text-white scale-100 rotate-0 shadow-md' 
-                               : isCompleted 
-                                 ? 'bg-[#a84383] text-white scale-90 group-hover:scale-100' 
-                                 : 'bg-gray-100 text-gray-400 scale-90 group-hover:text-gray-600 group-hover:scale-100 group-hover:shadow-md'}
+                             ${isActive
+                               ? 'bg-[#2a2a2a] dark:bg-white text-white dark:text-[#2a2a2a] scale-100 rotate-0 shadow-md'
+                               : isCompleted
+                                 ? 'bg-[#2a2a2a] text-white scale-90 group-hover:scale-100'
+                                 : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-400 scale-90 group-hover:text-gray-600 dark:group-hover:text-gray-200 group-hover:scale-100 group-hover:shadow-md'}
                            `}>
                              {isCompleted ? <span className="material-icons text-lg animate-[fadeIn_0.3s]">check</span> : idx + 1}
                            </div>
-                           
+
                            <div className={`flex flex-col items-start transition-all duration-500 overflow-hidden ${isActive ? 'w-auto opacity-100 translate-x-0' : 'w-0 opacity-0 -translate-x-4'}`}>
-                             <span className="font-bold text-sm text-[#2f2f2f] whitespace-nowrap leading-none mb-1">
+                             <span className="font-bold text-sm text-[#2f2f2f] dark:text-white whitespace-nowrap leading-none mb-1">
                                {step.label}
                              </span>
-                             <span className="text-[10px] text-gray-500 font-medium whitespace-nowrap leading-none uppercase tracking-wide">
+                             <span className="text-[10px] text-gray-500 dark:text-gray-300 font-medium whitespace-nowrap leading-none uppercase tracking-wide">
                                Étape {idx + 1}/{STEPS.length}
                              </span>
                            </div>
